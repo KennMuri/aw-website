@@ -606,6 +606,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     align-items: center;
+    justify-items: center;
   }
 
   .client-logo-compact {
@@ -1095,10 +1096,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     }
 
     .sidebar {
-      position: static;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      display: none;
     }
 
     .process-timeline-compact {
