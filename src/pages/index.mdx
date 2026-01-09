@@ -10,8 +10,6 @@ import LogoCarousel from '../components/LogoCarousel.astro';
 import FrameworksSection from '../components/FrameworksSection.astro';
 import ServiceToggle from '../components/ServiceToggle.astro';
 import SentryVideoShowcase from '../components/SentryVideoShowcase.astro';
-import StatsSection from '../components/StatsSection.astro';
-import ExpertiseSection from '../components/ExpertiseSection.astro';
 import CTASection from '../components/CTASection.astro';
 import Footer from '../components/Footer.astro';
 import { homeTheme, themeToColorScheme } from '../styles/themes.ts';
@@ -22,7 +20,7 @@ export const pageTheme = homeTheme;
 
 <ModernHero 
   title="Web3's Operational Security Layer"
-  description="Operational security audits and real-time monitoring. W3OS and SEAL compliant."
+  description="Operational security audits and real-time monitoring, built on W3OS and SEAL."
   primaryCta={{
     text: "Book An Audit",
     href: "/audits"
@@ -46,6 +44,7 @@ export const pageTheme = homeTheme;
     }
   ]}
   colorScheme={themeToColorScheme(pageTheme)}
+  isHomepage={true}
 />
 
 <LogoCarousel 
@@ -77,7 +76,7 @@ export const pageTheme = homeTheme;
         "W3OS and SEAL compliance",
         "Remediation roadmap"
       ],
-      primary: "W3OS and SEAL-compliant security assessments that protect your organization beyond code.",
+      primary: "Assess and harden your organization across people, systems, and workflows.",
       support: "We evaluate people, processes, and asset management to identify operational risk.",
       scope: "Security posture, team protocols, workflows, key management, remediation roadmap.",
       image: "/images/key-aud.png",
@@ -95,7 +94,7 @@ export const pageTheme = homeTheme;
         "Credential and account monitoring",
         "OpSec compliance tracking"
       ],
-      primary: "Continuous monitoring that detects compromise and operational security violations in real time.",
+      primary: "Monitor your organization continuously to detect compromise as it happens.",
       support: "Sentry provides organization-wide visibility across devices, credentials, and development workflows.",
       scope: "Alerts, DevOps monitoring, endpoint protection (EDR), credential tracking, OpSec compliance.",
       image: "/images/Screenshot-2025-07-14-at-2.46.51-PM.png",
@@ -113,7 +112,7 @@ export const pageTheme = homeTheme;
         "Gas optimization",
         "Formal verification"
       ],
-      primary: "Expert-led security audits for EVM and Rust-based smart contracts.",
+      primary: "Audit EVM and Rust smart contracts with expert-led security reviews.",
       support: "Manual review complements automated tooling to uncover logic and economic vulnerabilities.",
       scope: "EVM and Solana, manual review, automated scanning, business logic, gas optimization, formal verification.",
       image: "/images/code-aud.png",
@@ -131,7 +130,7 @@ export const pageTheme = homeTheme;
         "Secrets management and rotation",
         "Infrastructure as Code review"
       ],
-      primary: "Infrastructure security audits that prevent compromise at the deployment and cloud level.",
+      primary: "Secure cloud, deployment, and internal systems against real-world attacks.",
       support: "We assess environments, pipelines, and configurations that code depends on.",
       scope: "Cloud configs, CI/CD, containers, networking, secrets management, Infrastructure as Code review.",
       image: "/images/infra-aud.png",
@@ -141,10 +140,6 @@ export const pageTheme = homeTheme;
 />
 
 <SentryVideoShowcase />
-
-<StatsSection />
-
-<ExpertiseSection />
 
 <CTASection />
 

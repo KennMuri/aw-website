@@ -22,69 +22,63 @@ const { title, subtitle, services } = Astro.props;
   <div class="container">
     <div class="service-header text-center">
       <h2 class="h2">{title}</h2>
-      {subtitle && (
-        <p class="body-large" style="margin-top: var(--spacing-4); max-width: 600px; margin-left: auto; margin-right: auto;">
-          {subtitle}
-        </p>
-      )}
     </div>
     
-    <div class="service-toggle-container">
-      <div class="service-toggle" id="service-toggle" role="tablist" aria-label="Security Services">
-        <div class="service-toggle-indicator"></div>
-        {services.map((service, index) => (
-          <button 
-            class={`service-toggle-item ${index === 0 ? 'active' : ''}`}
-            data-service={service.id}
-            role="tab"
-            aria-selected={index === 0 ? 'true' : 'false'}
-            aria-controls={`panel-${service.id}`}
-            id={`tab-${service.id}`}
-            tabindex={index === 0 ? '0' : '-1'}
-          >
-            {service.name}
-          </button>
-        ))}
+    <div class="service-content-wrapper">
+      <div class="service-toggle-container">
+        <div class="service-tabs-wrapper">
+          <div class="service-tabs-track">
+            <div class="service-toggle" id="service-toggle" role="tablist" aria-label="Security Services">
+              <div class="service-toggle-indicator"></div>
+          {services.map((service, index) => (
+            <button 
+              class={`service-toggle-item ${index === 0 ? 'active' : ''}`}
+              data-service={service.id}
+                  role="tab"
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                  aria-controls={`panel-${service.id}`}
+                  id={`tab-${service.id}`}
+                  tabindex={index === 0 ? '0' : '-1'}
+            >
+              {service.name}
+            </button>
+          ))}
+            </div>
+        </div>
       </div>
-    </div>
-    
-    <div class="service-content">
-      {services.map((service, index) => (
-        <div 
-          class={`service-panel ${index === 0 ? 'active' : ''}`}
-          data-panel={service.id}
-          id={`panel-${service.id}`}
-          role="tabpanel"
-          aria-labelledby={`tab-${service.id}`}
-          aria-hidden={index === 0 ? 'false' : 'true'}
-        >
-          <div class="service-block">
-            <h3 class="h3 gradient-text">{service.name}</h3>
-            {service.primary && (
-              <p class="body-large service-primary">{service.primary}</p>
-            )}
-            {service.support && (
-              <p class="body-base service-support">{service.support}</p>
-            )}
-            {service.scope && (
-              <p class="body-base service-scope">{service.scope}</p>
-            )}
-            <div class="service-visual">
-              <div class="service-image-container">
-                <img 
-                  src={service.image} 
-                  alt={service.imageAlt}
-                  class="service-image"
-                  width="480"
-                  height="290"
-                  loading="lazy"
-                />
-                <div class="service-image-glow"></div>
+      
+        <div class="service-card-content">
+        {services.map((service, index) => (
+          <div 
+            class={`service-panel ${index === 0 ? 'active' : ''}`}
+            data-panel={service.id}
+              id={`panel-${service.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${service.id}`}
+              aria-hidden={index === 0 ? 'false' : 'true'}
+            >
+              <div class="service-summary">
+                <p class="body-base">
+                  {service.primary || service.description}
+                </p>
+              </div>
+              
+              <div class="service-media">
+                <div class="service-image-container">
+                  <img 
+                    src={service.image} 
+                    alt={service.imageAlt}
+                    class="service-image"
+                    width="480"
+                    height="290"
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                </div>
               </div>
             </div>
+          ))}
           </div>
-        </div>
-      ))}
+      </div>
     </div>
   </div>
 </section>
@@ -96,7 +90,7 @@ const { title, subtitle, services } = Astro.props;
     const panels = document.querySelectorAll('.service-panel');
     const indicator = document.querySelector('.service-toggle-indicator');
     const toggle = document.querySelector('.service-toggle');
-    const contentContainer = document.querySelector('.service-content');
+    const contentContainer = document.querySelector('.service-card-content');
     
     function updateIndicator(activeItem) {
       if (!indicator || !toggle) return;
@@ -164,12 +158,12 @@ const { title, subtitle, services } = Astro.props;
       });
       
       // Set container height to tallest panel with a small buffer for margins
-      // Only update if height changed to prevent unnecessary reflows
-      const newHeight = maxHeight > 0 ? `${maxHeight + 40}px` : 'auto';
-      if (contentContainer.style.height !== newHeight) {
-        contentContainer.style.height = newHeight;
-        contentContainer.style.minHeight = newHeight;
-      }
+      // Keep container at fixed height to prevent layout shift
+      const isMobile = window.innerWidth <= 767;
+      const fixedHeight = isMobile ? '320px' : '380px';
+      // Use fixed height for stability, regardless of calculated height
+      contentContainer.style.height = fixedHeight;
+      contentContainer.style.minHeight = fixedHeight;
     }
     
     // Wait for all images to load before calculating height
@@ -208,6 +202,7 @@ const { title, subtitle, services } = Astro.props;
     
     // Initialize first panel state explicitly
     const firstPanel = document.querySelector('.service-panel.active') || document.querySelector('.service-panel:first-child');
+    
     if (firstPanel) {
       firstPanel.classList.add('active');
       firstPanel.setAttribute('aria-hidden', 'false');
@@ -258,7 +253,7 @@ const { title, subtitle, services } = Astro.props;
     // Use responsive height based on viewport - content-driven sizing
     if (contentContainer) {
       const isMobile = window.innerWidth <= 767;
-      const initialHeight = isMobile ? '400px' : '450px';
+      const initialHeight = isMobile ? '320px' : '380px';
       contentContainer.style.height = initialHeight;
       contentContainer.style.minHeight = initialHeight;
     }
@@ -284,10 +279,10 @@ const { title, subtitle, services } = Astro.props;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        // Set initial stable height before recalculating - content-driven sizing
+        // Set initial stable height before recalculating - fixed height for stability
         if (contentContainer) {
           const isMobile = window.innerWidth <= 767;
-          const initialHeight = isMobile ? '400px' : '450px';
+          const initialHeight = isMobile ? '320px' : '380px';
           contentContainer.style.height = initialHeight;
           contentContainer.style.minHeight = initialHeight;
         }
@@ -338,6 +333,7 @@ const { title, subtitle, services } = Astro.props;
         }
       });
       
+      
       // Add active class and update ARIA for target item
       targetItem.classList.add('active');
       targetItem.setAttribute('aria-selected', 'true');
@@ -350,6 +346,7 @@ const { title, subtitle, services } = Astro.props;
       
       // Show corresponding panel
       const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
+      
       if (targetPanel) {
         targetPanel.classList.add('active');
         targetPanel.setAttribute('aria-hidden', 'false');
@@ -357,18 +354,18 @@ const { title, subtitle, services } = Astro.props;
         targetPanel.style.opacity = '1';
         targetPanel.style.visibility = 'visible';
         targetPanel.style.pointerEvents = 'auto';
-        
-        // Update indicator position after panel is shown
+      }
+      
+      // Update indicator position after panel is shown
+      requestAnimationFrame(() => {
+        updateIndicator(targetItem);
+        // Update container height after layout - use double RAF for stability
         requestAnimationFrame(() => {
-          updateIndicator(targetItem);
-          // Update container height after layout - use double RAF for stability
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              updateContainerHeight();
-            });
+            updateContainerHeight();
           });
         });
-      }
+      });
     }
     
     // Click handler
@@ -419,85 +416,167 @@ const { title, subtitle, services } = Astro.props;
 <style>
   .service-section {
     background: var(--color-background-primary);
-    padding: var(--spacing-4) 0;
+    border-top: none; /* Remove border-top since frameworks-section handles the divider */
+    border-bottom: 1px solid var(--color-border-primary);
+    padding: var(--spacing-3) 0;
   }
   
   /* Reduce bottom padding when followed by SentryVideoShowcase (connected sections) */
   .service-section:has(+ .feature-stack-section) {
-    padding-bottom: var(--spacing-2);
+    padding-bottom: var(--spacing-1);
   }
   
   .service-header {
     margin-top: 0;
-    margin-bottom: var(--spacing-5);
+    margin-bottom: 0; /* Spacing handled by heading margin-bottom in global.css */
   }
   
+  .service-content-wrapper {
+    margin-top: 0; /* Ensure no extra margin from wrapper */
+  }
+  
+  
+  /* Service content wrapper - single surface, no redundant card */
+  .service-content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  /* Toggle container - wraps tabs and description for contained feel */
   .service-toggle-container {
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5) var(--spacing-5) var(--spacing-4);
+    margin: 0 auto;
+    margin-top: 0; /* Match frameworks-grid spacing */
+    max-width: 100%;
+  }
+  
+  .service-tabs-wrapper {
+    margin-bottom: var(--spacing-4); /* Increased spacing: tabs → description */
     display: flex;
     justify-content: center;
-    margin-bottom: var(--spacing-6);
+    width: 100%;
+  }
+  
+  /* Rounded capsule track container - Tesser-style */
+  .service-tabs-track {
+    background: var(--color-background-tertiary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-1);
+    max-width: 600px;
+    width: 100%;
+    display: inline-flex;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   }
   
   .service-toggle {
     background: transparent;
     border: none;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
     position: relative;
     width: 100%;
-    max-width: 800px;
+    justify-content: space-evenly;
+    align-items: center;
     min-width: 0;
   }
   
   .service-toggle-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: var(--color-background-secondary);
-    border-radius: var(--radius-md);
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 0;
-    pointer-events: none;
-    width: 0;
+    display: none;
   }
   
   .service-toggle-item {
-    padding: var(--spacing-4) var(--spacing-8);
-    border-radius: var(--radius-md);
+    padding: var(--spacing-2-5) var(--spacing-5);
+    border-radius: var(--radius-lg);
     background: transparent;
+    border: none;
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-base);
-    line-height: 1.5;
-    transition: color var(--transition-base);
+    opacity: 0.65;
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    border: none;
     white-space: nowrap;
     position: relative;
     z-index: 1;
     text-align: center;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    min-height: 48px;
+    min-height: 36px;
+    height: 36px;
+    min-width: 100px;
     box-sizing: border-box;
     touch-action: manipulation;
+    overflow: visible;
+    flex: 1 1 0;
+    font-family: inherit;
   }
   
+  /* Active state: filled pill with purple gradient and high-contrast white text */
   .service-toggle-item.active {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-medium);
+    background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-500) 100%);
+    border-color: var(--color-primary-500);
+    color: #ffffff !important; /* High-contrast white text for readability */
+    font-weight: var(--font-weight-semibold);
+    opacity: 1;
+    box-shadow: 
+      0 0 0 1px rgba(139, 92, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 4px 12px rgba(124, 58, 237, 0.3);
+    z-index: 2;
   }
   
+  /* Subtle inner highlight for active state */
+  .service-toggle-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 60%);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Inactive state: transparent/ghost pill */
+  .service-toggle-item:not(.active) {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+  }
+  
+  /* Hover state for inactive tabs */
   .service-toggle-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
     color: var(--color-text-primary);
-    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  /* Hover state for active tab */
+  .service-toggle-item.active:hover {
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-400) 100%);
+    border-color: var(--color-primary-400);
+    color: #ffffff !important; /* Maintain white text on hover */
+    box-shadow: 
+      0 0 0 1px rgba(167, 139, 250, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 6px 16px rgba(124, 58, 237, 0.4);
+    transform: translateY(-1px);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Focus state - visible focus ring for keyboard accessibility */
   .service-toggle-item:focus {
     outline: none;
   }
@@ -505,14 +584,26 @@ const { title, subtitle, services } = Astro.props;
   .service-toggle-item:focus-visible {
     outline: 2px solid var(--color-primary-400);
     outline-offset: 2px;
-    border-color: var(--color-primary-400);
+    z-index: 3;
   }
   
-  .service-content {
+  .service-toggle-item.active:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 2px;
+  }
+  
+  /* Ensure text is always visible and high-contrast */
+  .service-toggle-item * {
+    color: inherit;
+    opacity: 1;
+  }
+  
+  .service-card-content {
     position: relative;
     width: 100%;
     overflow: visible;
-    margin-bottom: 0;
+    min-height: 380px;
+    height: 380px;
   }
   
   .service-panel {
@@ -522,7 +613,7 @@ const { title, subtitle, services } = Astro.props;
     right: 0;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.15s ease-out;
+    transition: opacity 0.2s ease-out;
     width: 100%;
     visibility: hidden;
   }
@@ -549,163 +640,130 @@ const { title, subtitle, services } = Astro.props;
     pointer-events: none;
   }
   
-  .service-block {
-    display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .service-block .h3 {
-    margin-bottom: var(--spacing-3);
-    text-align: center;
-  }
-  
-  .service-primary {
-    margin-bottom: var(--spacing-3);
-    text-align: center;
-  }
-  
-  .service-support {
-    color: var(--color-text-secondary);
-    line-height: 1.75;
+  .service-summary {
+    margin-bottom: 0; /* No bottom margin since media follows */
     margin-top: 0;
-    margin-bottom: var(--spacing-2);
     text-align: center;
+    padding: 0 var(--spacing-2);
   }
   
-  .service-scope {
+  .service-summary p {
     color: var(--color-text-secondary);
-    line-height: 1.75;
-    margin-top: 0;
-    margin-bottom: var(--spacing-5);
-    text-align: center;
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+    margin: 0;
+    max-width: 100%;
   }
   
-  .service-visual {
+  
+  .service-media {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: var(--spacing-4);
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
     overflow: visible;
+    width: 100%;
   }
   
   .service-image-container {
     position: relative;
-    max-width: 480px;
+    max-width: 100%;
     width: 100%;
     margin: 0 auto;
     overflow: visible;
     aspect-ratio: 480 / 290;
     min-height: 290px;
-    background: var(--color-background-secondary);
+    max-height: 320px;
+    background: transparent;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-3);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
   }
   
   .service-image {
     width: 100%;
     height: 100%;
-    max-width: 480px;
-    max-height: 290px;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     object-position: center;
-    border-radius: var(--radius-xl);
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.12),
-      0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    opacity: 0.95;
+    border-radius: var(--radius-md);
     display: block;
-    background: var(--color-background-secondary);
+    background: transparent;
+    border: none;
   }
   
-  .service-image-glow {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    background: linear-gradient(
-      135deg,
-      rgba(139, 92, 246, 0.12) 0%,
-      rgba(124, 58, 237, 0.08) 100%
-    );
-    border-radius: var(--radius-xl);
-    opacity: 0.6;
-    filter: blur(40px);
-    z-index: -1;
-  }
   
   /* Responsive Design */
-  @media (max-width: 1199px) {
-    .service-block {
-      max-width: 100%;
-    }
-  }
-  
   @media (max-width: 767px) {
-    .service-toggle-container {
-      padding: 0 var(--spacing-4);
-      width: 100%;
+    .service-header {
+      margin-bottom: var(--spacing-3);
+    }
+    
+    .service-card {
+      padding: var(--spacing-4) var(--spacing-4) var(--spacing-5);
+      margin-bottom: var(--spacing-3);
+    }
+    
+    .service-tabs-wrapper {
+      margin-bottom: var(--spacing-3);
+    }
+    
+    .service-tabs-track {
       max-width: 100%;
-      box-sizing: border-box;
+      padding: var(--spacing-1);
     }
     
     .service-toggle {
-      grid-template-columns: 1fr;
+      flex-direction: column;
       width: 100%;
-      max-width: 100%;
-      gap: var(--spacing-2);
+      gap: var(--spacing-1);
+      align-items: stretch;
     }
     
     .service-toggle-item {
-      text-align: center;
       width: 100%;
-      min-height: 48px;
-      padding: var(--spacing-4) var(--spacing-4);
-      font-size: var(--font-size-sm);
+      min-height: 40px;
+      height: 40px;
+      min-width: 100%;
+      flex: none;
     }
     
-    .service-toggle-indicator {
-      width: 100% !important;
-      transform: none !important;
-      top: auto;
-      bottom: 0;
-      height: 2px;
-      border-radius: 0;
+    
+    .service-card-content {
+      min-height: 320px;
+      height: 320px;
     }
     
-    .service-block {
-      max-width: 100%;
+    .service-image-container {
+      min-height: 240px;
+      max-height: 280px;
     }
     
-    .service-content {
-      min-height: 400px;
+    .service-summary {
+      margin-bottom: var(--spacing-3);
     }
   }
   
   @media (max-width: 479px) {
-    .service-toggle-container {
-      padding: 0 var(--spacing-3);
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
+    .service-card {
+      padding: var(--spacing-3) var(--spacing-3) var(--spacing-4);
     }
     
-    .service-toggle {
-      max-width: 100%;
-      width: 100%;
-      gap: var(--spacing-2);
+    .service-card-content {
+      min-height: 280px;
+      height: 280px;
     }
     
-    .service-toggle-item {
-      min-height: 48px;
-      padding: var(--spacing-3-5) var(--spacing-3);
-      font-size: var(--font-size-sm);
-    }
-    
-    .service-block {
-      max-width: 100%;
-      padding: 0 var(--spacing-2);
+    .service-image-container {
+      min-height: 200px;
+      max-height: 240px;
+      padding: var(--spacing-2);
     }
   }
 </style>

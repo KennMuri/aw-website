@@ -12,13 +12,13 @@ export interface Props {
 }
 
 const { 
-  title = "Built on Industry Standards",
+  title = "Shaping Industry Standards",
   frameworks = [
     {
       name: "W3OS Framework",
       logo: "/images/W3OS-Graphic.png",
       logoAlt: "W3OS Logo",
-      description: "W3OS compliance demonstrates security maturity. W3OS is the Web3 Operational Security Standard. Our audits align with W3OS guidelines for key management and access controls.",
+      description: "Created by Auditware as an open-source operational security standard for Web3 organizations.",
       linkText: "View Standard →",
       linkHref: "https://github.com/W3OSC/web3-opsec-standard"
     },
@@ -26,7 +26,7 @@ const {
       name: "SEAL Certification",
       logo: "/images/framework-logomark-circle-blue.svg",
       logoAlt: "SEAL Logo",
-      description: "SEAL provides consistent evaluation criteria. SEAL is a systematic security assessment framework. We apply SEAL methodology to structure security evaluations.",
+      description: "Our operational security methodology informed and was adopted by the SEAL framework.",
       linkText: "Learn more →",
       linkHref: "https://frameworks.securityalliance.org/"
     }
@@ -55,21 +55,9 @@ const {
               <h3 class="h5">{framework.name}</h3>
             </div>
             <div class="framework-description">
-              {(() => {
-                const sentences = framework.description.split(/\.\s+/).filter(s => s.trim()).slice(0, 3);
-                const result = [];
-                sentences.forEach((sentence, index) => {
-                  result.push(
-                    <p class={`body-base framework-sentence ${index === 0 ? 'framework-sentence--lead' : 'framework-sentence--support'}`}>
-                      {sentence.trim()}{index < sentences.length - 1 || sentence.endsWith('.') ? '' : '.'}
-                    </p>
-                  );
-                  if (index < sentences.length - 1) {
-                    result.push(<span class="framework-separator"></span>);
-                  }
-                });
-                return result;
-              })()}
+              <p class="body-base framework-sentence">
+                {framework.description}
+              </p>
             </div>
             {framework.linkHref && (
               <div class="framework-cta-wrapper">
@@ -87,13 +75,15 @@ const {
 
 <style>
   .frameworks-section {
-    padding: var(--spacing-4) 0;
+    padding: var(--spacing-3) 0;
     background: transparent;
+    border-top: none; /* Remove border-top since logo carousel handles the divider */
+    border-bottom: 1px solid var(--color-border-primary); /* Add border-bottom for divider before ServiceToggle */
   }
   
-  /* Reduce bottom padding when followed by ServiceToggle (connected sections) */
+  /* Match bottom padding to top padding for consistent spacing to divider */
   .frameworks-section:has(+ .service-section) {
-    padding-bottom: var(--spacing-2);
+    padding-bottom: var(--spacing-3);
   }
   
   .frameworks-content {
@@ -104,36 +94,31 @@ const {
   }
   
   .frameworks-title {
-    margin-bottom: var(--spacing-6);
     color: var(--color-text-primary);
+    /* margin-bottom handled by global.css */
   }
   
   .frameworks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-8);
-    justify-items: center;
+    gap: var(--spacing-6);
+    justify-items: stretch;
     align-items: stretch;
+    margin-top: 0;
   }
   
   .framework-card {
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
+    padding: var(--spacing-4) var(--spacing-5) var(--spacing-4);
     text-align: center;
     max-width: 500px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    transition: all var(--transition-base);
     min-height: 100%;
-  }
-  
-  .framework-card:hover {
-    border-color: var(--color-border-purple);
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-4px);
+    height: 100%;
   }
   
   .framework-card:focus-within {
@@ -145,15 +130,15 @@ const {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: var(--spacing-6);
-    min-height: 120px;
+    margin-bottom: var(--spacing-2);
+    min-height: auto;
     justify-content: flex-start;
   }
   
   .framework-logo {
     width: 64px;
     height: 64px;
-    margin-bottom: var(--spacing-5);
+    margin-bottom: var(--spacing-3);
     margin-top: 0;
     display: flex;
     align-items: center;
@@ -184,63 +169,30 @@ const {
   .framework-header h3 {
     color: var(--color-text-primary);
     margin: 0;
+    margin-bottom: var(--spacing-2);
     line-height: var(--line-height-tight);
     font-weight: var(--font-weight-semibold);
   }
   
   .framework-description {
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: var(--spacing-3);
     flex: 1;
-    display: flex;
-    flex-direction: column;
   }
   
   .framework-sentence {
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: var(--spacing-2-5);
-    max-width: 85%;
+    line-height: var(--line-height-normal);
+    margin: 0;
+    max-width: 90%;
     margin-left: auto;
     margin-right: auto;
-  }
-  
-  .framework-sentence--lead {
-    font-weight: 600;
-    color: var(--color-text-primary);
-    opacity: 1;
-    margin-bottom: var(--spacing-3);
-  }
-  
-  .framework-sentence--support {
-    opacity: 0.75;
-    font-weight: var(--font-weight-normal);
-  }
-  
-  .framework-sentence:last-child {
-    margin-bottom: 0;
-  }
-  
-  .framework-separator {
-    display: block;
-    width: 4px;
-    height: 4px;
-    background: var(--color-border-secondary);
-    border-radius: 50%;
-    margin: var(--spacing-2) auto;
-    opacity: 0.4;
-  }
-  
-  .framework-card p {
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-    margin-bottom: var(--spacing-6);
   }
   
   .framework-cta-wrapper {
     margin-top: auto;
     margin-bottom: 0;
-    padding-top: var(--spacing-8);
+    padding-top: var(--spacing-3);
     padding-bottom: 0;
     display: flex;
     justify-content: center;
@@ -293,7 +245,7 @@ const {
   
   @media (max-width: 479px) {
     .framework-card {
-      padding: var(--spacing-6);
+      padding: var(--spacing-4) var(--spacing-4);
     }
     
     .framework-logo {
