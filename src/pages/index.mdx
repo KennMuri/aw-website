@@ -22,7 +22,7 @@ export const pageTheme = homeTheme;
 
 <ModernHero 
   title="Web3's Operational Security Layer"
-  description="Protect your organization with comprehensive OpSec audits and real-time monitoring. Comply with W3OS and SEAL Certs."
+  description="Operational security audits and real-time monitoring. W3OS and SEAL compliant."
   primaryCta={{
     text: "Book An Audit",
     href: "/audits"
@@ -62,66 +62,78 @@ export const pageTheme = homeTheme;
 <FrameworksSection />
 
 <ServiceToggle 
-  title="Comprehensive Security Services"
-  subtitle="Expert-led audits and monitoring services designed to protect your entire organization"
+  title="End-to-End Security Operations"
+  subtitle="Systemized audits and continuous monitoring work together to protect your organization across code, infrastructure, and operations."
   services={[
     {
       id: "opsec-audit",
       name: "OpSec Audits",
-      description: "Holistic security reviews covering your entire organization. We don't just look at code - we protect your team, processes, and most sensitive assets with comprehensive W3OS and SEAL compliant assessments.",
+      description: "Protect your team, processes, and assets with W3OS and SEAL compliant security assessments. Reviews cover organizational security beyond code.",
       features: [
-        "Complete organizational security posture assessment",
-        "Team member security training and protocols",
-        "Process and workflow security analysis",
-        "Asset protection and key management review",
-        "Compliance with W3OS and SEAL Frameworks",
-        "Actionable remediation roadmap"
+        "Organizational security posture assessment",
+        "Team security training and protocols",
+        "Process and workflow analysis",
+        "Asset and key management review",
+        "W3OS and SEAL compliance",
+        "Remediation roadmap"
       ],
+      primary: "W3OS and SEAL-compliant security assessments that protect your organization beyond code.",
+      support: "We evaluate people, processes, and asset management to identify operational risk.",
+      scope: "Security posture, team protocols, workflows, key management, remediation roadmap.",
       image: "/images/key-aud.png",
       imageAlt: "Operational Security Audit Process"
     },
     {
       id: "sentry-platform",
       name: "Sentry Platform",
-      description: "Our flagship OpSec monitoring platform provides continuous security oversight for your entire organization. Monitor for device compromise, credential exposure, and operational security violations in real-time.",
+      description: "Continuous security monitoring detects device compromise, credential exposure, and operational violations in real-time across your organization.",
       features: [
-        "Active compromise detection and alerting",
+        "Compromise detection and alerting",
         "DevOps security monitoring (GitHub, CI/CD)",
-        "Frontend and DNS security monitoring", 
-        "EDR capabilities for endpoint protection",
+        "Frontend and DNS monitoring",
+        "Endpoint protection (EDR)",
         "Credential and account monitoring",
-        "Team-wide OpSec compliance tracking"
+        "OpSec compliance tracking"
       ],
+      primary: "Continuous monitoring that detects compromise and operational security violations in real time.",
+      support: "Sentry provides organization-wide visibility across devices, credentials, and development workflows.",
+      scope: "Alerts, DevOps monitoring, endpoint protection (EDR), credential tracking, OpSec compliance.",
       image: "/images/Screenshot-2025-07-14-at-2.46.51-PM.png",
       imageAlt: "Sentry OpSec Platform Dashboard"
     },
     {
       id: "smart-contracts",
-      name: "Smart Contract Audits",
-      description: "Industry-leading security audits for EVM and Rust-based smart contracts. Our auditors build security tools and have deep understanding of nuanced vulnerabilities that automated tools miss.",
+      name: "Smart Contracts",
+      description: "Security audits for EVM and Rust-based smart contracts. Manual review identifies vulnerabilities automated tools miss.",
       features: [
-        "EVM and Solana smart contract audits",
-        "Manual code review by expert auditors",
+        "EVM and Solana contract audits",
+        "Manual code review",
         "Automated vulnerability scanning",
-        "Business logic and economic security analysis",
-        "Gas optimization recommendations",
-        "Formal verification where applicable"
+        "Business logic and economic analysis",
+        "Gas optimization",
+        "Formal verification"
       ],
+      primary: "Expert-led security audits for EVM and Rust-based smart contracts.",
+      support: "Manual review complements automated tooling to uncover logic and economic vulnerabilities.",
+      scope: "EVM and Solana, manual review, automated scanning, business logic, gas optimization, formal verification.",
       image: "/images/code-aud.png",
       imageAlt: "Smart Contract Security Audit"
     },
     {
       id: "infrastructure",
-      name: "Infrastructure Security",
-      description: "Code is only as secure as the infrastructure running it. Our infrastructure audits cover cloud services, deployment pipelines, and hosting environments to prevent compromise at the infrastructure level.",
+      name: "Infrastructure",
+      description: "Infrastructure audits assess cloud services, deployment pipelines, and hosting environments to prevent infrastructure-level compromise.",
       features: [
         "Cloud security configuration review",
-        "CI/CD pipeline security assessment",
+        "CI/CD pipeline assessment",
         "Container and orchestration security",
         "Network security and segmentation",
         "Secrets management and rotation",
-        "Infrastructure as Code security review"
+        "Infrastructure as Code review"
       ],
+      primary: "Infrastructure security audits that prevent compromise at the deployment and cloud level.",
+      support: "We assess environments, pipelines, and configurations that code depends on.",
+      scope: "Cloud configs, CI/CD, containers, networking, secrets management, Infrastructure as Code review.",
       image: "/images/infra-aud.png",
       imageAlt: "Infrastructure Security Assessment"
     }

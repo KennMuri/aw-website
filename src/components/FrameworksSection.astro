@@ -18,7 +18,7 @@ const {
       name: "W3OS Framework",
       logo: "/images/W3OS-Graphic.png",
       logoAlt: "W3OS Logo",
-      description: "The Web3 Operational Security Standard (W3OS) provides comprehensive guidelines for operational security in decentralized organizations. We ensure full compliance with W3OS requirements, covering everything from key management to social engineering prevention.",
+      description: "W3OS compliance demonstrates security maturity. W3OS is the Web3 Operational Security Standard. Our audits align with W3OS guidelines for key management and access controls.",
       linkText: "View Standard →",
       linkHref: "https://github.com/W3OSC/web3-opsec-standard"
     },
@@ -26,8 +26,8 @@ const {
       name: "SEAL Certification",
       logo: "/images/framework-logomark-circle-blue.svg",
       logoAlt: "SEAL Logo",
-      description: "Security Alliance's SEAL (Security Engineering and Auditing Language) framework ensures systematic security assessment. Our audits follow SEAL methodology for consistent, thorough evaluation of your organization's security posture.",
-      linkText: "Learn More →",
+      description: "SEAL provides consistent evaluation criteria. SEAL is a systematic security assessment framework. We apply SEAL methodology to structure security evaluations.",
+      linkText: "Learn more →",
       linkHref: "https://frameworks.securityalliance.org/"
     }
   ]
@@ -42,20 +42,41 @@ const {
         {frameworks.map((framework) => (
           <div class="framework-card">
             <div class="framework-header">
-              <img 
-                src={framework.logo} 
-                alt={framework.logoAlt} 
-                class="framework-logo" 
-              />
+              <div class={`framework-logo ${framework.name.toLowerCase().includes('w3os') ? 'framework-logo--w3os' : 'framework-logo--seal'}`}>
+                <img 
+                  src={framework.logo} 
+                  alt={framework.logoAlt} 
+                  class="framework-logo-img"
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                />
+              </div>
               <h3 class="h5">{framework.name}</h3>
             </div>
-            <p class="body-base">
-              {framework.description}
-            </p>
+            <div class="framework-description">
+              {(() => {
+                const sentences = framework.description.split(/\.\s+/).filter(s => s.trim()).slice(0, 3);
+                const result = [];
+                sentences.forEach((sentence, index) => {
+                  result.push(
+                    <p class={`body-base framework-sentence ${index === 0 ? 'framework-sentence--lead' : 'framework-sentence--support'}`}>
+                      {sentence.trim()}{index < sentences.length - 1 || sentence.endsWith('.') ? '' : '.'}
+                    </p>
+                  );
+                  if (index < sentences.length - 1) {
+                    result.push(<span class="framework-separator"></span>);
+                  }
+                });
+                return result;
+              })()}
+            </div>
             {framework.linkHref && (
-              <a href={framework.linkHref} class="btn btn-ghost btn-sm">
-                {framework.linkText || "Learn More →"}
-              </a>
+              <div class="framework-cta-wrapper">
+                <a href={framework.linkHref} class="btn btn-ghost btn-sm">
+                  {framework.linkText || "View Framework →"}
+                </a>
+              </div>
             )}
           </div>
         ))}
@@ -66,17 +87,24 @@ const {
 
 <style>
   .frameworks-section {
-    padding: var(--spacing-20) 0;
+    padding: var(--spacing-4) 0;
     background: transparent;
+  }
+  
+  /* Reduce bottom padding when followed by ServiceToggle (connected sections) */
+  .frameworks-section:has(+ .service-section) {
+    padding-bottom: var(--spacing-2);
   }
   
   .frameworks-content {
     max-width: 1000px;
     margin: 0 auto;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   
   .frameworks-title {
-    margin-bottom: var(--spacing-12);
+    margin-bottom: var(--spacing-6);
     color: var(--color-text-primary);
   }
   
@@ -85,22 +113,32 @@ const {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: var(--spacing-8);
     justify-items: center;
+    align-items: stretch;
   }
   
   .framework-card {
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-8);
+    padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
     text-align: center;
     max-width: 500px;
     width: 100%;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-base);
+    min-height: 100%;
   }
   
   .framework-card:hover {
+    border-color: var(--color-border-purple);
+    box-shadow: var(--shadow-glow);
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+  }
+  
+  .framework-card:focus-within {
+    border-color: var(--color-border-purple);
+    box-shadow: var(--shadow-glow);
   }
   
   .framework-header {
@@ -108,17 +146,89 @@ const {
     flex-direction: column;
     align-items: center;
     margin-bottom: var(--spacing-6);
+    min-height: 120px;
+    justify-content: flex-start;
   }
   
   .framework-logo {
-    width: 60px;
-    height: 60px;
-    margin-bottom: var(--spacing-4);
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--spacing-5);
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 64px;
+    min-height: 64px;
+  }
+  
+  .framework-logo-img {
+    width: 100%;
+    height: 100%;
+    min-width: 64px;
+    min-height: 64px;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Optically balanced logo scaling */
+  .framework-logo--w3os {
+    transform: scale(1.95);
+  }
+  
+  .framework-logo--seal {
+    transform: scale(1.2);
   }
   
   .framework-header h3 {
     color: var(--color-text-primary);
     margin: 0;
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
+  }
+  
+  .framework-description {
+    margin-top: 0;
+    margin-bottom: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .framework-sentence {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-2-5);
+    max-width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .framework-sentence--lead {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    opacity: 1;
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .framework-sentence--support {
+    opacity: 0.75;
+    font-weight: var(--font-weight-normal);
+  }
+  
+  .framework-sentence:last-child {
+    margin-bottom: 0;
+  }
+  
+  .framework-separator {
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: var(--color-border-secondary);
+    border-radius: 50%;
+    margin: var(--spacing-2) auto;
+    opacity: 0.4;
   }
   
   .framework-card p {
@@ -127,21 +237,50 @@ const {
     margin-bottom: var(--spacing-6);
   }
   
+  .framework-cta-wrapper {
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-top: var(--spacing-8);
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
+  }
+  
   .btn-ghost {
     background: transparent;
     border: 1px solid var(--color-primary-400);
     color: var(--color-primary-400);
-    padding: var(--spacing-2) var(--spacing-4);
+    padding: var(--spacing-2-5) var(--spacing-5);
     border-radius: var(--radius-md);
     text-decoration: none;
     font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
     transition: all var(--transition-base);
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: var(--line-height-normal);
+    min-width: 140px;
+    min-height: 44px;
+    text-align: center;
+    touch-action: manipulation;
   }
   
   .btn-ghost:hover {
     background: var(--color-primary-400);
     color: var(--color-background-primary);
+    transform: translateY(-1px);
+  }
+  
+  .btn-ghost:focus {
+    outline: none;
+  }
+  
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
   }
   
   @media (max-width: 991px) {
@@ -158,13 +297,20 @@ const {
     }
     
     .framework-logo {
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
     }
     
     .frameworks-grid {
       grid-template-columns: 1fr;
       min-width: auto;
+    }
+    
+    .btn-ghost {
+      min-height: 48px;
+      min-width: 100%;
+      width: 100%;
+      padding: var(--spacing-3) var(--spacing-4);
     }
   }
 </style>

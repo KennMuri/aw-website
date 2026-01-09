@@ -1,7 +1,6 @@
 /* Premium Global Styles - Modern Design System */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+/* Fonts are loaded via link tags in BaseLayout.astro to avoid render-blocking */
 
 /* Reset and Base Styles */
 *,
@@ -142,6 +141,8 @@ h6 {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--spacing-6);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .container-sm {
@@ -165,9 +166,22 @@ h6 {
 }
 
 .section {
-  padding: var(--spacing-12) 0;
+  padding: var(--spacing-3) 0;
   border-top: 1px solid var(--color-border-primary);
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section > .container > *:first-child {
+  margin-top: var(--spacing-6);
+}
+
+.section > .container > *:last-child {
+  margin-bottom: var(--spacing-6);
 }
 
 .section::before {
@@ -182,15 +196,65 @@ h6 {
 }
 
 .section-sm {
-  padding: var(--spacing-10) 0;
+  padding: var(--spacing-2) 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-sm > .container > *:first-child {
+  margin-top: var(--spacing-5);
+}
+
+.section-sm > .container > *:last-child {
+  margin-bottom: var(--spacing-5);
 }
 
 .section-lg {
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-3) 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-lg > .container > *:first-child {
+  margin-top: var(--spacing-8);
+}
+
+.section-lg > .container > *:last-child {
+  margin-bottom: var(--spacing-8);
 }
 
 .section-xl {
-  padding: var(--spacing-20) 0;
+  padding: var(--spacing-4) 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-xl > .container > *:first-child {
+  margin-top: var(--spacing-10);
+}
+
+.section-xl > .container > *:last-child {
+  margin-bottom: var(--spacing-10);
+}
+
+/* Reduce spacing between logically connected sections */
+/* Frameworks → Services: Tighten connection */
+.frameworks-section + .service-section {
+  padding-top: var(--spacing-4);
+}
+
+/* Services → Sentry: Tighten connection */
+.service-section + .feature-stack-section {
+  padding-top: var(--spacing-4);
 }
 
 /* Grid System */
@@ -337,6 +401,10 @@ h6 {
 }
 
 .btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
   outline: 2px solid var(--color-primary-400);
   outline-offset: 2px;
 }
@@ -888,6 +956,16 @@ h6 {
   color: var(--color-primary-400);
 }
 
+.framework-badge:focus {
+  outline: none;
+}
+
+.framework-badge:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+  border-color: var(--color-primary-400);
+}
+
 /* Framework Badge Icon Links - Compact Version */
 .framework-badge-icon-link {
   display: inline-flex;
@@ -901,6 +979,16 @@ h6 {
 .framework-badge-icon-link:hover {
   transform: translateY(-2px) scale(1.05);
   opacity: 0.8;
+}
+
+.framework-badge-icon-link:focus {
+  outline: none;
+}
+
+.framework-badge-icon-link:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 4px;
+  border-radius: var(--radius-md);
 }
 
 .framework-badge-icon-link .framework-badge-icon {
@@ -1034,7 +1122,15 @@ h6 {
 
 @media (max-width: 767px) {
   .section {
-    padding: var(--spacing-16) 0;
+    padding: var(--spacing-3) 0;
+  }
+  
+  .section > .container > *:first-child {
+    margin-top: var(--spacing-5);
+  }
+  
+  .section > .container > *:last-child {
+    margin-bottom: var(--spacing-5);
   }
   
   .hero {
@@ -1077,6 +1173,16 @@ h6 {
   
   .logo-carousel-track {
     gap: var(--spacing-8);
+  }
+  
+  /* Ensure buttons meet tap target requirements on mobile */
+  .btn {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  .btn-lg {
+    min-height: 48px;
   }
 }
 
@@ -1132,10 +1238,11 @@ h6 {
 }
 
 /* Scroll Animation Utilities */
+/* Premium, minimal motion animations - opacity and subtle transform only */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;

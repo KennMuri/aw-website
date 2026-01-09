@@ -62,8 +62,8 @@ const {
           <div class="expertise-highlights">
             {highlights.map((highlight) => (
               <div class="expertise-item">
-                <h4 class="h6">{highlight.title}</h4>
-                <p class="body-small">{highlight.description}</p>
+                <div class="expertise-label">{highlight.title}</div>
+                <p class="expertise-text-content">{highlight.description}</p>
               </div>
             ))}
           </div>
@@ -86,26 +86,76 @@ const {
 
 <style>
   .expertise-section {
-    padding: var(--spacing-20) 0;
+    padding: var(--spacing-4) 0;
     background: transparent;
+    position: relative;
+  }
+  
+  .expertise-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-primary-500), transparent);
+    opacity: 0.2;
+    z-index: 1;
+  }
+  
+  .expertise-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .expertise-content {
+    position: relative;
+    z-index: 1;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   
   .expertise-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-16);
-    align-items: center;
+    gap: var(--spacing-10);
+    align-items: start;
+  }
+  
+  .expertise-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   
   .expertise-text h2 {
-    margin-bottom: var(--spacing-6);
+    margin-top: 0;
+    margin-bottom: var(--spacing-5);
     color: var(--color-text-primary);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-black);
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
   }
   
   .expertise-description {
-    margin-bottom: var(--spacing-8);
+    margin-bottom: var(--spacing-6);
     color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+    max-width: 90%;
+  }
+  
+  /* Align first highlight with first metric card */
+  .expertise-highlights {
+    padding-top: var(--spacing-2);
   }
   
   .expertise-highlights {
@@ -114,60 +164,121 @@ const {
     gap: var(--spacing-6);
   }
   
-  .expertise-item h4 {
-    margin-bottom: var(--spacing-2);
-    color: var(--color-text-primary);
+  .expertise-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1-5);
   }
   
-  .expertise-item p {
+  .expertise-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0;
+    opacity: 0.6;
+  }
+  
+  .expertise-text-content {
     color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+    margin: 0;
+    font-weight: var(--font-weight-normal);
+  }
+  
+  .expertise-visual {
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   
   .expertise-metrics {
     display: grid;
-    gap: var(--spacing-4);
+    gap: var(--spacing-6);
+  }
+  
+  /* Vertical rhythm alignment: first metric aligns with first highlight */
+  .expertise-metrics .metric-card:first-child {
+    margin-top: 0;
   }
   
   .metric-card {
     background: var(--color-background-primary);
-    border: 1px solid var(--color-border-primary);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-6);
+    padding: var(--spacing-7) var(--spacing-6);
     text-align: center;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    transition: all var(--transition-base);
   }
   
   .metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-purple);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+  }
+  
+  .metric-card:focus-within {
+    border-color: var(--color-border-purple);
+    box-shadow: var(--shadow-glow);
   }
   
   .metric-title {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-3);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-4);
     font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
   }
   
   .metric-value {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
     color: var(--color-primary-400);
     margin-bottom: var(--spacing-2);
-    line-height: var(--line-height-tight);
+    line-height: var(--line-height-none);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
   }
   
   .metric-trend {
     font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+    opacity: 0.8;
+    margin-top: var(--spacing-1);
   }
   
   @media (max-width: 1199px) {
+    .expertise-section {
+      padding: var(--spacing-3) 0;
+    }
+    
+    .expertise-content {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    
     .expertise-grid {
       grid-template-columns: 1fr;
-      gap: var(--spacing-12);
+      gap: var(--spacing-8);
       text-align: center;
+    }
+    
+    .expertise-text h2 {
+      margin-bottom: var(--spacing-6);
+    }
+    
+    .expertise-description {
+      max-width: 100%;
+      margin-bottom: var(--spacing-8);
+    }
+    
+    .expertise-visual {
+      padding-top: var(--spacing-4);
     }
     
     .expertise-metrics {
@@ -178,15 +289,42 @@ const {
   }
   
   @media (max-width: 767px) {
-    .expertise-metrics {
-      grid-template-columns: 1fr;
-      max-width: 300px;
+    .expertise-section {
+      padding: var(--spacing-3) 0;
+    }
+    
+    .expertise-content {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    
+    .expertise-text h2 {
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--spacing-5);
+    }
+    
+    .expertise-description {
+      margin-bottom: var(--spacing-6);
     }
     
     .expertise-highlights {
       text-align: left;
-      max-width: 500px;
-      margin: 0 auto;
+      max-width: 100%;
+      gap: var(--spacing-5);
+    }
+    
+    .expertise-metrics {
+      grid-template-columns: 1fr;
+      max-width: 100%;
+      gap: var(--spacing-5);
+    }
+    
+    .metric-card {
+      padding: var(--spacing-6) var(--spacing-5);
+    }
+    
+    .metric-value {
+      font-size: var(--font-size-2xl);
     }
   }
 </style>

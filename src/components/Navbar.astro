@@ -12,9 +12,10 @@
               width="702" 
               height="Auto" 
               alt="Auditware Logo" 
-              loading="lazy" 
+              loading="eager" 
               src="/images/Logo-hi-vis.png" 
               class="brand-image"
+              fetchpriority="high"
             />
           </a>
           <nav class="nav-menu" id="navMenu">
@@ -111,6 +112,16 @@
     transform: scale(1.02);
     opacity: 0.9;
   }
+  
+  .brand:focus {
+    outline: none;
+  }
+  
+  .brand:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 4px;
+    border-radius: var(--radius-md);
+  }
 
   .brand-image {
     max-width: 160px;
@@ -171,6 +182,16 @@
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.15);
   }
+  
+  .nav-button:focus {
+    outline: none;
+  }
+  
+  .nav-button:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+    border-color: var(--color-primary-400);
+  }
 
   /* Colored glow effects for each page */
   .nav-button[data-page="home"]:hover,
@@ -229,6 +250,11 @@
     box-shadow: 0 0 20px rgba(79, 99, 255, 0.5);
     transform: translateY(-2px);
   }
+  
+  .nav-button-cta:focus-visible {
+    outline: 2px solid rgba(79, 99, 255, 0.8);
+    outline-offset: 2px;
+  }
 
   /* Mobile menu button */
   .menu-button {
@@ -244,6 +270,16 @@
   .menu-button:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.12);
+  }
+  
+  .menu-button:focus {
+    outline: none;
+  }
+  
+  .menu-button:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+    border-color: var(--color-primary-400);
   }
 
   .menu-icon {
@@ -373,8 +409,8 @@
   }
 </style>
 
-<script>
-  // Mobile menu toggle
+<script defer>
+  // Mobile menu toggle - Deferred to avoid blocking initial render
   const menuButton = document.getElementById('menuButton');
   const navMenuLinkHolder = document.getElementById('navMenuLinkHolder');
 

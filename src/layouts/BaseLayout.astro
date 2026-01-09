@@ -102,7 +102,7 @@ if (structuredData) {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={imageUrl} />
   
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data (JSON-LD) - Non-blocking -->
   <script type="application/ld+json" set:html={JSON.stringify(allSchemas)} />
   
   <!-- Favicon -->
@@ -116,7 +116,10 @@ if (structuredData) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   
-  <!-- Fonts - Optimized Loading with display=swap -->
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/images/Logo-hi-vis.png" as="image" type="image/png" />
+  
+  <!-- Fonts - Optimized Loading with display=swap to prevent FOIT -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
@@ -137,8 +140,8 @@ if (structuredData) {
   <SiteBackground />
   <slot />
   
-  <script>
-    // Scroll reveal animations
+  <script defer>
+    // Scroll reveal animations - Deferred to avoid blocking initial render
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -178,6 +181,12 @@ if (structuredData) {
   * {
     box-sizing: border-box;
   }
+  
+  html {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
 
   body {
     color: #fff;
@@ -188,6 +197,9 @@ if (structuredData) {
     margin: 0;
     padding: 0;
     position: relative;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
   }
   
   body > * {

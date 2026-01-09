@@ -124,7 +124,7 @@ const cs = colorScheme;
 `}>
   <div class="container">
     <div class="hero-content">
-      <div class="hero-grid">
+      <div class="hero-stack">
         <div class="hero-text">
           {subtitle && (
             <div class="hero-subtitle-badge">
@@ -146,7 +146,7 @@ const cs = colorScheme;
                 <a href={badge.href} class="framework-badge-icon-link" target="_blank" rel="noopener noreferrer" title={badge.text}>
                   {badge.icon && (
                     badge.icon.startsWith('http') ? (
-                      <img src={badge.icon} alt={badge.text} class="framework-badge-icon" loading="lazy" />
+                      <img src={badge.icon} alt={badge.text} class="framework-badge-icon" width="48" height="48" loading="lazy" />
                     ) : (
                       <Image src={badge.icon} alt={badge.text} class="framework-badge-icon" width={48} height={48} loading="lazy" />
                     )
@@ -159,14 +159,14 @@ const cs = colorScheme;
           <div class="hero-cta">
             <a href={primaryCta.href} class="btn btn-primary btn-lg">
               {primaryCta.text}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
             {secondaryCta && (
               <a href={secondaryCta.href} class="btn btn-secondary btn-lg">
                 {secondaryCta.text}
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
@@ -183,6 +183,7 @@ const cs = colorScheme;
                   alt={imageAlt}
                   class="hero-image"
                   loading="eager"
+                  fetchpriority="high"
                 />
               ) : (
                 <Image 
@@ -193,6 +194,7 @@ const cs = colorScheme;
                   height={450}
                   loading="eager"
                   format="webp"
+                  fetchpriority="high"
                 />
               )}
               <div class="hero-image-glow"></div>
@@ -216,44 +218,87 @@ const cs = colorScheme;
     display: flex;
     align-items: center;
     background: transparent;
-    overflow: hidden;
-    padding: var(--spacing-8) 0;
+    overflow: visible;
+    padding: var(--spacing-10) 0 var(--spacing-12);
     border-bottom: 1px solid var(--color-border-primary);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .hero-content {
     position: relative;
     z-index: 1;
     width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
   }
   
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: var(--spacing-20);
+  .hero-stack {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    min-height: auto;
+    text-align: center;
+    gap: var(--spacing-12);
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  /* Ensure container doesn't clip content */
+  .hero .container {
+    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    max-width: 100%;
   }
   
   .hero-text {
-    max-width: 660px;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
+  }
+  
+  /* Subtle overlay to reduce background pattern noise behind text */
+  .hero-text::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    right: -10%;
+    bottom: -20%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
   }
   
   .hero-subtitle-badge {
     margin-bottom: var(--spacing-8);
-    animation: fade-in-up 0.6s var(--ease-out);
+    animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
   }
   
   .hero-title {
     font-size: clamp(2.5rem, 5vw, 5rem);
     font-weight: var(--font-weight-black);
-    line-height: 1.15;
-    margin-top: var(--spacing-6);
+    line-height: 1.1;
+    margin-top: 0;
     margin-bottom: var(--spacing-8);
-    letter-spacing: -0.025em;
-    animation: fade-in-up 0.6s 0.1s var(--ease-out) backwards;
+    letter-spacing: -0.03em;
+    animation: fade-in-up 1.2s 0.1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     text-wrap: balance;
     font-feature-settings: 'liga' 1, 'kern' 1;
+    will-change: opacity, transform;
     background: linear-gradient(
       135deg,
       rgb(var(--gradient-text-1)) 0%,
@@ -269,12 +314,13 @@ const cs = colorScheme;
   }
   
   .hero-description {
-    margin-bottom: var(--spacing-10);
-    max-width: 560px;
+    margin-bottom: var(--spacing-8);
+    max-width: 600px;
     font-size: var(--font-size-xl);
-    line-height: var(--line-height-relaxed);
+    line-height: var(--line-height-normal);
     color: rgb(var(--description-color));
-    animation: fade-in-up 0.6s 0.2s var(--ease-out) backwards;
+    animation: fade-in-up 1.1s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
   }
   
   .hero-badges {
@@ -282,65 +328,90 @@ const cs = colorScheme;
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--spacing-5);
-    margin-bottom: var(--spacing-12);
-    animation: fade-in-up 0.6s 0.3s var(--ease-out) backwards;
+    margin-bottom: var(--spacing-8);
+    justify-content: center;
+    animation: fade-in-up 1.1s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
   }
   
   .hero-cta {
     display: flex;
     gap: var(--spacing-4);
     flex-wrap: wrap;
-    animation: fade-in-up 0.6s 0.4s var(--ease-out) backwards;
+    justify-content: center;
+    margin-bottom: 0;
+    animation: fade-in-up 1.1s 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
+    overflow: visible;
+    padding: var(--spacing-2) 0;
+    position: relative;
   }
   
   .hero-visual {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fade-in 0.8s 0.5s var(--ease-out) backwards;
+    margin-top: var(--spacing-5);
+    animation: fade-in 1.4s 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    position: relative;
+    z-index: 1;
+    will-change: opacity;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
   }
   
   .hero-image-container {
     position: relative;
-    max-width: 650px;
+    max-width: 800px;
     width: 100%;
+    aspect-ratio: 650 / 450;
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    box-sizing: border-box;
   }
+  
+  /* Vignette effect removed */
   
   .hero-image {
     width: 100%;
-    height: auto;
-    border-radius: var(--radius-3xl);
-    box-shadow: var(--shadow-elevation-high);
-    border: 1px solid rgba(var(--image-border-color), var(--image-border-opacity));
-    transition: transform var(--transition-slower), box-shadow var(--transition-slower);
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+    position: relative;
+    z-index: 1;
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* Subtle grounding shadow that blends with dark background */
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.4)) 
+            drop-shadow(0 4px 16px rgba(0, 0, 0, 0.3))
+            drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
   }
   
-  .hero-image-container:hover .hero-image {
-    transform: translateY(-8px);
-    box-shadow: 0 0 0 1px rgba(var(--image-border-color), calc(var(--image-border-opacity) + 0.1)), 
-                0 12px 48px rgba(var(--image-border-color), 0.2);
-  }
-  
+  /* Very subtle ambient glow - much more restrained */
   .hero-image-glow {
     position: absolute;
-    top: 30px;
-    left: 30px;
-    right: 30px;
-    bottom: 30px;
-    background: linear-gradient(
-      135deg, 
-      rgba(var(--image-glow-start), var(--image-glow-start-opacity)) 0%, 
-      rgba(var(--image-glow-end), var(--image-glow-end-opacity)) 100%
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(var(--image-glow-start), calc(var(--image-glow-start-opacity) * 0.15)) 0%,
+      rgba(var(--image-glow-end), calc(var(--image-glow-end-opacity) * 0.15)) 50%,
+      transparent 100%
     );
-    border-radius: var(--radius-3xl);
-    opacity: 0.3;
-    filter: blur(50px);
-    z-index: -1;
-    transition: opacity var(--transition-slower);
-  }
-  
-  .hero-image-container:hover .hero-image-glow {
-    opacity: 0.5;
+    border-radius: var(--radius-lg);
+    opacity: 0.08;
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
   }
   
   /* Background Elements */
@@ -360,25 +431,80 @@ const cs = colorScheme;
     border-color: rgba(var(--button-border-color), var(--button-border-opacity));
     box-shadow: 0 0 0 1px rgba(var(--button-border-color), calc(var(--button-border-opacity) * 0.5)), 
                 0 4px 20px rgba(var(--button-primary-start), 0.3);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hero .btn-primary:hover {
     background: linear-gradient(135deg, rgb(var(--button-primary-hover-start)) 0%, rgb(var(--button-primary-hover-end)) 100%);
     border-color: rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1));
     box-shadow: 0 0 0 1px rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1)), 
-                0 8px 32px rgba(var(--button-primary-start), 0.4);
-    transform: translateY(-2px);
+                0 12px 40px rgba(var(--button-primary-start), 0.5),
+                0 4px 16px rgba(var(--button-primary-start), 0.3);
+    transform: translateY(-2px) scale(1.01);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
-
+  
+  /* Arrow icon animation */
+  .hero .btn-primary .btn-arrow {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+  
+  .hero .btn-primary:hover .btn-arrow {
+    transform: translateX(2px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hero .btn-primary:focus {
+    outline: none;
+  }
+  
+  .hero .btn-primary:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+  }
+  
   .hero .btn-secondary {
     background: rgba(var(--button-primary-start), 0.1);
     border-color: rgba(var(--button-border-color), var(--button-border-opacity));
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
+  
   .hero .btn-secondary:hover {
     background: rgba(var(--button-primary-start), 0.15);
     border-color: rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1));
-    box-shadow: 0 4px 16px rgba(var(--button-primary-start), 0.2);
+    box-shadow: 0 8px 24px rgba(var(--button-primary-start), 0.3),
+                0 4px 12px rgba(var(--button-primary-start), 0.2);
+    transform: translateY(-2px) scale(1.01);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  /* Arrow icon animation for secondary button */
+  .hero .btn-secondary .btn-arrow {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+  
+  .hero .btn-secondary:hover .btn-arrow {
+    transform: translateX(2px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hero .btn-secondary:focus {
+    outline: none;
+  }
+  
+  .hero .btn-secondary:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
   }
 
   /* Dynamic Badge Styling */
@@ -401,12 +527,12 @@ const cs = colorScheme;
     background-image: 
       radial-gradient(circle at 1px 1px, rgba(var(--grid-pattern-color), var(--grid-pattern-opacity)) 1px, transparent 0);
     background-size: 48px 48px;
-    opacity: 0.4;
+    opacity: 0.25;
   }
 
   /* Dotted Background Pattern */
   .hero-dotted-pattern {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -416,50 +542,51 @@ const cs = colorScheme;
     background-size: 50px 50px;
     pointer-events: none;
     z-index: -1;
+    overflow: hidden;
   }
   
   
   /* Responsive Design */
   @media (max-width: 1199px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-16);
-      text-align: center;
+    .hero-stack {
+      gap: var(--spacing-10);
     }
     
     .hero-text {
-      max-width: none;
-      margin: 0 auto;
+      max-width: 100%;
     }
     
-    .hero-description {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .hero-badges {
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .hero-cta {
-      justify-content: center;
+    .hero-image-container {
+      max-width: 100%;
     }
   }
   
   @media (max-width: 767px) {
     .hero {
-      padding: var(--spacing-6) 0;
+      padding: var(--spacing-8) 0 var(--spacing-10);
     }
     
-    .hero-grid {
-      gap: var(--spacing-12);
-      min-height: auto;
+    .hero-stack {
+      gap: var(--spacing-10);
+    }
+    
+    .hero-title {
+      margin-bottom: var(--spacing-6);
+      letter-spacing: -0.025em;
     }
     
     .hero-description {
       font-size: var(--font-size-lg);
-      margin-bottom: var(--spacing-8);
+      margin-bottom: var(--spacing-6);
+      line-height: var(--line-height-normal);
+    }
+    
+    .hero-badges {
+      margin-bottom: var(--spacing-6);
+    }
+    
+    .hero-visual {
+      margin-top: var(--spacing-4);
     }
     
     .hero-cta {
@@ -467,15 +594,29 @@ const cs = colorScheme;
       align-items: center;
     }
     
+    .hero-cta {
+      gap: var(--spacing-3);
+    }
+    
     .hero-cta .btn {
       width: 100%;
-      max-width: 320px;
+      max-width: 100%;
+      min-height: 48px;
+      padding: var(--spacing-4) var(--spacing-6);
+    }
+    
+    .hero-cta .btn-lg {
+      min-height: 48px;
     }
   }
   
   @media (max-width: 479px) {
     .hero {
-      padding: var(--spacing-4) 0;
+      padding: var(--spacing-6) 0 var(--spacing-8);
+    }
+    
+    .hero-stack {
+      gap: var(--spacing-8);
     }
     
     .hero-badges {
@@ -484,6 +625,24 @@ const cs = colorScheme;
     
     .hero-description {
       font-size: var(--font-size-base);
+      margin-bottom: var(--spacing-6);
+    }
+    
+    .hero-visual {
+      margin-top: var(--spacing-4);
+    }
+    
+    .hero-badges {
+      gap: var(--spacing-3);
+    }
+    
+    .framework-badge-icon-link {
+      min-width: 48px;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
     }
     
     .framework-badge-icon-link .framework-badge-icon {

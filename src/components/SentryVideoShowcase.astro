@@ -8,6 +8,8 @@
         src="/images/Sentry-logo.png" 
         alt="Sentry Logo" 
         class="sentry-logo"
+        width="280"
+        height="86"
         loading="lazy"
       />
     </div>
@@ -19,7 +21,9 @@
         muted
         loop
         playsinline
+        preload="metadata"
         poster="https://via.placeholder.com/1920x1080/000000/FFFFFF?text=Sentry+Video"
+        loading="lazy"
       >
         <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
         Your browser does not support the video tag.
@@ -30,9 +34,27 @@
 
 <style>
   .feature-stack-section {
-    padding: 120px 0;
+    padding: var(--spacing-4) 0 var(--spacing-6) 0;
     background: #000000;
     overflow: hidden;
+    border-bottom: 1px solid var(--color-border-primary);
+    position: relative;
+  }
+  
+  .video-container {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .feature-stack-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-primary-500), transparent);
+    opacity: 0.2;
   }
 
   .video-container {
@@ -47,18 +69,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 86px;
   }
 
   .sentry-logo {
     height: 86px;
     width: auto;
     max-width: 280px;
+    min-height: 86px;
     object-fit: contain;
+    display: block;
   }
 
   .video-wrapper {
     position: relative;
     width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
     aspect-ratio: 16 / 9;
     border-radius: 18px;
     overflow: hidden;
@@ -101,7 +128,12 @@
   /* Responsive Design */
   @media (max-width: 1199px) {
     .feature-stack-section {
-      padding: 100px 0;
+      padding: var(--spacing-3) 0 var(--spacing-5) 0;
+    }
+    
+    .video-container {
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .video-container {
@@ -128,7 +160,12 @@
 
   @media (max-width: 767px) {
     .feature-stack-section {
-      padding: 80px 0;
+      padding: var(--spacing-3) 0 var(--spacing-5) 0;
+    }
+    
+    .video-container {
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .video-container {
@@ -156,7 +193,12 @@
 
   @media (max-width: 479px) {
     .feature-stack-section {
-      padding: 60px 0;
+      padding: var(--spacing-2) 0 var(--spacing-4) 0;
+    }
+    
+    .video-container {
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .video-container {

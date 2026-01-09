@@ -7,6 +7,9 @@ export interface Props {
     name: string;
     description: string;
     features: string[];
+    primary?: string;
+    support?: string;
+    scope?: string;
     image: string;
     imageAlt: string;
   }>;
@@ -27,11 +30,17 @@ const { title, subtitle, services } = Astro.props;
     </div>
     
     <div class="service-toggle-container">
-      <div class="service-toggle" id="service-toggle">
+      <div class="service-toggle" id="service-toggle" role="tablist" aria-label="Security Services">
+        <div class="service-toggle-indicator"></div>
         {services.map((service, index) => (
           <button 
             class={`service-toggle-item ${index === 0 ? 'active' : ''}`}
             data-service={service.id}
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            aria-controls={`panel-${service.id}`}
+            id={`tab-${service.id}`}
+            tabindex={index === 0 ? '0' : '-1'}
           >
             {service.name}
           </button>
@@ -44,28 +53,30 @@ const { title, subtitle, services } = Astro.props;
         <div 
           class={`service-panel ${index === 0 ? 'active' : ''}`}
           data-panel={service.id}
+          id={`panel-${service.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${service.id}`}
+          aria-hidden={index === 0 ? 'false' : 'true'}
         >
-          <div class="service-grid">
-            <div class="service-info">
-              <h3 class="h3 gradient-text">{service.name}</h3>
-              <p class="body-large">{service.description}</p>
-              <ul class="service-features">
-                {service.features.map((feature) => (
-                  <li class="service-feature">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div class="service-block">
+            <h3 class="h3 gradient-text">{service.name}</h3>
+            {service.primary && (
+              <p class="body-large service-primary">{service.primary}</p>
+            )}
+            {service.support && (
+              <p class="body-base service-support">{service.support}</p>
+            )}
+            {service.scope && (
+              <p class="body-base service-scope">{service.scope}</p>
+            )}
             <div class="service-visual">
               <div class="service-image-container">
                 <img 
                   src={service.image} 
                   alt={service.imageAlt}
                   class="service-image"
+                  width="480"
+                  height="290"
                   loading="lazy"
                 />
                 <div class="service-image-glow"></div>
@@ -78,33 +89,327 @@ const { title, subtitle, services } = Astro.props;
   </div>
 </section>
 
-<script>
-  // Service toggle functionality
+<script defer>
+  // Service toggle functionality - Deferred to avoid blocking initial render
   document.addEventListener('DOMContentLoaded', function() {
     const toggleItems = document.querySelectorAll('.service-toggle-item');
     const panels = document.querySelectorAll('.service-panel');
+    const indicator = document.querySelector('.service-toggle-indicator');
+    const toggle = document.querySelector('.service-toggle');
+    const contentContainer = document.querySelector('.service-content');
     
+    function updateIndicator(activeItem) {
+      if (!indicator || !toggle) return;
+      
+      const toggleRect = toggle.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+      
+      // Calculate position relative to toggle container
+      const left = itemRect.left - toggleRect.left;
+      const width = itemRect.width;
+      
+      indicator.style.width = `${width}px`;
+      indicator.style.transform = `translateX(${left}px)`;
+    }
+    
+    function updateContainerHeight() {
+      if (!contentContainer) return;
+      
+      // Find the tallest panel by measuring all panels
+      let maxHeight = 0;
+      
+      panels.forEach((panel) => {
+        const isActive = panel.classList.contains('active');
+        
+        // Temporarily show panel to measure
+        const originalPosition = panel.style.position;
+        const originalOpacity = panel.style.opacity;
+        const originalVisibility = panel.style.visibility;
+        const originalPointerEvents = panel.style.pointerEvents;
+        const originalZIndex = panel.style.zIndex;
+        
+        // Force panel to be visible for measurement
+        panel.style.position = 'relative';
+        panel.style.opacity = '1';
+        panel.style.visibility = 'visible';
+        panel.style.pointerEvents = 'none';
+        panel.style.zIndex = '-1';
+        panel.style.height = 'auto';
+        
+        // Force a reflow to ensure accurate measurement
+        void panel.offsetHeight;
+        
+        // Use scrollHeight to get full content height including margins and overflow
+        const height = Math.max(panel.scrollHeight, panel.offsetHeight);
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+        
+        // Restore original state based on active status
+        if (isActive) {
+          panel.style.position = 'relative';
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.pointerEvents = 'auto';
+          panel.style.zIndex = '';
+          panel.style.height = '';
+        } else {
+          panel.style.position = originalPosition || 'absolute';
+          panel.style.opacity = originalOpacity || '0';
+          panel.style.visibility = originalVisibility || 'hidden';
+          panel.style.pointerEvents = originalPointerEvents || 'none';
+          panel.style.zIndex = originalZIndex || '';
+          panel.style.height = '';
+        }
+      });
+      
+      // Set container height to tallest panel with a small buffer for margins
+      // Only update if height changed to prevent unnecessary reflows
+      const newHeight = maxHeight > 0 ? `${maxHeight + 40}px` : 'auto';
+      if (contentContainer.style.height !== newHeight) {
+        contentContainer.style.height = newHeight;
+        contentContainer.style.minHeight = newHeight;
+      }
+    }
+    
+    // Wait for all images to load before calculating height
+    function waitForImages(callback) {
+      const images = document.querySelectorAll('.service-image');
+      let loadedCount = 0;
+      const totalImages = images.length;
+      
+      if (totalImages === 0) {
+        callback();
+        return;
+      }
+      
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            callback();
+          }
+        } else {
+          img.addEventListener('load', () => {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          });
+          img.addEventListener('error', () => {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          });
+        }
+      });
+    }
+    
+    // Initialize first panel state explicitly
+    const firstPanel = document.querySelector('.service-panel.active') || document.querySelector('.service-panel:first-child');
+    if (firstPanel) {
+      firstPanel.classList.add('active');
+      firstPanel.setAttribute('aria-hidden', 'false');
+      firstPanel.style.position = 'relative';
+      firstPanel.style.opacity = '1';
+      firstPanel.style.visibility = 'visible';
+      firstPanel.style.pointerEvents = 'auto';
+      
+      // Ensure other panels are hidden
+      panels.forEach((panel, index) => {
+        if (panel !== firstPanel) {
+          panel.classList.remove('active');
+          panel.setAttribute('aria-hidden', 'true');
+          panel.style.position = 'absolute';
+          panel.style.opacity = '0';
+          panel.style.visibility = 'hidden';
+          panel.style.pointerEvents = 'none';
+        }
+      });
+    }
+    
+    // Initialize indicator position for first active item
+    const firstActive = document.querySelector('.service-toggle-item.active') || document.querySelector('.service-toggle-item:first-child');
+    if (firstActive) {
+      if (!firstActive.classList.contains('active')) {
+        firstActive.classList.add('active');
+      }
+      firstActive.setAttribute('aria-selected', 'true');
+      firstActive.setAttribute('tabindex', '0');
+      if (indicator) {
+        // Small delay to ensure layout is complete
+        requestAnimationFrame(() => {
+          updateIndicator(firstActive);
+        });
+      }
+    }
+    
+    // Ensure other tabs have correct initial ARIA state
+    toggleItems.forEach((item, index) => {
+      if (item !== firstActive) {
+        item.setAttribute('aria-selected', 'false');
+        item.setAttribute('tabindex', '-1');
+      }
+    });
+    
+    // Initialize container height immediately with a stable initial height
+    // This prevents layout shift before images load
+    // Use responsive height based on viewport - content-driven sizing
+    if (contentContainer) {
+      const isMobile = window.innerWidth <= 767;
+      const initialHeight = isMobile ? '400px' : '450px';
+      contentContainer.style.height = initialHeight;
+      contentContainer.style.minHeight = initialHeight;
+    }
+    
+    // Update height after layout is stable
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        updateContainerHeight();
+      });
+    });
+    
+    waitForImages(() => {
+      // Small delay to ensure layout is complete
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateContainerHeight();
+        });
+      });
+    });
+    
+    // Update height on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Set initial stable height before recalculating - content-driven sizing
+        if (contentContainer) {
+          const isMobile = window.innerWidth <= 767;
+          const initialHeight = isMobile ? '400px' : '450px';
+          contentContainer.style.height = initialHeight;
+          contentContainer.style.minHeight = initialHeight;
+        }
+        waitForImages(() => {
+          requestAnimationFrame(() => {
+            updateContainerHeight();
+          });
+        });
+      }, 100);
+    });
+    
+    // Update height when images load (for lazy-loaded images)
+    const imageObserver = new MutationObserver(() => {
+      waitForImages(() => {
+        updateContainerHeight();
+      });
+    });
+    
+    // Observe service-content for image additions
+    if (contentContainer) {
+      imageObserver.observe(contentContainer, {
+        childList: true,
+        subtree: true
+      });
+    }
+    
+    // Function to switch tabs
+    function switchTab(targetItem, focusItem = false) {
+      if (!targetItem) return;
+      
+      const serviceId = targetItem.getAttribute('data-service');
+      
+      // Remove active class and update ARIA from all items and panels
+      toggleItems.forEach((toggle, index) => {
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-selected', 'false');
+        toggle.setAttribute('tabindex', '-1');
+      });
+      
+      panels.forEach(panel => {
+        panel.classList.remove('active');
+        panel.setAttribute('aria-hidden', 'true');
+        if (!panel.classList.contains('active')) {
+          panel.style.opacity = '';
+          panel.style.pointerEvents = '';
+          panel.style.position = '';
+          panel.style.visibility = '';
+        }
+      });
+      
+      // Add active class and update ARIA for target item
+      targetItem.classList.add('active');
+      targetItem.setAttribute('aria-selected', 'true');
+      targetItem.setAttribute('tabindex', '0');
+      
+      // Focus the item if requested (for keyboard navigation)
+      if (focusItem) {
+        targetItem.focus();
+      }
+      
+      // Show corresponding panel
+      const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.setAttribute('aria-hidden', 'false');
+        targetPanel.style.position = 'relative';
+        targetPanel.style.opacity = '1';
+        targetPanel.style.visibility = 'visible';
+        targetPanel.style.pointerEvents = 'auto';
+        
+        // Update indicator position after panel is shown
+        requestAnimationFrame(() => {
+          updateIndicator(targetItem);
+          // Update container height after layout - use double RAF for stability
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              updateContainerHeight();
+            });
+          });
+        });
+      }
+    }
+    
+    // Click handler
     toggleItems.forEach(item => {
       item.addEventListener('click', function() {
-        const serviceId = this.getAttribute('data-service');
+        switchTab(this, false);
+      });
+    });
+    
+    // Keyboard navigation
+    toggleItems.forEach((item) => {
+      item.addEventListener('keydown', function(e) {
+        const currentIndex = Array.from(toggleItems).indexOf(this);
+        let targetIndex = -1;
         
-        // Remove active class from all items and panels
-        toggleItems.forEach(toggle => toggle.classList.remove('active'));
-        panels.forEach(panel => {
-          panel.classList.remove('active');
-          panel.style.opacity = '0';
-        });
+        switch(e.key) {
+          case 'ArrowLeft':
+            e.preventDefault();
+            targetIndex = currentIndex > 0 ? currentIndex - 1 : toggleItems.length - 1;
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            targetIndex = currentIndex < toggleItems.length - 1 ? currentIndex + 1 : 0;
+            break;
+          case 'Home':
+            e.preventDefault();
+            targetIndex = 0;
+            break;
+          case 'End':
+            e.preventDefault();
+            targetIndex = toggleItems.length - 1;
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            switchTab(this, false);
+            return;
+        }
         
-        // Add active class to clicked item
-        this.classList.add('active');
-        
-        // Show corresponding panel with fade effect
-        const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
-        if (targetPanel) {
-          setTimeout(() => {
-            targetPanel.classList.add('active');
-            targetPanel.style.opacity = '1';
-          }, 150);
+        if (targetIndex >= 0) {
+          switchTab(toggleItems[targetIndex], true);
         }
       });
     });
@@ -114,55 +419,100 @@ const { title, subtitle, services } = Astro.props;
 <style>
   .service-section {
     background: var(--color-background-primary);
+    padding: var(--spacing-4) 0;
+  }
+  
+  /* Reduce bottom padding when followed by SentryVideoShowcase (connected sections) */
+  .service-section:has(+ .feature-stack-section) {
+    padding-bottom: var(--spacing-2);
   }
   
   .service-header {
-    margin-bottom: var(--spacing-16);
+    margin-top: 0;
+    margin-bottom: var(--spacing-5);
   }
   
   .service-toggle-container {
     display: flex;
     justify-content: center;
-    margin-bottom: var(--spacing-16);
+    margin-bottom: var(--spacing-6);
   }
   
   .service-toggle {
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-2);
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    min-width: 0;
+  }
+  
+  .service-toggle-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     background: var(--color-background-secondary);
-    border: 1px solid var(--color-border-primary);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-2);
-    display: inline-flex;
-    gap: var(--spacing-1);
-    backdrop-filter: var(--backdrop-blur-sm);
+    border-radius: var(--radius-md);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    pointer-events: none;
+    width: 0;
   }
   
   .service-toggle-item {
-    padding: var(--spacing-3) var(--spacing-6);
-    border-radius: var(--radius-lg);
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: var(--radius-md);
     background: transparent;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-secondary);
     font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    transition: color var(--transition-base);
     cursor: pointer;
     border: none;
-    font-size: var(--font-size-sm);
     white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    touch-action: manipulation;
   }
   
   .service-toggle-item.active {
-    background: var(--gradient-primary);
     color: var(--color-text-primary);
-    box-shadow: var(--shadow-sm);
+    font-weight: var(--font-weight-medium);
   }
   
   .service-toggle-item:hover:not(.active) {
-    background: var(--color-background-glass);
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .service-toggle-item:focus {
+    outline: none;
+  }
+  
+  .service-toggle-item:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+    border-color: var(--color-primary-400);
   }
   
   .service-content {
     position: relative;
-    min-height: 600px;
+    width: 100%;
+    overflow: visible;
+    margin-bottom: 0;
   }
   
   .service-panel {
@@ -171,133 +521,191 @@ const { title, subtitle, services } = Astro.props;
     left: 0;
     right: 0;
     opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-out;
+    width: 100%;
     visibility: hidden;
-    transition: all var(--transition-base);
   }
   
   .service-panel.active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    visibility: visible !important;
+  }
+  
+  /* Ensure first panel is visible on initial load */
+  .service-panel:first-child {
+    position: relative;
     opacity: 1;
     visibility: visible;
-    position: relative;
+    pointer-events: auto;
   }
   
-  .service-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-16);
-    align-items: center;
+  .service-panel:first-child:not(.active) {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
   
-  .service-info {
-    max-width: 500px;
-  }
-  
-  .service-info .h3 {
-    margin-bottom: var(--spacing-4);
-  }
-  
-  .service-info .body-large {
-    margin-bottom: var(--spacing-8);
-  }
-  
-  .service-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .service-block {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-3);
+    max-width: 800px;
+    margin: 0 auto;
   }
   
-  .service-feature {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
+  .service-block .h3 {
+    margin-bottom: var(--spacing-3);
+    text-align: center;
+  }
+  
+  .service-primary {
+    margin-bottom: var(--spacing-3);
+    text-align: center;
+  }
+  
+  .service-support {
     color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-top: 0;
+    margin-bottom: var(--spacing-2);
+    text-align: center;
   }
   
-  .service-feature svg {
-    color: var(--color-primary-400);
-    flex-shrink: 0;
+  .service-scope {
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-top: 0;
+    margin-bottom: var(--spacing-5);
+    text-align: center;
   }
   
   .service-visual {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: var(--spacing-4);
+    overflow: visible;
   }
   
   .service-image-container {
     position: relative;
-    max-width: 500px;
+    max-width: 480px;
     width: 100%;
+    margin: 0 auto;
+    overflow: visible;
+    aspect-ratio: 480 / 290;
+    min-height: 290px;
+    background: var(--color-background-secondary);
   }
   
   .service-image {
     width: 100%;
-    height: auto;
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-2xl);
-    border: 1px solid var(--color-border-primary);
+    height: 100%;
+    max-width: 480px;
+    max-height: 290px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: var(--radius-xl);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    opacity: 0.95;
+    display: block;
+    background: var(--color-background-secondary);
   }
   
   .service-image-glow {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-2xl);
-    opacity: 0.15;
-    filter: blur(30px);
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.12) 0%,
+      rgba(124, 58, 237, 0.08) 100%
+    );
+    border-radius: var(--radius-xl);
+    opacity: 0.6;
+    filter: blur(40px);
     z-index: -1;
   }
   
   /* Responsive Design */
   @media (max-width: 1199px) {
-    .service-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-12);
-      text-align: center;
-    }
-    
-    .service-info {
-      max-width: none;
+    .service-block {
+      max-width: 100%;
     }
   }
   
   @media (max-width: 767px) {
-    .service-toggle {
-      flex-direction: column;
+    .service-toggle-container {
+      padding: 0 var(--spacing-4);
       width: 100%;
-      max-width: 400px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .service-toggle {
+      grid-template-columns: 1fr;
+      width: 100%;
+      max-width: 100%;
+      gap: var(--spacing-2);
     }
     
     .service-toggle-item {
       text-align: center;
+      width: 100%;
+      min-height: 48px;
+      padding: var(--spacing-4) var(--spacing-4);
+      font-size: var(--font-size-sm);
+    }
+    
+    .service-toggle-indicator {
+      width: 100% !important;
+      transform: none !important;
+      top: auto;
+      bottom: 0;
+      height: 2px;
+      border-radius: 0;
+    }
+    
+    .service-block {
+      max-width: 100%;
     }
     
     .service-content {
-      min-height: 500px;
-    }
-    
-    .service-grid {
-      gap: var(--spacing-8);
+      min-height: 400px;
     }
   }
   
   @media (max-width: 479px) {
     .service-toggle-container {
-      padding: 0 var(--spacing-4);
+      padding: 0 var(--spacing-3);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     
     .service-toggle {
-      max-width: none;
+      max-width: 100%;
+      width: 100%;
+      gap: var(--spacing-2);
     }
     
-    .service-content {
-      min-height: 400px;
+    .service-toggle-item {
+      min-height: 48px;
+      padding: var(--spacing-3-5) var(--spacing-3);
+      font-size: var(--font-size-sm);
+    }
+    
+    .service-block {
+      max-width: 100%;
+      padding: 0 var(--spacing-2);
     }
   }
 </style>
