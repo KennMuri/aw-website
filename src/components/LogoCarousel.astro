@@ -63,18 +63,10 @@ const { title, subtitle, logos } = Astro.props;
     border-top: 1px solid var(--color-border-secondary);
     border-bottom: 1px solid var(--color-border-secondary);
     overflow: hidden;
-    width: 100%;
-    max-width: 100%;
-    padding: var(--spacing-3) 0;
   }
   
   .logo-carousel-header {
-    margin-top: 0;
-    margin-bottom: var(--spacing-5);
-  }
-  
-  .logo-carousel-container {
-    margin-bottom: 0;
+    margin-bottom: var(--spacing-12);
   }
   
   .logo-carousel-header .body-small {
@@ -86,8 +78,6 @@ const { title, subtitle, logos } = Astro.props;
   
   .logo-carousel-container {
     overflow: hidden;
-    width: 100%;
-    max-width: 100%;
     mask: linear-gradient(
       to right,
       transparent 0%,
@@ -107,7 +97,7 @@ const { title, subtitle, logos } = Astro.props;
   .logo-carousel-track {
     display: flex;
     align-items: center;
-    gap: var(--spacing-8);
+    gap: var(--spacing-16);
     width: fit-content;
     animation: scroll-horizontal 40s linear infinite;
   }
@@ -121,7 +111,6 @@ const { title, subtitle, logos } = Astro.props;
     justify-content: center;
     height: 180px;
     min-width: 360px;
-    aspect-ratio: 3 / 1;
   }
   
   .logo-carousel-item:hover {
@@ -132,7 +121,6 @@ const { title, subtitle, logos } = Astro.props;
     height: 120px;
     width: auto;
     min-height: 120px;
-    max-height: 120px;
     filter: grayscale(100%) brightness(1.2);
     transition: filter var(--transition-base);
     object-fit: contain;
@@ -158,7 +146,7 @@ const { title, subtitle, logos } = Astro.props;
   /* Responsive Design */
   @media (max-width: 767px) {
     .logo-carousel-track {
-      gap: var(--spacing-6);
+      gap: var(--spacing-12);
       animation-duration: 30s;
     }
     
@@ -175,7 +163,7 @@ const { title, subtitle, logos } = Astro.props;
   
   @media (max-width: 479px) {
     .logo-carousel-track {
-      gap: var(--spacing-4);
+      gap: var(--spacing-8);
       animation-duration: 25s;
     }
     
