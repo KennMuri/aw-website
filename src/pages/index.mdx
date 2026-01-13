@@ -20,7 +20,7 @@ export const pageTheme = homeTheme;
 
 <ModernHero 
   title="Web3's Operational Security Layer"
-  description="Operational security audits and real-time monitoring, built on W3OS and SEAL."
+  description="Operational security audits and real-time monitoring, built on:"
   primaryCta={{
     text: "Book An Audit",
     href: "/audits"
@@ -39,7 +39,7 @@ export const pageTheme = homeTheme;
     },
     { 
       text: "SEAL Certification", 
-      href: "https://frameworks.securityalliance.org/", 
+      href: "https://frameworks.securityalliance.org/certs/overview", 
       icon: "https://images.typeform.com/images/85jp8NBEtu4u" 
     }
   ]}
@@ -141,6 +141,6 @@ export const pageTheme = homeTheme;
 
 <SentryVideoShowcase />
 
-<CTASection />
+<CTASection colorScheme={themeToColorScheme(pageTheme)} />
 
 <Footer />

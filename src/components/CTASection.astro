@@ -1,4 +1,6 @@
 ---
+import type { ColorScheme } from './ModernHero.astro';
+
 export interface Props {
   title?: string;
   description?: string;
@@ -11,6 +13,7 @@ export interface Props {
     href: string;
   };
   disclaimer?: string;
+  colorScheme?: ColorScheme;
 }
 
 const { 
@@ -24,11 +27,21 @@ const {
     text: "Explore Sentry",
     href: "/sentry"
   },
-  disclaimer = "Free consultation • W3OS & SEAL compliant • Enterprise-grade security"
+  disclaimer = "Free consultation • W3OS & SEAL compliant • Enterprise-grade security",
+  colorScheme
 } = Astro.props;
+
+const cs = colorScheme;
 ---
 
-<section class="cta-section section">
+<section class="cta-section section" style={cs ? `
+  --cta-button-primary-start: ${cs.button.primary.start};
+  --cta-button-primary-end: ${cs.button.primary.end};
+  --cta-button-primary-hover-start: ${cs.button.primaryHover.start};
+  --cta-button-primary-hover-end: ${cs.button.primaryHover.end};
+  --cta-button-border-color: ${cs.button.border.color};
+  --cta-button-border-opacity: ${cs.button.border.opacity};
+` : ''}>
   <div class="container">
     <div class="cta-content text-center">
       <h2 class="h2 cta-title">
@@ -78,8 +91,9 @@ const {
   }
   
   .cta-content:hover {
-    border-color: rgba(139, 92, 246, 0.15);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
+    border-color: rgba(var(--cta-button-border-color, 139, 92, 246), var(--cta-button-border-opacity, 0.3));
+    box-shadow: 0 0 0 1px rgba(var(--cta-button-border-color, 139, 92, 246), calc(var(--cta-button-border-opacity, 0.3) * 0.5)), 
+                0 4px 20px rgba(var(--cta-button-primary-start, 147, 51, 234), 0.3);
     transform: translateY(-2px);
   }
   
@@ -131,22 +145,27 @@ const {
   }
   
   .cta-buttons .btn-primary {
-    background: rgb(125, 70, 190);
-    color: #FFFFFF;
-    border: none;
+    background: linear-gradient(135deg, rgb(var(--cta-button-primary-start, 147, 51, 234)) 0%, rgb(var(--cta-button-primary-end, 168, 85, 247)) 100%);
+    color: var(--color-text-primary);
+    border: 1px solid rgba(var(--cta-button-border-color, 139, 92, 246), var(--cta-button-border-opacity, 0.4));
     border-radius: var(--radius-full);
-    box-shadow: none;
-    transition: background 175ms ease-out;
+    box-shadow: 0 0 0 1px rgba(var(--cta-button-border-color, 139, 92, 246), calc(var(--cta-button-border-opacity, 0.4) * 0.5)), 
+                0 4px 20px rgba(var(--cta-button-primary-start, 147, 51, 234), 0.3);
+    transition: all var(--transition-base);
   }
   
   .cta-buttons .btn-primary:hover {
-    background: rgb(150, 86, 220);
-    transition: background 175ms ease-out;
+    background: linear-gradient(135deg, rgb(var(--cta-button-primary-hover-start, 168, 85, 247)) 0%, rgb(var(--cta-button-primary-hover-end, 192, 132, 252)) 100%);
+    border-color: rgba(var(--cta-button-border-color, 139, 92, 246), calc(var(--cta-button-border-opacity, 0.4) + 0.1));
+    box-shadow: 0 0 0 1px rgba(var(--cta-button-border-color, 139, 92, 246), calc(var(--cta-button-border-opacity, 0.4) + 0.1)), 
+                0 8px 32px rgba(var(--cta-button-primary-start, 147, 51, 234), 0.4);
+    transform: translateY(-2px);
+    transition: all var(--transition-base);
   }
 
   .cta-buttons .btn-primary:active {
-    background: rgb(112, 62, 175);
-    transition: background 150ms ease-out;
+    transform: translateY(0) scale(0.98);
+    transition: all var(--transition-fast);
   }
   
   .cta-buttons .btn-primary:focus {
@@ -158,26 +177,37 @@ const {
     outline-offset: 2px;
   }
   
+  .cta-buttons .btn-primary svg {
+    transition: transform var(--transition-base);
+  }
+  
+  .cta-buttons .btn-primary:hover svg {
+    transform: translateX(2px);
+  }
+  
   .cta-buttons .btn-secondary {
-    background: #12091F;
-    color: #FFFFFF;
-    border: 1px solid rgba(168, 85, 247, 0.4);
+    background: var(--color-background-glass-medium);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-full);
-    backdrop-filter: none;
+    backdrop-filter: var(--backdrop-blur-base);
+    transition: all var(--transition-base);
   }
   
   .cta-buttons .btn-secondary:hover {
-    background: #1A0F2E;
-    border-color: rgba(168, 85, 247, 0.55);
+    background: var(--color-background-glass-strong);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-elevation-low);
+    transform: translateY(-2px);
   }
   
   .cta-buttons .btn-secondary:focus {
     outline: none;
   }
   
-  .btn-secondary:hover {
-    background: var(--color-background-secondary);
-    border-color: var(--color-primary-400);
+  .cta-buttons .btn-secondary:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
   }
   
   .btn-lg {
