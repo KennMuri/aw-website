@@ -51,6 +51,7 @@ export interface Props {
     icon?: string;
   }>;
   colorScheme?: ColorScheme;
+  isHomepage?: boolean;
 }
 
 // Default purple color scheme
@@ -89,13 +90,14 @@ const {
   imageUrl, 
   imageAlt = '', 
   badges = [],
-  colorScheme = defaultColorScheme
+  colorScheme = defaultColorScheme,
+  isHomepage = false
 } = Astro.props;
 
 const cs = colorScheme;
 ---
 
-<section class="hero" style={`
+<section class={`hero ${isHomepage ? 'hero-homepage' : ''}`} style={`
   --gradient-text-1: ${cs.gradientText.stop1};
   --gradient-text-2: ${cs.gradientText.stop2};
   --gradient-text-3: ${cs.gradientText.stop3};
@@ -205,8 +207,6 @@ const cs = colorScheme;
   
   <!-- Background Elements -->
   <div class="hero-bg-elements">
-    <div class="hero-grid-pattern"></div>
-    <div class="hero-dotted-pattern"></div>
   </div>
 </section>
 
@@ -216,9 +216,13 @@ const cs = colorScheme;
     display: flex;
     align-items: center;
     background: transparent;
-    overflow: hidden;
-    padding: var(--spacing-8) 0;
+    overflow: visible;
+    padding: var(--spacing-7) 0 var(--spacing-4);
     border-bottom: 1px solid var(--color-border-primary);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
   }
   
   .hero-content {
@@ -232,7 +236,21 @@ const cs = colorScheme;
     grid-template-columns: 1.1fr 0.9fr;
     gap: var(--spacing-20);
     align-items: center;
-    min-height: auto;
+    text-align: center;
+    gap: var(--spacing-4);
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  /* Ensure container doesn't clip content */
+  .hero .container {
+    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    max-width: 100%;
   }
   
   .hero-text {
@@ -240,18 +258,19 @@ const cs = colorScheme;
   }
   
   .hero-subtitle-badge {
-    margin-bottom: var(--spacing-8);
-    animation: fade-in-up 0.6s var(--ease-out);
+    margin-bottom: var(--spacing-5);
+    animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
   }
   
   .hero-title {
     font-size: clamp(2.5rem, 5vw, 5rem);
     font-weight: var(--font-weight-black);
-    line-height: 1.15;
-    margin-top: var(--spacing-6);
-    margin-bottom: var(--spacing-8);
-    letter-spacing: -0.025em;
-    animation: fade-in-up 0.6s 0.1s var(--ease-out) backwards;
+    line-height: 1.1;
+    margin-top: 0;
+    margin-bottom: var(--spacing-5);
+    letter-spacing: -0.03em;
+    animation: fade-in-up 1.2s 0.1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     text-wrap: balance;
     font-feature-settings: 'liga' 1, 'kern' 1;
     background: linear-gradient(
@@ -268,9 +287,17 @@ const cs = colorScheme;
     font-style: normal;
   }
   
+  /* Homepage hero uses CTA-matching gradient */
+  .hero-homepage .hero-title {
+    background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-primary-300) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+  }
+  
   .hero-description {
-    margin-bottom: var(--spacing-10);
-    max-width: 560px;
+    margin-bottom: var(--spacing-4);
+    max-width: 600px;
     font-size: var(--font-size-xl);
     line-height: var(--line-height-relaxed);
     color: rgb(var(--description-color));
@@ -290,20 +317,43 @@ const cs = colorScheme;
     display: flex;
     gap: var(--spacing-4);
     flex-wrap: wrap;
-    animation: fade-in-up 0.6s 0.4s var(--ease-out) backwards;
+    justify-content: center;
+    margin-bottom: 0;
+    animation: fade-in-up 1.1s 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    will-change: opacity, transform;
+    overflow: visible;
+    padding: var(--spacing-1) 0;
+    position: relative;
   }
   
   .hero-visual {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fade-in 0.8s 0.5s var(--ease-out) backwards;
+    margin-top: var(--spacing-4);
+    margin-bottom: 0;
+    animation: fade-in 1.4s 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    position: relative;
+    z-index: 1;
+    will-change: opacity;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
   }
   
   .hero-image-container {
     position: relative;
     max-width: 650px;
     width: 100%;
+    aspect-ratio: 650 / 450;
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    box-sizing: border-box;
+    padding: var(--spacing-2) 0;
   }
   
   .hero-image {
@@ -356,29 +406,76 @@ const cs = colorScheme;
 
   /* Dynamic Button Styling */
   .hero .btn-primary {
-    background: linear-gradient(135deg, rgb(var(--button-primary-start)) 0%, rgb(var(--button-primary-end)) 100%);
-    border-color: rgba(var(--button-border-color), var(--button-border-opacity));
-    box-shadow: 0 0 0 1px rgba(var(--button-border-color), calc(var(--button-border-opacity) * 0.5)), 
-                0 4px 20px rgba(var(--button-primary-start), 0.3);
+    background: rgb(125, 70, 190);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-full);
+    box-shadow: none;
+    transition: background 175ms ease-out;
   }
 
   .hero .btn-primary:hover {
-    background: linear-gradient(135deg, rgb(var(--button-primary-hover-start)) 0%, rgb(var(--button-primary-hover-end)) 100%);
-    border-color: rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1));
-    box-shadow: 0 0 0 1px rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1)), 
-                0 8px 32px rgba(var(--button-primary-start), 0.4);
-    transform: translateY(-2px);
+    background: rgb(150, 86, 220);
+    transition: background 175ms ease-out;
+  }
+
+  .hero .btn-primary:active {
+    background: rgb(112, 62, 175);
+    transition: background 150ms ease-out;
+  }
+  
+  /* Arrow icon animation */
+  .hero .btn-primary .btn-arrow {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+  
+  .hero .btn-primary:hover .btn-arrow {
+    transform: translateX(2px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hero .btn-primary:focus {
+    outline: none;
   }
 
   .hero .btn-secondary {
-    background: rgba(var(--button-primary-start), 0.1);
-    border-color: rgba(var(--button-border-color), var(--button-border-opacity));
+    background: #12091F;
+    color: #FFFFFF;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: var(--radius-full);
+    backdrop-filter: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hero .btn-secondary:hover {
-    background: rgba(var(--button-primary-start), 0.15);
-    border-color: rgba(var(--button-border-color), calc(var(--button-border-opacity) + 0.1));
-    box-shadow: 0 4px 16px rgba(var(--button-primary-start), 0.2);
+    background: #1A0F2E;
+    border-color: rgba(168, 85, 247, 0.55);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  /* Arrow icon animation for secondary button */
+  .hero .btn-secondary .btn-arrow {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+  
+  .hero .btn-secondary:hover .btn-arrow {
+    transform: translateX(2px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hero .btn-secondary:focus {
+    outline: none;
+  }
+  
+  .hero .btn-secondary:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
   }
 
   /* Dynamic Badge Styling */
@@ -459,7 +556,12 @@ const cs = colorScheme;
     
     .hero-description {
       font-size: var(--font-size-lg);
-      margin-bottom: var(--spacing-8);
+      margin-bottom: var(--spacing-4);
+      line-height: var(--line-height-normal);
+    }
+    
+    .hero-visual {
+      margin-top: var(--spacing-4);
     }
     
     .hero-cta {
@@ -478,12 +580,13 @@ const cs = colorScheme;
       padding: var(--spacing-4) 0;
     }
     
-    .hero-badges {
-      gap: var(--spacing-3);
-    }
-    
     .hero-description {
       font-size: var(--font-size-base);
+      margin-bottom: var(--spacing-4);
+    }
+    
+    .hero-visual {
+      margin-top: var(--spacing-4);
     }
     
     .framework-badge-icon-link .framework-badge-icon {

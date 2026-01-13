@@ -12,13 +12,13 @@ export interface Props {
 }
 
 const { 
-  title = "Built on Industry Standards",
+  title = "Shaping Industry Standards",
   frameworks = [
     {
       name: "W3OS Framework",
       logo: "/images/W3OS-Graphic.png",
       logoAlt: "W3OS Logo",
-      description: "The Web3 Operational Security Standard (W3OS) provides comprehensive guidelines for operational security in decentralized organizations. We ensure full compliance with W3OS requirements, covering everything from key management to social engineering prevention.",
+      description: "Created by Auditware as an open-source operational security standard for Web3 organizations.",
       linkText: "View Standard →",
       linkHref: "https://github.com/W3OSC/web3-opsec-standard"
     },
@@ -26,9 +26,9 @@ const {
       name: "SEAL Certification",
       logo: "/images/framework-logomark-circle-blue.svg",
       logoAlt: "SEAL Logo",
-      description: "Security Alliance's SEAL (Security Engineering and Auditing Language) framework ensures systematic security assessment. Our audits follow SEAL methodology for consistent, thorough evaluation of your organization's security posture.",
-      linkText: "Learn More →",
-      linkHref: "https://frameworks.securityalliance.org/"
+      description: "Our OpSec reviews and Sentry platform keep you compliant with all domains in SEAL's Certs program.",
+      linkText: "Learn more →",
+      linkHref: "https://frameworks.securityalliance.org/certs/overview"
     }
   ]
 } = Astro.props;
@@ -49,9 +49,11 @@ const {
               />
               <h3 class="h5">{framework.name}</h3>
             </div>
-            <p class="body-base">
-              {framework.description}
-            </p>
+            <div class="framework-description">
+              <p class="body-base framework-sentence">
+                {framework.description}
+              </p>
+            </div>
             {framework.linkHref && (
               <a href={framework.linkHref} class="btn btn-ghost btn-sm">
                 {framework.linkText || "Learn More →"}
@@ -66,8 +68,15 @@ const {
 
 <style>
   .frameworks-section {
-    padding: var(--spacing-20) 0;
+    padding: var(--spacing-3) 0;
     background: transparent;
+    border-top: none; /* Remove border-top since logo carousel handles the divider */
+    border-bottom: 1px solid var(--color-border-primary); /* Add border-bottom for divider before ServiceToggle */
+  }
+  
+  /* Match bottom padding to top padding for consistent spacing to divider */
+  .frameworks-section:has(+ .service-section) {
+    padding-bottom: var(--spacing-3);
   }
   
   .frameworks-content {
@@ -76,55 +85,110 @@ const {
   }
   
   .frameworks-title {
-    margin-bottom: var(--spacing-12);
     color: var(--color-text-primary);
+    /* margin-bottom handled by global.css */
   }
   
   .frameworks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-8);
-    justify-items: center;
+    gap: var(--spacing-6);
+    justify-items: stretch;
+    align-items: stretch;
+    margin-top: 0;
   }
   
   .framework-card {
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-8);
+    padding: var(--spacing-4) var(--spacing-5) var(--spacing-4);
     text-align: center;
     max-width: 500px;
     width: 100%;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
   }
   
-  .framework-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+  .framework-card:focus-within {
+    border-color: var(--color-border-purple);
+    box-shadow: var(--shadow-glow);
   }
   
   .framework-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-2);
+    min-height: auto;
+    justify-content: flex-start;
   }
   
   .framework-logo {
-    width: 60px;
-    height: 60px;
-    margin-bottom: var(--spacing-4);
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--spacing-3);
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 64px;
+    min-height: 64px;
+  }
+  
+  .framework-logo-img {
+    width: 100%;
+    height: 100%;
+    min-width: 64px;
+    min-height: 64px;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Optically balanced logo scaling */
+  .framework-logo--w3os {
+    transform: scale(1.95);
+  }
+  
+  .framework-logo--seal {
+    transform: scale(1.2);
   }
   
   .framework-header h3 {
     color: var(--color-text-primary);
     margin: 0;
+    margin-bottom: var(--spacing-2);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
   }
   
-  .framework-card p {
+  .framework-description {
+    margin-top: 0;
+    margin-bottom: var(--spacing-3);
+    flex: 1;
+  }
+  
+  .framework-sentence {
     color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-    margin-bottom: var(--spacing-6);
+    line-height: var(--line-height-normal);
+    margin: 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .framework-cta-wrapper {
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-top: var(--spacing-3);
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
   }
   
   .btn-ghost {
@@ -154,7 +218,7 @@ const {
   
   @media (max-width: 479px) {
     .framework-card {
-      padding: var(--spacing-6);
+      padding: var(--spacing-4) var(--spacing-4);
     }
     
     .framework-logo {

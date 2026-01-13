@@ -59,22 +59,31 @@ const { title, subtitle, logos } = Astro.props;
 
 <style>
   .logo-carousel {
-    background: var(--color-background-secondary);
-    border-top: 1px solid var(--color-border-secondary);
-    border-bottom: 1px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    border-top: none;
+    border-bottom: 1px solid var(--color-border-primary);
     overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    padding: var(--spacing-1) 0;
   }
   
   .logo-carousel-header {
-    margin-bottom: var(--spacing-12);
+    margin-top: 0;
+    margin-bottom: 0; /* Spacing handled by heading margin-bottom */
+  }
+  
+  .logo-carousel-container {
+    margin-bottom: 0;
   }
   
   .logo-carousel-header .body-small {
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-1); /* Consistent: subtitle → title */
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-wider);
     color: var(--color-text-muted);
   }
+  
   
   .logo-carousel-container {
     overflow: hidden;
@@ -94,22 +103,24 @@ const { title, subtitle, logos } = Astro.props;
     );
   }
   
+  .logo-carousel-container:hover .logo-carousel-track {
+    animation-play-state: paused;
+  }
+  
   .logo-carousel-track {
     display: flex;
     align-items: center;
-    gap: var(--spacing-16);
+    gap: 120px;
     width: fit-content;
     animation: scroll-horizontal 40s linear infinite;
   }
   
   .logo-carousel-item {
-    opacity: 0.6;
-    transition: opacity var(--transition-base);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 180px;
+    height: 150px;
     min-width: 360px;
   }
   
@@ -118,20 +129,17 @@ const { title, subtitle, logos } = Astro.props;
   }
   
   .logo-carousel-item img {
-    height: 120px;
+    height: 110px;
     width: auto;
-    min-height: 120px;
-    filter: grayscale(100%) brightness(1.2);
-    transition: filter var(--transition-base);
+    min-height: 110px;
+    max-height: 110px;
+    filter: grayscale(100%) brightness(0.7) contrast(0.9);
     object-fit: contain;
+    transition: filter var(--transition-base);
   }
   
   .logo-carousel-item:hover img {
-    filter: grayscale(0%) brightness(1);
-  }
-  
-  .logo-carousel-track:hover {
-    animation-play-state: paused;
+    filter: grayscale(80%) brightness(0.85) contrast(0.95);
   }
   
   @keyframes scroll-horizontal {
@@ -146,35 +154,35 @@ const { title, subtitle, logos } = Astro.props;
   /* Responsive Design */
   @media (max-width: 767px) {
     .logo-carousel-track {
-      gap: var(--spacing-12);
+      gap: var(--spacing-4);
       animation-duration: 30s;
     }
     
     .logo-carousel-item {
-      min-width: 240px;
-      height: 140px;
+      height: 100px;
     }
     
     .logo-carousel-item img {
-      height: 90px;
-      min-height: 90px;
+      height: 95px;
+      min-height: 95px;
+      max-height: 95px;
     }
   }
   
   @media (max-width: 479px) {
     .logo-carousel-track {
-      gap: var(--spacing-8);
+      gap: var(--spacing-3);
       animation-duration: 25s;
     }
     
     .logo-carousel-item {
-      min-width: 200px;
-      height: 120px;
+      height: 90px;
     }
     
     .logo-carousel-item img {
       height: 80px;
       min-height: 80px;
+      max-height: 80px;
     }
   }
 </style>

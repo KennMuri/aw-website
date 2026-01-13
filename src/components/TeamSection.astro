@@ -8,21 +8,21 @@ const {
 
 <section class="team-circles">
   <h1 class="heading-3">{title}</h1>
-  <div class="text-block-9">
-    {subtitle}
-  </div>
   
   <div class="container-2">
     <div class="team-grid">
       {teamMembers.map(member => (
         <div class="team-card">
-          <img 
-            src={member.image} 
-            loading="lazy" 
-            width="137" 
-            alt={member.name} 
-            class="team-member-image" 
-          />
+          <div class="hex-avatar" data-member={member.name.toLowerCase().replace(/\s+/g, '-')}>
+            <img 
+              src={member.image} 
+              loading="lazy" 
+              width="140" 
+              height="140"
+              alt={member.name} 
+              class="team-member-image" 
+            />
+          </div>
           <div class="team-member-name">{member.name}</div>
           <div class="team-member-position">{member.position}</div>
           <p class="paragraph-18">
@@ -49,18 +49,15 @@ const {
 
 <style>
   .team-circles {
-    padding: 80px 0;
+    padding: 56px 0;
     text-align: center;
-    background: #000000;
+    background: transparent;
     position: relative;
     overflow: hidden;
   }
 
   .heading-3 {
-    font-size: 3rem;
-    font-weight: bold;
     color: #ffffff;
-    margin-bottom: 24px;
     position: relative;
     z-index: 1;
   }
@@ -100,6 +97,8 @@ const {
     width: 100%;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
   }
 
   .team-card:hover {
@@ -108,12 +107,61 @@ const {
     border-color: rgba(107, 33, 168, 0.3);
   }
 
+  /* Regular hexagon shape (flat top) - Single shared wrapper for all avatars */
+  .hex-avatar {
+    width: 140px;
+    height: 140px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    clip-path: polygon(25% -3%, 75% -3%, 100% 50%, 75% 98%, 25% 98%, 0% 50%);
+  }
+  
+  .hex-avatar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    clip-path: polygon(25% -3%, 75% -3%, 100% 50%, 75% 98%, 25% 98%, 0% 50%);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Baseline image styling - identical for all, fixed computed size */
   .team-member-image {
-    width: 137px;
-    height: 137px;
-    border-radius: 50%;
-    margin-bottom: 24px;
+    width: 140px;
+    height: 140px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    flex-shrink: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Per-image adjustments - only object-position for cropping, no size/transform changes */
+  .hex-avatar[data-member="joe-van-loon"] .team-member-image {
+    object-position: center;
+  }
+  
+  .hex-avatar[data-member="tomer-bar"] .team-member-image {
+    object-position: center;
+  }
+  
+  .hex-avatar[data-member="ken-murillo"] .team-member-image {
+    object-position: center;
   }
 
   .team-member-name {
@@ -126,21 +174,24 @@ const {
   .team-member-position {
     font-size: 1rem;
     color: #6b21a8;
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: 16px;
   }
 
   .paragraph-18, .paragraph-22 {
     color: #a0a0a0;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin-bottom: 0;
     font-size: 1rem;
+    flex: 1;
   }
 
   .footer-social-block {
     display: flex;
     justify-content: center;
     gap: 16px;
+    margin-top: auto;
+    padding-top: 24px;
   }
 
   .footer-social-link {

@@ -79,6 +79,43 @@ h6 {
   text-wrap: balance;
 }
 
+/* Standardized section heading style - Identical styling for all primary section titles */
+/* Excludes: hero headline (.hero-title) and CTA title (.cta-title) */
+.section .h2:not(.cta-title),
+.section .h3,
+.section .h4,
+.section-heading,
+.service-header .h2,
+.frameworks-title,
+.logo-carousel-header .h2,
+.logo-carousel-header .h4,
+.heading-3 {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-4xl) !important; /* 2.25rem / 36px - identical */
+  font-weight: var(--font-weight-bold) !important; /* 700 - identical */
+  letter-spacing: var(--letter-spacing-tight) !important; /* identical */
+  line-height: var(--line-height-snug);
+  margin-top: 0 !important; /* identical */
+  margin-bottom: var(--spacing-4) !important; /* Increased spacing for better visual separation */
+  text-wrap: balance;
+  color: var(--color-text-primary);
+}
+
+/* Standardized spacing rhythm for all sections */
+/* Section title → subtitle */
+.section .body-small,
+.section .body-base:first-of-type,
+.logo-carousel-header .body-small {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2); /* Consistent: subtitle → content */
+}
+
+/* Subtitle → content/media */
+.section > .container > *:not(:first-child):not(:last-child) {
+  margin-top: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+
 .h3 {
   font-family: var(--font-family-display);
   font-size: var(--font-size-4xl);
@@ -165,9 +202,22 @@ h6 {
 }
 
 .section {
-  padding: var(--spacing-12) 0;
+  padding: var(--spacing-2) 0;
   border-top: 1px solid var(--color-border-primary);
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section > .container > *:first-child {
+  margin-top: var(--spacing-4);
+}
+
+.section > .container > *:last-child {
+  margin-bottom: var(--spacing-4);
 }
 
 .section::before {
@@ -182,15 +232,78 @@ h6 {
 }
 
 .section-sm {
-  padding: var(--spacing-10) 0;
+  padding: var(--spacing-1-5) 0;
+  border-top: 1px solid var(--color-border-primary);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.section-sm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-500), transparent);
+  opacity: 0.2;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-sm > .container > *:first-child {
+  margin-top: var(--spacing-3);
+}
+
+.section-sm > .container > *:last-child {
+  margin-bottom: var(--spacing-3);
 }
 
 .section-lg {
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-2) 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-lg > .container > *:first-child {
+  margin-top: var(--spacing-5);
+}
+
+.section-lg > .container > *:last-child {
+  margin-bottom: var(--spacing-5);
 }
 
 .section-xl {
-  padding: var(--spacing-20) 0;
+  padding: var(--spacing-3) 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Standardized section content spacing for consistent rhythm */
+.section-xl > .container > *:first-child {
+  margin-top: var(--spacing-7);
+}
+
+.section-xl > .container > *:last-child {
+  margin-bottom: var(--spacing-7);
+}
+
+/* Reduce spacing between logically connected sections */
+/* Frameworks → Services: Tighten connection */
+.frameworks-section + .service-section {
+  padding-top: var(--spacing-2);
+}
+
+/* Services → Sentry: Tighten connection */
+.service-section + .feature-stack-section {
+  padding-top: var(--spacing-2);
 }
 
 /* Grid System */
@@ -304,7 +417,6 @@ h6 {
   font-weight: var(--font-weight-medium);
   text-decoration: none;
   border: none;
-  border-radius: var(--radius-xl);
   cursor: pointer;
   transition: all var(--transition-base);
   position: relative;
@@ -320,21 +432,6 @@ h6 {
   transform: translateX(3px);
 }
 
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.btn:hover::before {
-  opacity: 1;
-}
 
 .btn:focus {
   outline: 2px solid var(--color-primary-400);
@@ -346,91 +443,38 @@ h6 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #8b5cf6 100%);
-  background-size: 200% 200%;
-  color: var(--color-text-primary);
-  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.2), 
-              0 4px 12px rgba(124, 58, 237, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  background: rgb(125, 70, 190);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  box-shadow: none;
   position: relative;
-  animation: gradient-shift 3s ease infinite;
   overflow: hidden;
-}
-
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 70%
-  );
-  animation: shimmer 3s infinite;
-  pointer-events: none;
-}
-
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
+  transition: background 175ms ease-out;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
-  background-size: 200% 200%;
-  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.3),
-              0 6px 16px rgba(124, 58, 237, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px) scale(1.02);
-  border-color: rgba(139, 92, 246, 0.4);
-  animation: gradient-shift 1.5s ease infinite;
+  background: rgb(150, 86, 220);
+  transition: background 175ms ease-out;
+}
+
+.btn-primary:active {
+  background: rgb(112, 62, 175);
+  transition: background 150ms ease-out;
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, 
-              rgba(139, 92, 246, 0.1) 0%, 
-              rgba(124, 58, 237, 0.05) 100%);
-  color: var(--color-text-primary);
-  border: 1px solid rgba(167, 139, 250, 0.5);
-  backdrop-filter: var(--backdrop-blur-base);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
-              0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #12091F;
+  color: #FFFFFF;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: var(--radius-full);
   position: relative;
-}
-
-.btn-secondary::before {
-  background: radial-gradient(circle at center, 
-              rgba(139, 92, 246, 0.15), 
-              transparent 70%);
+  backdrop-filter: none;
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, 
-              rgba(139, 92, 246, 0.2) 0%, 
-              rgba(124, 58, 237, 0.1) 100%);
-  border-color: rgba(167, 139, 250, 0.7);
-  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1),
-              0 8px 20px rgba(124, 58, 237, 0.2);
-  transform: translateY(-2px) scale(1.02);
+  background: #1A0F2E;
+  border-color: rgba(168, 85, 247, 0.55);
 }
 
 .btn-ghost {
