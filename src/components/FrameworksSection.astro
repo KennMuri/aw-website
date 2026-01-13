@@ -127,16 +127,12 @@ const {
   }
   
   .framework-logo {
-    width: 64px;
     height: 64px;
+    width: auto;
     margin-bottom: var(--spacing-3);
     margin-top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    min-width: 64px;
-    min-height: 64px;
+    object-fit: contain;
+    display: block;
   }
   
   .framework-logo-img {
@@ -222,8 +218,8 @@ const {
     }
     
     .framework-logo {
-      width: 50px;
       height: 50px;
+      width: auto;
     }
     
     .frameworks-grid {

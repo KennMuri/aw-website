@@ -103,35 +103,17 @@ const { title, subtitle, services } = Astro.props;
       indicator.style.transform = `translateX(${left}px)`;
     }
     
-    toggleItems.forEach(item => {
-      item.addEventListener('click', function() {
-        const serviceId = this.getAttribute('data-service');
-        
-        // Restore original state based on active status
-        if (isActive) {
-          panel.style.position = 'relative';
-          panel.style.opacity = '1';
-          panel.style.visibility = 'visible';
-          panel.style.pointerEvents = 'auto';
-          panel.style.zIndex = '';
-          panel.style.height = '';
-        } else {
-          panel.style.position = originalPosition || 'absolute';
-          panel.style.opacity = originalOpacity || '0';
-          panel.style.visibility = originalVisibility || 'hidden';
-          panel.style.pointerEvents = originalPointerEvents || 'none';
-          panel.style.zIndex = originalZIndex || '';
-          panel.style.height = '';
-        }
-      });
+    // Function to update container height based on active panel
+    function updateContainerHeight() {
+      if (!contentContainer) return;
       
-      // Set container height to tallest panel with a small buffer for margins
-      // Keep container at fixed height to prevent layout shift
-      const isMobile = window.innerWidth <= 767;
-      const fixedHeight = isMobile ? '320px' : '380px';
-      // Use fixed height for stability, regardless of calculated height
-      contentContainer.style.height = fixedHeight;
-      contentContainer.style.minHeight = fixedHeight;
+      const activePanel = document.querySelector('.service-panel.active');
+      if (activePanel) {
+        const isMobile = window.innerWidth <= 767;
+        const fixedHeight = isMobile ? '320px' : '380px';
+        contentContainer.style.height = fixedHeight;
+        contentContainer.style.minHeight = fixedHeight;
+      }
     }
     
     // Wait for all images to load before calculating height
@@ -371,13 +353,11 @@ const { title, subtitle, services } = Astro.props;
             return;
         }
         
-        // Show corresponding panel with fade effect
-        const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
-        if (targetPanel) {
-          setTimeout(() => {
-            targetPanel.classList.add('active');
-            targetPanel.style.opacity = '1';
-          }, 150);
+        if (targetIndex >= 0) {
+          const targetItem = toggleItems[targetIndex];
+          if (targetItem) {
+            switchTab(targetItem, true);
+          }
         }
       });
     });

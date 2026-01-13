@@ -422,7 +422,16 @@ const experienceWithFill = sortedExperience.map(exp => ({
     grid-template-columns: 380px 1fr;
     gap: 40px;
     align-items: start;
-    animation: fade-in-up 0.8s 0.3s var(--ease-out) backwards;
+    animation: slide-in-up 0.8s 0.3s var(--ease-out) backwards;
+  }
+
+  @keyframes slide-in-up {
+    from {
+      transform: translateY(30px);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
   .sidebar {
