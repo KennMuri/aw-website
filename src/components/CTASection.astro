@@ -15,7 +15,7 @@ export interface Props {
 
 const { 
   title = "Secure Your Organization Today",
-  description = "Don't wait for a security incident. Get comprehensive OpSec audits and monitoring from industry experts with proven experience protecting leading Web3 organizations.",
+  description = "Don't wait for a security incident.",
   primaryCta = {
     text: "Book An Audit",
     href: "/audits"
@@ -35,7 +35,7 @@ const {
         {title}
       </h2>
       <p class="body-large cta-description">
-        {description}
+        {description} Book an operational security audit to identify and mitigate risk.
       </p>
       <div class="cta-buttons flex gap-4 justify-center">
         <a href={primaryCta.href} class="btn btn-primary btn-lg">
@@ -61,17 +61,30 @@ const {
 
 <style>
   .cta-section {
-    padding: var(--spacing-24) 0;
+    padding: var(--spacing-3) 0;
     background: var(--color-background-primary);
   }
   
   .cta-content {
     max-width: 800px;
     margin: 0 auto;
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .cta-content:hover {
+    border-color: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
+    transform: translateY(-2px);
   }
   
   .cta-title {
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-4);
     color: var(--color-text-primary);
     background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-primary-300) 100%);
     -webkit-background-clip: text;
@@ -90,15 +103,17 @@ const {
   
   .cta-buttons {
     display: flex;
-    gap: var(--spacing-4);
+    gap: var(--spacing-3);
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-2); /* Consistent: buttons → disclaimer */
   }
   
   .cta-disclaimer {
     color: var(--color-text-secondary);
     opacity: 0.8;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   
   .btn {
@@ -115,21 +130,49 @@ const {
     font-family: inherit;
   }
   
-  .btn-primary {
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: var(--shadow-sm);
+  .cta-buttons .btn-primary {
+    background: rgb(125, 70, 190);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-full);
+    box-shadow: none;
+    transition: background 175ms ease-out;
   }
   
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+  .cta-buttons .btn-primary:hover {
+    background: rgb(150, 86, 220);
+    transition: background 175ms ease-out;
+  }
+
+  .cta-buttons .btn-primary:active {
+    background: rgb(112, 62, 175);
+    transition: background 150ms ease-out;
   }
   
-  .btn-secondary {
-    background: transparent;
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-primary);
+  .cta-buttons .btn-primary:focus {
+    outline: none;
+  }
+  
+  .cta-buttons .btn-primary:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+  }
+  
+  .cta-buttons .btn-secondary {
+    background: #12091F;
+    color: #FFFFFF;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: var(--radius-full);
+    backdrop-filter: none;
+  }
+  
+  .cta-buttons .btn-secondary:hover {
+    background: #1A0F2E;
+    border-color: rgba(168, 85, 247, 0.55);
+  }
+  
+  .cta-buttons .btn-secondary:focus {
+    outline: none;
   }
   
   .btn-secondary:hover {
@@ -140,6 +183,8 @@ const {
   .btn-lg {
     padding: var(--spacing-4) var(--spacing-8);
     font-size: var(--font-size-lg);
+    border-radius: var(--radius-full);
+    min-height: 48px;
   }
   
   .btn svg {

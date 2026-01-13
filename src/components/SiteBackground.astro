@@ -109,6 +109,7 @@ function buildGradientStyle(
 </div>
 
 <style>
+  /* Base solid background - bottom layer */
   .site-background {
     position: fixed;
     inset: 0;
@@ -117,6 +118,7 @@ function buildGradientStyle(
     background: #000000;
   }
 
+  /* Gradients/glows - above base background */
   .site-background-gradient-1,
   .site-background-gradient-2,
   .site-background-gradient-3 {
@@ -125,14 +127,19 @@ function buildGradientStyle(
     z-index: 0;
   }
 
+  /* Dot layer - above base and gradients, but still behind all content */
+  /* TEMPORARY DEBUG: Exaggerated values to verify rendering */
   .site-background-dots {
     position: absolute;
     inset: 0;
-    opacity: 0.15;
-    background-image: radial-gradient(circle at 25px 25px, rgba(255,255,255,0.4) 2px, transparent 0);
-    background-size: 50px 50px;
+    opacity: 0.25;
+    background-image: radial-gradient(circle at 25px 25px, rgba(255,255,255,0.6) 1.5px, transparent 0);
+    background-size: 48px 48px;
+    background-position: 0 0;
+    background-repeat: repeat;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
+    mix-blend-mode: normal;
   }
 </style>
 

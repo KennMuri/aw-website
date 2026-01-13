@@ -19,61 +19,63 @@ const { title, subtitle, services } = Astro.props;
   <div class="container">
     <div class="service-header text-center">
       <h2 class="h2">{title}</h2>
-      {subtitle && (
-        <p class="body-large" style="margin-top: var(--spacing-4); max-width: 600px; margin-left: auto; margin-right: auto;">
-          {subtitle}
-        </p>
-      )}
     </div>
     
-    <div class="service-toggle-container">
-      <div class="service-toggle" id="service-toggle">
-        {services.map((service, index) => (
-          <button 
-            class={`service-toggle-item ${index === 0 ? 'active' : ''}`}
-            data-service={service.id}
-          >
-            {service.name}
-          </button>
-        ))}
-      </div>
-    </div>
-    
-    <div class="service-content">
-      {services.map((service, index) => (
-        <div 
-          class={`service-panel ${index === 0 ? 'active' : ''}`}
-          data-panel={service.id}
-        >
-          <div class="service-grid">
-            <div class="service-info">
-              <h3 class="h3 gradient-text">{service.name}</h3>
-              <p class="body-large">{service.description}</p>
-              <ul class="service-features">
-                {service.features.map((feature) => (
-                  <li class="service-feature">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+    <div class="service-content-wrapper">
+      <div class="service-toggle-container">
+        <div class="service-tabs-wrapper">
+          <div class="service-tabs-track">
+            <div class="service-toggle" id="service-toggle" role="tablist" aria-label="Security Services">
+              <div class="service-toggle-indicator"></div>
+          {services.map((service, index) => (
+            <button 
+              class={`service-toggle-item ${index === 0 ? 'active' : ''}`}
+              data-service={service.id}
+                  role="tab"
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                  aria-controls={`panel-${service.id}`}
+                  id={`tab-${service.id}`}
+                  tabindex={index === 0 ? '0' : '-1'}
+            >
+              {service.name}
+            </button>
+          ))}
             </div>
-            <div class="service-visual">
-              <div class="service-image-container">
-                <img 
-                  src={service.image} 
-                  alt={service.imageAlt}
-                  class="service-image"
-                  loading="lazy"
-                />
-                <div class="service-image-glow"></div>
+        </div>
+      </div>
+      
+        <div class="service-card-content">
+        {services.map((service, index) => (
+          <div 
+            class={`service-panel ${index === 0 ? 'active' : ''}`}
+            data-panel={service.id}
+              id={`panel-${service.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${service.id}`}
+              aria-hidden={index === 0 ? 'false' : 'true'}
+            >
+              <div class="service-summary">
+                <p class="body-base">
+                  {service.primary || service.description}
+                </p>
+              </div>
+              
+              <div class="service-media">
+                <div class="service-image-container">
+                  <img 
+                    src={service.image} 
+                    alt={service.imageAlt}
+                    class="service-image"
+                    width="480"
+                    height="290"
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                </div>
               </div>
             </div>
+          ))}
           </div>
-        </div>
-      ))}
+      </div>
     </div>
   </div>
 </section>
@@ -83,28 +85,279 @@ const { title, subtitle, services } = Astro.props;
   document.addEventListener('DOMContentLoaded', function() {
     const toggleItems = document.querySelectorAll('.service-toggle-item');
     const panels = document.querySelectorAll('.service-panel');
+    const indicator = document.querySelector('.service-toggle-indicator');
+    const toggle = document.querySelector('.service-toggle');
+    const contentContainer = document.querySelector('.service-card-content');
     
-    toggleItems.forEach(item => {
-      item.addEventListener('click', function() {
-        const serviceId = this.getAttribute('data-service');
-        
-        // Remove active class from all items and panels
-        toggleItems.forEach(toggle => toggle.classList.remove('active'));
-        panels.forEach(panel => {
+    function updateIndicator(activeItem) {
+      if (!indicator || !toggle) return;
+      
+      const toggleRect = toggle.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+      
+      // Calculate position relative to toggle container
+      const left = itemRect.left - toggleRect.left;
+      const width = itemRect.width;
+      
+      indicator.style.width = `${width}px`;
+      indicator.style.transform = `translateX(${left}px)`;
+    }
+    
+    // Function to update container height based on active panel
+    function updateContainerHeight() {
+      if (!contentContainer) return;
+      
+      const activePanel = document.querySelector('.service-panel.active');
+      if (activePanel) {
+        const isMobile = window.innerWidth <= 767;
+        const fixedHeight = isMobile ? '320px' : '380px';
+        contentContainer.style.height = fixedHeight;
+        contentContainer.style.minHeight = fixedHeight;
+      }
+    }
+    
+    // Wait for all images to load before calculating height
+    function waitForImages(callback) {
+      const images = document.querySelectorAll('.service-image');
+      let loadedCount = 0;
+      const totalImages = images.length;
+      
+      if (totalImages === 0) {
+        callback();
+        return;
+      }
+      
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            callback();
+          }
+        } else {
+          img.addEventListener('load', () => {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          });
+          img.addEventListener('error', () => {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          });
+        }
+      });
+    }
+    
+    // Initialize first panel state explicitly
+    const firstPanel = document.querySelector('.service-panel.active') || document.querySelector('.service-panel:first-child');
+    
+    if (firstPanel) {
+      firstPanel.classList.add('active');
+      firstPanel.setAttribute('aria-hidden', 'false');
+      firstPanel.style.position = 'relative';
+      firstPanel.style.opacity = '1';
+      firstPanel.style.visibility = 'visible';
+      firstPanel.style.pointerEvents = 'auto';
+      
+      // Ensure other panels are hidden
+      panels.forEach((panel, index) => {
+        if (panel !== firstPanel) {
           panel.classList.remove('active');
           panel.style.opacity = '0';
+          panel.style.visibility = 'hidden';
+          panel.style.pointerEvents = 'none';
+        }
+      });
+    }
+    
+    // Initialize indicator position for first active item
+    const firstActive = document.querySelector('.service-toggle-item.active') || document.querySelector('.service-toggle-item:first-child');
+    if (firstActive) {
+      if (!firstActive.classList.contains('active')) {
+        firstActive.classList.add('active');
+      }
+      firstActive.setAttribute('aria-selected', 'true');
+      firstActive.setAttribute('tabindex', '0');
+      if (indicator) {
+        // Small delay to ensure layout is complete
+        requestAnimationFrame(() => {
+          updateIndicator(firstActive);
         });
+      }
+    }
+    
+    // Ensure other tabs have correct initial ARIA state
+    toggleItems.forEach((item, index) => {
+      if (item !== firstActive) {
+        item.setAttribute('aria-selected', 'false');
+        item.setAttribute('tabindex', '-1');
+      }
+    });
+    
+    // Initialize container height immediately with a stable initial height
+    // This prevents layout shift before images load
+    // Use responsive height based on viewport - content-driven sizing
+    if (contentContainer) {
+      const isMobile = window.innerWidth <= 767;
+      const initialHeight = isMobile ? '320px' : '380px';
+      contentContainer.style.height = initialHeight;
+      contentContainer.style.minHeight = initialHeight;
+    }
+    
+    // Update height after layout is stable
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        updateContainerHeight();
+      });
+    });
+    
+    waitForImages(() => {
+      // Small delay to ensure layout is complete
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateContainerHeight();
+        });
+      });
+    });
+    
+    // Update height on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Set initial stable height before recalculating - fixed height for stability
+        if (contentContainer) {
+          const isMobile = window.innerWidth <= 767;
+          const initialHeight = isMobile ? '320px' : '380px';
+          contentContainer.style.height = initialHeight;
+          contentContainer.style.minHeight = initialHeight;
+        }
+        waitForImages(() => {
+          requestAnimationFrame(() => {
+            updateContainerHeight();
+          });
+        });
+      }, 100);
+    });
+    
+    // Update height when images load (for lazy-loaded images)
+    const imageObserver = new MutationObserver(() => {
+      waitForImages(() => {
+        updateContainerHeight();
+      });
+    });
+    
+    // Observe service-content for image additions
+    if (contentContainer) {
+      imageObserver.observe(contentContainer, {
+        childList: true,
+        subtree: true
+      });
+    }
+    
+    // Function to switch tabs
+    function switchTab(targetItem, focusItem = false) {
+      if (!targetItem) return;
+      
+      const serviceId = targetItem.getAttribute('data-service');
+      
+      // Remove active class and update ARIA from all items and panels
+      toggleItems.forEach((toggle, index) => {
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-selected', 'false');
+        toggle.setAttribute('tabindex', '-1');
+      });
+      
+      panels.forEach(panel => {
+        panel.classList.remove('active');
+        panel.setAttribute('aria-hidden', 'true');
+        if (!panel.classList.contains('active')) {
+          panel.style.opacity = '';
+          panel.style.pointerEvents = '';
+          panel.style.position = '';
+          panel.style.visibility = '';
+        }
+      });
+      
+      
+      // Add active class and update ARIA for target item
+      targetItem.classList.add('active');
+      targetItem.setAttribute('aria-selected', 'true');
+      targetItem.setAttribute('tabindex', '0');
+      
+      // Focus the item if requested (for keyboard navigation)
+      if (focusItem) {
+        targetItem.focus();
+      }
+      
+      // Show corresponding panel
+      const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
+      
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.setAttribute('aria-hidden', 'false');
+        targetPanel.style.position = 'relative';
+        targetPanel.style.opacity = '1';
+        targetPanel.style.visibility = 'visible';
+        targetPanel.style.pointerEvents = 'auto';
+      }
+      
+      // Update indicator position after panel is shown
+      requestAnimationFrame(() => {
+        updateIndicator(targetItem);
+        // Update container height after layout - use double RAF for stability
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            updateContainerHeight();
+          });
+        });
+      });
+    }
+    
+    // Click handler
+    toggleItems.forEach(item => {
+      item.addEventListener('click', function() {
+        switchTab(this, false);
+      });
+    });
+    
+    // Keyboard navigation
+    toggleItems.forEach((item) => {
+      item.addEventListener('keydown', function(e) {
+        const currentIndex = Array.from(toggleItems).indexOf(this);
+        let targetIndex = -1;
         
-        // Add active class to clicked item
-        this.classList.add('active');
+        switch(e.key) {
+          case 'ArrowLeft':
+            e.preventDefault();
+            targetIndex = currentIndex > 0 ? currentIndex - 1 : toggleItems.length - 1;
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            targetIndex = currentIndex < toggleItems.length - 1 ? currentIndex + 1 : 0;
+            break;
+          case 'Home':
+            e.preventDefault();
+            targetIndex = 0;
+            break;
+          case 'End':
+            e.preventDefault();
+            targetIndex = toggleItems.length - 1;
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            switchTab(this, false);
+            return;
+        }
         
-        // Show corresponding panel with fade effect
-        const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
-        if (targetPanel) {
-          setTimeout(() => {
-            targetPanel.classList.add('active');
-            targetPanel.style.opacity = '1';
-          }, 150);
+        if (targetIndex >= 0) {
+          const targetItem = toggleItems[targetIndex];
+          if (targetItem) {
+            switchTab(targetItem, true);
+          }
         }
       });
     });
@@ -114,55 +367,194 @@ const { title, subtitle, services } = Astro.props;
 <style>
   .service-section {
     background: var(--color-background-primary);
+    border-top: none; /* Remove border-top since frameworks-section handles the divider */
+    border-bottom: 1px solid var(--color-border-primary);
+    padding: var(--spacing-3) 0;
+  }
+  
+  /* Reduce bottom padding when followed by SentryVideoShowcase (connected sections) */
+  .service-section:has(+ .feature-stack-section) {
+    padding-bottom: var(--spacing-1);
   }
   
   .service-header {
-    margin-bottom: var(--spacing-16);
+    margin-top: 0;
+    margin-bottom: 0; /* Spacing handled by heading margin-bottom in global.css */
   }
   
+  .service-content-wrapper {
+    margin-top: 0; /* Ensure no extra margin from wrapper */
+  }
+  
+  
+  /* Service content wrapper - single surface, no redundant card */
+  .service-content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  /* Toggle container - wraps tabs and description for contained feel */
   .service-toggle-container {
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5) var(--spacing-5) var(--spacing-4);
+    margin: 0 auto;
+    margin-top: 0; /* Match frameworks-grid spacing */
+    max-width: 100%;
+  }
+  
+  .service-tabs-wrapper {
+    margin-bottom: var(--spacing-4); /* Increased spacing: tabs → description */
     display: flex;
     justify-content: center;
-    margin-bottom: var(--spacing-16);
+    width: 100%;
+  }
+  
+  /* Rounded capsule track container - Tesser-style */
+  .service-tabs-track {
+    background: var(--color-background-tertiary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-1);
+    max-width: 600px;
+    width: 100%;
+    display: inline-flex;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   }
   
   .service-toggle {
-    background: var(--color-background-secondary);
-    border: 1px solid var(--color-border-primary);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-2);
-    display: inline-flex;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--spacing-1);
-    backdrop-filter: var(--backdrop-blur-sm);
+    position: relative;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    min-width: 0;
+  }
+  
+  .service-toggle-indicator {
+    display: none;
   }
   
   .service-toggle-item {
-    padding: var(--spacing-3) var(--spacing-6);
+    padding: var(--spacing-2-5) var(--spacing-5);
     border-radius: var(--radius-lg);
     background: transparent;
-    color: var(--color-text-tertiary);
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-base);
-    cursor: pointer;
     border: none;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    opacity: 0.65;
     font-size: var(--font-size-sm);
+    line-height: 1.4;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
     white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    height: 36px;
+    min-width: 100px;
+    box-sizing: border-box;
+    touch-action: manipulation;
+    overflow: visible;
+    flex: 1 1 0;
+    font-family: inherit;
   }
   
+  /* Active state: filled pill with purple gradient and high-contrast white text */
   .service-toggle-item.active {
-    background: var(--gradient-primary);
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-500) 100%);
+    border-color: var(--color-primary-500);
+    color: #ffffff !important; /* High-contrast white text for readability */
+    font-weight: var(--font-weight-semibold);
+    opacity: 1;
+    box-shadow: 
+      0 0 0 1px rgba(139, 92, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 4px 12px rgba(124, 58, 237, 0.3);
+    z-index: 2;
   }
   
-  .service-toggle-item:hover:not(.active) {
-    background: var(--color-background-glass);
+  /* Subtle inner highlight for active state */
+  .service-toggle-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 60%);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Inactive state: transparent/ghost pill */
+  .service-toggle-item:not(.active) {
+    background: transparent;
+    border: none;
     color: var(--color-text-secondary);
   }
   
-  .service-content {
+  /* Hover state for inactive tabs */
+  .service-toggle-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-primary);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hover state for active tab */
+  .service-toggle-item.active:hover {
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-400) 100%);
+    border-color: var(--color-primary-400);
+    color: #ffffff !important; /* Maintain white text on hover */
+    box-shadow: 
+      0 0 0 1px rgba(167, 139, 250, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 6px 16px rgba(124, 58, 237, 0.4);
+    transform: translateY(-1px);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Focus state - visible focus ring for keyboard accessibility */
+  .service-toggle-item:focus {
+    outline: none;
+  }
+  
+  .service-toggle-item:focus-visible {
+    outline: 2px solid var(--color-primary-400);
+    outline-offset: 2px;
+    z-index: 3;
+  }
+  
+  .service-toggle-item.active:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 2px;
+  }
+  
+  /* Ensure text is always visible and high-contrast */
+  .service-toggle-item * {
+    color: inherit;
+    opacity: 1;
+  }
+  
+  .service-card-content {
     position: relative;
-    min-height: 600px;
+    width: 100%;
+    overflow: visible;
+    min-height: 380px;
+    height: 380px;
   }
   
   .service-panel {
@@ -171,6 +563,9 @@ const { title, subtitle, services } = Astro.props;
     left: 0;
     right: 0;
     opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+    width: 100%;
     visibility: hidden;
     transition: all var(--transition-base);
   }
@@ -188,116 +583,130 @@ const { title, subtitle, services } = Astro.props;
     align-items: center;
   }
   
-  .service-info {
-    max-width: 500px;
+  .service-summary {
+    margin-bottom: 0; /* No bottom margin since media follows */
+    margin-top: 0;
+    text-align: center;
+    padding: 0 var(--spacing-2);
   }
   
-  .service-info .h3 {
-    margin-bottom: var(--spacing-4);
-  }
-  
-  .service-info .body-large {
-    margin-bottom: var(--spacing-8);
-  }
-  
-  .service-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-3);
-  }
-  
-  .service-feature {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
+  .service-summary p {
     color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+    margin: 0;
+    max-width: 100%;
   }
   
-  .service-feature svg {
-    color: var(--color-primary-400);
-    flex-shrink: 0;
-  }
   
-  .service-visual {
+  .service-media {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    overflow: visible;
+    width: 100%;
   }
   
   .service-image-container {
     position: relative;
-    max-width: 500px;
+    max-width: 100%;
     width: 100%;
+    margin: 0 auto;
+    overflow: visible;
+    aspect-ratio: 480 / 290;
+    min-height: 290px;
+    max-height: 320px;
+    background: transparent;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-3);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
   }
   
   .service-image {
     width: 100%;
-    height: auto;
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-2xl);
-    border: 1px solid var(--color-border-primary);
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: var(--radius-md);
+    display: block;
+    background: transparent;
+    border: none;
   }
   
-  .service-image-glow {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-2xl);
-    opacity: 0.15;
-    filter: blur(30px);
-    z-index: -1;
-  }
   
   /* Responsive Design */
-  @media (max-width: 1199px) {
-    .service-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-12);
-      text-align: center;
+  @media (max-width: 767px) {
+    .service-header {
+      margin-bottom: var(--spacing-3);
     }
     
-    .service-info {
-      max-width: none;
+    .service-card {
+      padding: var(--spacing-4) var(--spacing-4) var(--spacing-5);
+      margin-bottom: var(--spacing-3);
     }
-  }
-  
-  @media (max-width: 767px) {
+    
+    .service-tabs-wrapper {
+      margin-bottom: var(--spacing-3);
+    }
+    
+    .service-tabs-track {
+      max-width: 100%;
+      padding: var(--spacing-1);
+    }
+    
     .service-toggle {
       flex-direction: column;
       width: 100%;
-      max-width: 400px;
+      gap: var(--spacing-1);
+      align-items: stretch;
     }
     
     .service-toggle-item {
-      text-align: center;
+      width: 100%;
+      min-height: 40px;
+      height: 40px;
+      min-width: 100%;
+      flex: none;
     }
     
-    .service-content {
-      min-height: 500px;
+    
+    .service-card-content {
+      min-height: 320px;
+      height: 320px;
     }
     
-    .service-grid {
-      gap: var(--spacing-8);
+    .service-image-container {
+      min-height: 240px;
+      max-height: 280px;
+    }
+    
+    .service-summary {
+      margin-bottom: var(--spacing-3);
     }
   }
   
   @media (max-width: 479px) {
-    .service-toggle-container {
-      padding: 0 var(--spacing-4);
+    .service-card {
+      padding: var(--spacing-3) var(--spacing-3) var(--spacing-4);
     }
     
-    .service-toggle {
-      max-width: none;
+    .service-card-content {
+      min-height: 280px;
+      height: 280px;
     }
     
-    .service-content {
-      min-height: 400px;
+    .service-image-container {
+      min-height: 200px;
+      max-height: 240px;
+      padding: var(--spacing-2);
     }
   }
 </style>
