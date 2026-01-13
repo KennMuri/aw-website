@@ -26,7 +26,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
           <span class="status-badge">Available for Projects</span>
         </div>
         <h1 class="main-title">Security Audits</h1>
-        <p class="subtitle">Professional security assessments for Web3 organizations</p>
+        <p class="subtitle">Comprehensive security assessments for Web3 organizations</p>
         
         <div class="quick-stats">
           <div class="stat-item">
@@ -39,7 +39,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
           </div>
           <div class="stat-item">
             <div class="stat-number">24/7</div>
-            <div class="stat-label">Support Available</div>
+            <div class="stat-label">Incident Response</div>
           </div>
         </div>
       </div>
@@ -86,16 +86,37 @@ const experienceWithFill = sortedExperience.map(exp => ({
         </div>
         <div class="experience-years-grid">
           {experienceWithFill.map((exp, index) => (
-            <div class="experience-year-item" data-service-index={index}>
+            <div class="experience-year-item">
               <div class="experience-top">
                 <span class="experience-year-label">{exp.name}</span>
-                <span class="experience-year-value">{exp.years}yr</span>
               </div>
               <div class="experience-bar">
                 <div class="experience-fill" style={`width: ${exp.fillPercent}%`}></div>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div class="slim-section">
+        <div class="slim-header">
+          <h4>Comply with industry standards</h4>
+        </div>
+        <div class="compliance-badges">
+          <a href="https://github.com/W3OSC/web3-opsec-standard" target="_blank" rel="noopener noreferrer" title="W3OS Compliance">
+            <img 
+              src="/images/W3OS-Graphic.png" 
+              alt="W3OS Compliance" 
+              class="compliance-icon" 
+            />
+          </a>
+          <a href="https://frameworks.securityalliance.org/" target="_blank" rel="noopener noreferrer" title="SEAL Certification">
+            <img 
+              src="https://images.typeform.com/images/85jp8NBEtu4u" 
+              alt="SEAL Certification" 
+              class="compliance-icon" 
+            />
+          </a>
         </div>
       </div>
 
@@ -132,28 +153,6 @@ const experienceWithFill = sortedExperience.map(exp => ({
           ))}
         </div>
       </div>
-
-      <div class="slim-section">
-        <div class="slim-header">
-          <h4>Compliance</h4>
-        </div>
-        <div class="compliance-badges">
-          <a href="https://github.com/W3OSC/web3-opsec-standard" target="_blank" rel="noopener noreferrer" title="W3OS Compliance">
-            <img 
-              src="/images/W3OS-Graphic.png" 
-              alt="W3OS Compliance" 
-              class="compliance-icon" 
-            />
-          </a>
-          <a href="https://frameworks.securityalliance.org/" target="_blank" rel="noopener noreferrer" title="SEAL Certification">
-            <img 
-              src="https://images.typeform.com/images/85jp8NBEtu4u" 
-              alt="SEAL Certification" 
-              class="compliance-icon" 
-            />
-          </a>
-        </div>
-      </div>
     </aside>
 
     <!-- Right Column: Service Offerings -->
@@ -171,7 +170,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
         
         <div class="services-grid" id="services-grid">
           {serviceOfferings.map((service, index) => (
-            <div class={`service-card ${service.featured ? 'featured' : ''}`} data-service-index={index}>
+            <div class={`service-card ${service.featured ? 'featured' : ''} ${service.featured ? 'expanded' : ''}`} data-expanded={service.featured}>
               {service.featured && <div class="featured-badge">Most Popular</div>}
               <div class="service-header">
                 <h3 class="service-title">{service.title}</h3>
@@ -182,8 +181,14 @@ const experienceWithFill = sortedExperience.map(exp => ({
                 <p>{service.description}</p>
               </div>
 
-              <details class="service-details" open={service.featured}>
-                <summary class="details-toggle">View Details</summary>
+              <div class="details-indicator">
+                <span class="indicator-text">View Details</span>
+                <svg class="indicator-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+
+              <div class="service-details">
                 <div class="details-content">
                   <div class="service-features">
                     <div class="features-header">What's Included:</div>
@@ -215,7 +220,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
                     </div>
                   )}
                 </div>
-              </details>
+              </div>
 
               {service.duration && (
                 <div class="service-meta">
@@ -250,6 +255,8 @@ const experienceWithFill = sortedExperience.map(exp => ({
   /* Header Section - More Compact */
   .audit-header {
     background: transparent;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding: 60px 20px 40px;
     margin-bottom: 40px;
@@ -536,11 +543,6 @@ const experienceWithFill = sortedExperience.map(exp => ({
     border-radius: 8px;
   }
 
-  .experience-year-item.highlighted {
-    background: rgba(30, 58, 138, 0.1);
-    transform: translateX(4px);
-  }
-
   .experience-top {
     display: flex;
     justify-content: space-between;
@@ -552,16 +554,6 @@ const experienceWithFill = sortedExperience.map(exp => ({
     color: #cccccc;
     font-weight: 500;
     transition: color 0.3s ease;
-  }
-
-  .experience-year-item.highlighted .experience-year-label {
-    color: #ffffff;
-  }
-
-  .experience-year-value {
-    font-size: 0.75rem;
-    color: #1e3a8a;
-    font-weight: 600;
   }
 
   .experience-bar {
@@ -578,10 +570,6 @@ const experienceWithFill = sortedExperience.map(exp => ({
     border-radius: 3px;
     transition: all 0.8s ease;
     box-shadow: 0 0 8px rgba(30, 58, 138, 0.3);
-  }
-
-  .experience-year-item.highlighted .experience-fill {
-    box-shadow: 0 0 12px rgba(30, 64, 175, 0.6);
   }
 
   /* Experience List */
@@ -618,6 +606,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     align-items: center;
+    justify-items: center;
   }
 
   .client-logo-compact {
@@ -641,6 +630,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     gap: 16px;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
   }
 
   .compliance-badges a {
@@ -675,6 +665,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
   }
 
   .service-card::before {
@@ -689,8 +680,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     transition: opacity 0.3s ease;
   }
 
-  .service-card:hover::before,
-  .service-card.active::before {
+  .service-card:hover::before {
     opacity: 1;
   }
 
@@ -717,8 +707,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     letter-spacing: 0.05em;
   }
 
-  .service-card:hover,
-  .service-card.active {
+  .service-card:hover {
     border-color: rgba(30, 58, 138, 0.4);
     box-shadow: 0 8px 32px rgba(30, 58, 138, 0.15);
     transform: translateY(-2px);
@@ -726,41 +715,56 @@ const experienceWithFill = sortedExperience.map(exp => ({
 
   /* Service Details Toggle */
   .service-details {
+    margin-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+  }
+
+  .service-card.expanded .service-details,
+  .service-card[data-expanded="true"] .service-details {
+    max-height: 2000px;
     margin-top: 16px;
   }
 
-  .details-toggle {
-    cursor: pointer;
+  .details-content {
+    animation: slideDown 0.3s ease;
+  }
+
+  /* Details Indicator */
+  .details-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
     color: #1e3a8a;
     font-size: 0.875rem;
     font-weight: 500;
-    list-style: none;
-    user-select: none;
-    padding: 8px 0;
+    transition: all 0.3s ease;
+    opacity: 1;
+  }
+
+  .service-card.expanded .details-indicator,
+  .service-card[data-expanded="true"] .details-indicator {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .indicator-text {
     transition: color 0.3s ease;
   }
 
-  .details-toggle::-webkit-details-marker {
-    display: none;
-  }
-
-  .details-toggle::before {
-    content: '▼ ';
-    display: inline-block;
+  .indicator-arrow {
+    width: 16px;
+    height: 16px;
     transition: transform 0.3s ease;
+    color: #1e3a8a;
   }
 
-  details[open] .details-toggle::before {
-    transform: rotate(180deg);
-  }
-
-  .details-toggle:hover {
+  .service-card:hover .details-indicator {
     color: #1e40af;
-  }
-
-  .details-content {
-    margin-top: 12px;
-    animation: slideDown 0.3s ease;
   }
 
   @keyframes slideDown {
@@ -1092,10 +1096,7 @@ const experienceWithFill = sortedExperience.map(exp => ({
     }
 
     .sidebar {
-      position: static;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      display: none;
     }
 
     .process-timeline-compact {
@@ -1162,40 +1163,30 @@ const experienceWithFill = sortedExperience.map(exp => ({
 </style>
 
 <script>
-  // Scroll-based highlighting for service offerings and experience items
-  const serviceCards = document.querySelectorAll('.service-card');
-  const experienceItems = document.querySelectorAll('.experience-year-item');
-
-  const observerOptions = {
-    root: null,
-    rootMargin: '-40% 0px -40% 0px',
-    threshold: 0
-  };
-
-  const serviceObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const serviceIndex = entry.target.getAttribute('data-service-index');
+  // Make service cards clickable to toggle details
+  document.addEventListener('DOMContentLoaded', () => {
+    const serviceCards = document.querySelectorAll('.service-card');
+    
+    serviceCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Don't toggle if clicking on a link inside the card
+        const target = e.target as HTMLElement;
+        if (target && target.closest && target.closest('a')) {
+          return;
+        }
         
-        // Remove active class from all cards
-        serviceCards.forEach(card => card.classList.remove('active'));
-        // Add active class to current card
-        entry.target.classList.add('active');
+        const isExpanded = card.classList.contains('expanded');
+        const expandedAttr = card.getAttribute('data-expanded') === 'true';
         
-        // Highlight corresponding experience item
-        experienceItems.forEach((item, idx) => {
-          if (idx === parseInt(serviceIndex)) {
-            item.classList.add('highlighted');
-          } else {
-            item.classList.remove('highlighted');
-          }
-        });
-      }
+        if (isExpanded || expandedAttr) {
+          card.classList.remove('expanded');
+          card.setAttribute('data-expanded', 'false');
+        } else {
+          card.classList.add('expanded');
+          card.setAttribute('data-expanded', 'true');
+        }
+      });
     });
-  }, observerOptions);
-
-  serviceCards.forEach(card => {
-    serviceObserver.observe(card);
   });
 </script>
 

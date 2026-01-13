@@ -7,9 +7,6 @@ export interface Props {
     name: string;
     description: string;
     features: string[];
-    primary?: string;
-    support?: string;
-    scope?: string;
     image: string;
     imageAlt: string;
   }>;
@@ -83,8 +80,8 @@ const { title, subtitle, services } = Astro.props;
   </div>
 </section>
 
-<script defer>
-  // Service toggle functionality - Deferred to avoid blocking initial render
+<script>
+  // Service toggle functionality
   document.addEventListener('DOMContentLoaded', function() {
     const toggleItems = document.querySelectorAll('.service-toggle-item');
     const panels = document.querySelectorAll('.service-panel');
@@ -106,38 +103,9 @@ const { title, subtitle, services } = Astro.props;
       indicator.style.transform = `translateX(${left}px)`;
     }
     
-    function updateContainerHeight() {
-      if (!contentContainer) return;
-      
-      // Find the tallest panel by measuring all panels
-      let maxHeight = 0;
-      
-      panels.forEach((panel) => {
-        const isActive = panel.classList.contains('active');
-        
-        // Temporarily show panel to measure
-        const originalPosition = panel.style.position;
-        const originalOpacity = panel.style.opacity;
-        const originalVisibility = panel.style.visibility;
-        const originalPointerEvents = panel.style.pointerEvents;
-        const originalZIndex = panel.style.zIndex;
-        
-        // Force panel to be visible for measurement
-        panel.style.position = 'relative';
-        panel.style.opacity = '1';
-        panel.style.visibility = 'visible';
-        panel.style.pointerEvents = 'none';
-        panel.style.zIndex = '-1';
-        panel.style.height = 'auto';
-        
-        // Force a reflow to ensure accurate measurement
-        void panel.offsetHeight;
-        
-        // Use scrollHeight to get full content height including margins and overflow
-        const height = Math.max(panel.scrollHeight, panel.offsetHeight);
-        if (height > maxHeight) {
-          maxHeight = height;
-        }
+    toggleItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const serviceId = this.getAttribute('data-service');
         
         // Restore original state based on active status
         if (isActive) {
@@ -215,8 +183,6 @@ const { title, subtitle, services } = Astro.props;
       panels.forEach((panel, index) => {
         if (panel !== firstPanel) {
           panel.classList.remove('active');
-          panel.setAttribute('aria-hidden', 'true');
-          panel.style.position = 'absolute';
           panel.style.opacity = '0';
           panel.style.visibility = 'hidden';
           panel.style.pointerEvents = 'none';
@@ -405,8 +371,13 @@ const { title, subtitle, services } = Astro.props;
             return;
         }
         
-        if (targetIndex >= 0) {
-          switchTab(toggleItems[targetIndex], true);
+        // Show corresponding panel with fade effect
+        const targetPanel = document.querySelector(`[data-panel="${serviceId}"]`);
+        if (targetPanel) {
+          setTimeout(() => {
+            targetPanel.classList.add('active');
+            targetPanel.style.opacity = '1';
+          }, 150);
         }
       });
     });
@@ -616,28 +587,20 @@ const { title, subtitle, services } = Astro.props;
     transition: opacity 0.2s ease-out;
     width: 100%;
     visibility: hidden;
+    transition: all var(--transition-base);
   }
   
   .service-panel.active {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    position: relative !important;
-    visibility: visible !important;
-  }
-  
-  /* Ensure first panel is visible on initial load */
-  .service-panel:first-child {
-    position: relative;
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
+    position: relative;
   }
   
-  .service-panel:first-child:not(.active) {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-16);
+    align-items: center;
   }
   
   .service-summary {

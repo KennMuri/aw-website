@@ -87,8 +87,6 @@ const { title, subtitle, logos } = Astro.props;
   
   .logo-carousel-container {
     overflow: hidden;
-    width: 100%;
-    max-width: 100%;
     mask: linear-gradient(
       to right,
       transparent 0%,
@@ -122,9 +120,12 @@ const { title, subtitle, logos } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 120px;
-    min-width: 0;
-    background: transparent;
+    height: 150px;
+    min-width: 360px;
+  }
+  
+  .logo-carousel-item:hover {
+    opacity: 1;
   }
   
   .logo-carousel-item img {

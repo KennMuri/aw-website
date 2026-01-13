@@ -1,6 +1,7 @@
 /* Premium Global Styles - Modern Design System */
 
-/* Fonts are loaded via link tags in BaseLayout.astro to avoid render-blocking */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
 /* Reset and Base Styles */
 *,
@@ -178,8 +179,6 @@ h6 {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--spacing-6);
-  box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 .container-sm {
@@ -435,10 +434,6 @@ h6 {
 
 
 .btn:focus {
-  outline: none;
-}
-
-.btn:focus-visible {
   outline: 2px solid var(--color-primary-400);
   outline-offset: 2px;
 }
@@ -937,16 +932,6 @@ h6 {
   color: var(--color-primary-400);
 }
 
-.framework-badge:focus {
-  outline: none;
-}
-
-.framework-badge:focus-visible {
-  outline: 2px solid var(--color-primary-400);
-  outline-offset: 2px;
-  border-color: var(--color-primary-400);
-}
-
 /* Framework Badge Icon Links - Compact Version */
 .framework-badge-icon-link {
   display: inline-flex;
@@ -960,16 +945,6 @@ h6 {
 .framework-badge-icon-link:hover {
   transform: translateY(-2px) scale(1.05);
   opacity: 0.8;
-}
-
-.framework-badge-icon-link:focus {
-  outline: none;
-}
-
-.framework-badge-icon-link:focus-visible {
-  outline: 2px solid var(--color-primary-400);
-  outline-offset: 4px;
-  border-radius: var(--radius-md);
 }
 
 .framework-badge-icon-link .framework-badge-icon {
@@ -1103,15 +1078,7 @@ h6 {
 
 @media (max-width: 767px) {
   .section {
-    padding: var(--spacing-3) 0;
-  }
-  
-  .section > .container > *:first-child {
-    margin-top: var(--spacing-5);
-  }
-  
-  .section > .container > *:last-child {
-    margin-bottom: var(--spacing-5);
+    padding: var(--spacing-16) 0;
   }
   
   .hero {
@@ -1154,16 +1121,6 @@ h6 {
   
   .logo-carousel-track {
     gap: var(--spacing-8);
-  }
-  
-  /* Ensure buttons meet tap target requirements on mobile */
-  .btn {
-    min-height: 44px;
-    touch-action: manipulation;
-  }
-  
-  .btn-lg {
-    min-height: 48px;
   }
 }
 
@@ -1219,11 +1176,10 @@ h6 {
 }
 
 /* Scroll Animation Utilities */
-/* Premium, minimal motion animations - opacity and subtle transform only */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;

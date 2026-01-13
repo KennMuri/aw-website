@@ -14,19 +14,19 @@ import Footer from '../components/Footer.astro';
 <AuditRequest 
   experienceYears={[
     { name: "Web2 Penetration Testing", years: 15 },
-    { name: "Infrastructure Security Review", years: 10 },
     { name: "Operational Security Audits", years: 10 },
+    { name: "Infrastructure Security Review", years: 10 },
     { name: "Smart Contract & Protocol Audits", years: 6 }
   ]}
   experience={[
-    "10+ years combined security experience from Apple, Amazon, and Fortune 500 companies",
-    "Operational Security Audits & Consulting for Web3 organizations",
+    "10+ years combined security experience from Apple, Amazon, and penetrating testing firms",
+    "Operational Security Audits & Consulting - forged in Web2, adapted to Web3",
     "Smart Contract Audits for EVM and Solana ecosystems",
+    "Custom static analysis engine for Solidity and Rust contracts",
     "Layer 1 & Layer 2 Protocol Security Reviews",
-    "Mobile Application Security Assessments",
-    "Infrastructure & Cloud Security Audits",
-    "Web2 Penetration Testing & Red Team Operations",
-    "Security monitoring platform development"
+    "Infrastructure & Cloud security reviews - for large companies and small startups",
+    "Web2 Penetration testing & active scanning",
+    "Security monitoring platform development (Sentry)"
   ]}
   trustedBy={[
     { name: "UDdd", logo: "/images/UDdd.png", width: 360, height: 120 },
@@ -36,103 +36,73 @@ import Footer from '../components/Footer.astro';
   ]}
   serviceOfferings={[
     {
-      title: "Operational Security Audit",
+      title: "Operational Security Audit + Sentry Monitoring",
       tagline: "Organizational security posture assessment",
-      description: "Comprehensive review of your organization's security posture. We assess team security, processes, infrastructure, and operational practices using W3OS and SEAL Frameworks.",
+      description: "Comprehensive review of your organization's security posture. We assess communications, wallet/multi-sig handling, devices, social engineering resistance, and general operations against our W3OS standard and SEAL Frameworks.",
       featured: true,
       features: [
-        "Complete security posture assessment across all organizational domains",
-        "Team member security review including devices, accounts, and practices",
-        "Code repository and DevOps pipeline security analysis",
-        "Infrastructure and cloud security configuration review",
-        "Wallet security, key management, and multi-sig setup evaluation",
-        "Communication security and data protection protocols",
-        "Incident response planning and security training",
-        "W3OS and SEAL framework compliance verification"
+        "Team member security review including devices, accounts, and training",
+        "Code repo and DevOps pipeline security review",
+        "Wallet security, key management, and multi-sig setup and usage evaluation",
+        "Communication security and socials/brand integrity"
       ],
       deliverables: [
-        "Comprehensive audit report with executive summary",
-        "Detailed findings with severity ratings and remediation guidance",
-        "Security posture scorecard and compliance assessment",
-        "Actionable remediation roadmap with priorities",
-        "Custom security policies and procedures documentation",
-        "Team training materials and security guidelines",
-        "90-day post-audit support and remediation verification"
-      ],
-      duration: "3-6 weeks"
-    },
-    {
-      title: "Smart Contract Audit",
-      tagline: "On-chain code security review",
-      description: "Manual review and automated analysis of smart contracts. Expertise in EVM and Solana ecosystems, identifying vulnerabilities that automated tools miss.",
-      features: [
-        "Manual line-by-line code review by expert auditors",
-        "Automated vulnerability scanning with industry-leading tools",
-        "Business logic and economic security analysis",
-        "Gas optimization recommendations",
-        "Architecture review and design pattern assessment",
-        "Integration testing and attack simulation",
-        "Formal verification for critical components (where applicable)",
-        "Post-audit remediation verification"
-      ],
-      deliverables: [
-        "Detailed security audit report",
-        "Executive summary for stakeholders",
-        "Categorized findings with severity levels",
-        "Proof-of-concept code for critical issues",
-        "Remediation recommendations and best practices",
-        "Gas optimization suggestions",
-        "Re-audit after fixes (included)"
+        "Security standards compliance and team training tracking via Sentry",
+        "Actionable task tracking and development support to meet requirements",
+        "2-month support retainer & Sentry monitoring set up and access (can be extended)"
       ],
       duration: "2-4 weeks"
     },
     {
-      title: "Infrastructure Security Assessment",
+      title: "Smart Contract Audit",
+      tagline: "On-chain code security review",
+      description: "Manual review and automated analysis of smart contracts. Expertise in EVM and Solana ecosystems, with custom automated detections powered by our static analysis tool, Radar.",
+      features: [
+        "Manual line-by-line code review by experienced auditors",
+        "Automated multi-language vulnerability scanning with Radar",
+        "Architecture review and design pattern assessment",
+        "Fuzz testing and attack simulation"
+      ],
+      deliverables: [
+        "Detailed and ready-to-publish security audit report",
+        "Proof-of-concept tests for significant issues",
+        "Re-review after fixes (included)"
+      ],
+      duration: "2-4 weeks"
+    },
+    {
+      title: "Web2 Penetration Test",
+      tagline: "Application security testing",
+      description: "Penetration testing of web applications, front-ends, and backend services using real-world attacker techniques.",
+      features: [
+        "Review of OWASP Top 10 and beyond",
+        "Authentication and authorization testing",
+        "Business logic vulnerability assessment",
+        "Client-side security checks",
+      ],
+      deliverables: [
+        "Penetration test report with detailed findings",
+        "Detailed remediation guidance",
+        "Post-remediation verification testing"
+      ],
+      duration: "1-3 weeks"
+    },
+    {
+      title: "Infrastructure Security Review",
       tagline: "Cloud and deployment security review",
       description: "Assessment of cloud configurations, deployment pipelines, hosting environments, and network security to prevent infrastructure-level compromises.",
       features: [
-        "Cloud infrastructure configuration review (AWS, GCP, Azure)",
-        "CI/CD pipeline security assessment",
-        "Container and Kubernetes security evaluation",
+        "Infrastructure as Code (IaC) security scanning",
         "Network architecture and segmentation analysis",
-        "Secrets management and key rotation practices",
-        "Infrastructure as Code (IaC) security review",
         "Monitoring and logging configuration assessment",
         "Disaster recovery and backup validation"
       ],
       deliverables: [
         "Infrastructure security assessment report",
-        "Configuration vulnerability findings",
-        "Architecture diagrams and documentation",
         "Hardening recommendations and checklists",
-        "IaC security templates and examples",
         "Incident detection and response playbooks"
       ],
-      duration: "2-3 weeks"
-    },
-    {
-      title: "Web Application Penetration Test",
-      tagline: "Application security testing",
-      description: "Penetration testing of web applications, APIs, and backend services using real-world attacker techniques.",
-      features: [
-        "Full-scope web application security testing",
-        "API security assessment (REST, GraphQL, WebSocket)",
-        "Authentication and authorization testing",
-        "Business logic vulnerability assessment",
-        "Client-side security review",
-        "Database security evaluation",
-        "Third-party integration security review",
-        "OWASP Top 10 and beyond"
-      ],
-      deliverables: [
-        "Penetration test report with findings",
-        "Exploited vulnerabilities with proof-of-concept",
-        "Risk ratings and CVSS scores",
-        "Detailed remediation guidance",
-        "Post-remediation verification testing",
-        "Security recommendations and best practices"
-      ],
-      duration: "1-3 weeks"
+      duration: "1-2 weeks"
     }
   ]}
   processSteps={[
