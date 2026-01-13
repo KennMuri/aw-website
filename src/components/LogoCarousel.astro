@@ -28,8 +28,8 @@ const { title, subtitle, logos } = Astro.props;
       </div>
     )}
     
-    <div class="logo-carousel-container">
-      <div class="logo-carousel-track">
+    <div class="logo-carousel-container" id="logo-carousel-container">
+      <div class="logo-carousel-track" id="logo-carousel-track">
         {logos.concat(logos).map((logo, index) => (
           <div class="logo-carousel-item" key={`${logo.name}-${index}`}>
             {logo.src.startsWith('http') ? (
@@ -44,8 +44,8 @@ const { title, subtitle, logos } = Astro.props;
               <Image 
                 src={logo.src} 
                 alt={logo.name}
-                width={logo.width || 360}
-                height={logo.height || 120}
+                width={logo.width || 400}
+                height={logo.height || 130}
                 loading="lazy"
                 format="webp"
               />
@@ -66,10 +66,11 @@ const { title, subtitle, logos } = Astro.props;
     width: 100%;
     max-width: 100%;
     padding: var(--spacing-1) 0;
+    margin-top: 0;
   }
   
   .logo-carousel-header {
-    margin-top: 0;
+    margin-top: 0 !important;
     margin-bottom: 0; /* Spacing handled by heading margin-bottom */
   }
   
@@ -103,16 +104,17 @@ const { title, subtitle, logos } = Astro.props;
     );
   }
   
-  .logo-carousel-container:hover .logo-carousel-track {
-    animation-play-state: paused;
-  }
-  
   .logo-carousel-track {
     display: flex;
     align-items: center;
-    gap: 120px;
+    gap: 80px;
     width: fit-content;
     animation: scroll-horizontal 40s linear infinite;
+    --animation-speed: 1;
+  }
+  
+  .logo-carousel-track.slow {
+    animation-duration: 120s;
   }
   
   .logo-carousel-item {
@@ -120,8 +122,8 @@ const { title, subtitle, logos } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 150px;
-    min-width: 360px;
+    height: 160px;
+    min-width: 380px;
   }
   
   .logo-carousel-item:hover {
@@ -129,17 +131,17 @@ const { title, subtitle, logos } = Astro.props;
   }
   
   .logo-carousel-item img {
-    height: 110px;
+    height: 130px;
     width: auto;
-    min-height: 110px;
-    max-height: 110px;
-    filter: grayscale(100%) brightness(0.7) contrast(0.9);
+    min-height: 130px;
+    max-height: 130px;
+    filter: grayscale(100%) brightness(1.2);
     object-fit: contain;
     transition: filter var(--transition-base);
   }
   
   .logo-carousel-item:hover img {
-    filter: grayscale(80%) brightness(0.85) contrast(0.95);
+    filter: grayscale(0%) brightness(1);
   }
   
   @keyframes scroll-horizontal {
@@ -154,35 +156,106 @@ const { title, subtitle, logos } = Astro.props;
   /* Responsive Design */
   @media (max-width: 767px) {
     .logo-carousel-track {
-      gap: var(--spacing-4);
+      gap: 60px;
       animation-duration: 30s;
     }
     
+    .logo-carousel-track.slow {
+      animation-duration: 90s;
+    }
+    
     .logo-carousel-item {
-      height: 100px;
+      height: 120px;
+      min-width: 280px;
     }
     
     .logo-carousel-item img {
-      height: 95px;
-      min-height: 95px;
-      max-height: 95px;
+      height: 110px;
+      min-height: 110px;
+      max-height: 110px;
     }
   }
   
   @media (max-width: 479px) {
     .logo-carousel-track {
-      gap: var(--spacing-3);
+      gap: 40px;
       animation-duration: 25s;
     }
     
+    .logo-carousel-track.slow {
+      animation-duration: 75s;
+    }
+    
     .logo-carousel-item {
-      height: 90px;
+      height: 110px;
+      min-width: 240px;
     }
     
     .logo-carousel-item img {
-      height: 80px;
-      min-height: 80px;
-      max-height: 80px;
+      height: 100px;
+      min-height: 100px;
+      max-height: 100px;
     }
   }
 </style>
+
+<script>
+  (function() {
+    const container = document.getElementById('logo-carousel-container');
+    const track = document.getElementById('logo-carousel-track');
+    
+    if (!container || !track) return;
+    
+    let animation: Animation | null = null;
+    let currentProgress = 0;
+    let isHovering = false;
+    
+    // Get the current animation
+    const animations = track.getAnimations();
+    if (animations.length > 0) {
+      animation = animations[0] as Animation;
+    }
+    
+    function updateSpeed() {
+      if (!animation) return;
+      
+      // Get current progress before changing speed
+      currentProgress = (animation.currentTime || 0) / (animation.effect?.getComputedTiming().duration || 40000);
+      
+      if (isHovering) {
+        // Slow down: calculate new duration to maintain position
+        const baseDuration = window.innerWidth <= 479 ? 25000 : window.innerWidth <= 767 ? 30000 : 40000;
+        const slowDuration = window.innerWidth <= 479 ? 75000 : window.innerWidth <= 767 ? 90000 : 120000;
+        
+        // Set new duration and adjust currentTime to maintain visual position
+        animation.effect?.updateTiming({ duration: slowDuration });
+        animation.currentTime = currentProgress * slowDuration;
+        track.classList.add('slow');
+      } else {
+        // Speed up: calculate new duration to maintain position
+        const baseDuration = window.innerWidth <= 479 ? 25000 : window.innerWidth <= 767 ? 30000 : 40000;
+        const slowDuration = window.innerWidth <= 479 ? 75000 : window.innerWidth <= 767 ? 90000 : 120000;
+        
+        // Get current progress from slow animation
+        if (track.classList.contains('slow')) {
+          currentProgress = (animation.currentTime || 0) / slowDuration;
+        }
+        
+        // Set base duration and adjust currentTime
+        animation.effect?.updateTiming({ duration: baseDuration });
+        animation.currentTime = currentProgress * baseDuration;
+        track.classList.remove('slow');
+      }
+    }
+    
+    container.addEventListener('mouseenter', () => {
+      isHovering = true;
+      updateSpeed();
+    });
+    
+    container.addEventListener('mouseleave', () => {
+      isHovering = false;
+      updateSpeed();
+    });
+  })();
+</script>

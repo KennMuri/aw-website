@@ -47,21 +47,22 @@ export interface PageTheme {
 }
 
 // Home Page - Purple/Violet Theme (Default brand colors)
+// Matches tokens.css values to ensure consistency with service toggle buttons
 export const homeTheme: PageTheme = {
   id: 'home',
   name: 'Home',
   palette: {
     primary: {
-      50: '250, 245, 255',   // #faf5ff
-      100: '243, 232, 255',  // #f3e8ff
-      200: '233, 213, 255',  // #e9d5ff
-      300: '216, 180, 254',  // #d8b4fe
-      400: '192, 132, 252',  // #c084fc
-      500: '168, 85, 247',   // #a855f7 - Base purple
-      600: '147, 51, 234',   // #9333ea
-      700: '126, 34, 206',   // #7e22ce
-      800: '107, 33, 168',   // #6b21a8
-      900: '88, 28, 135',    // #581c87
+      50: '245, 243, 255',   // #f5f3ff - matches tokens.css
+      100: '237, 233, 254',  // #ede9fe - matches tokens.css
+      200: '221, 214, 254',  // #ddd6fe - matches tokens.css
+      300: '196, 181, 253',  // #c4b5fd - matches tokens.css
+      400: '167, 139, 250',  // #a78bfa - matches tokens.css
+      500: '139, 92, 246',   // #8b5cf6 - matches tokens.css (used in service toggle)
+      600: '124, 58, 237',   // #7c3aed - matches tokens.css (used in service toggle)
+      700: '109, 40, 217',   // #6d28d9 - matches tokens.css
+      800: '91, 33, 182',    // #5b21b6 - matches tokens.css
+      900: '76, 29, 149',    // #4c1d95 - matches tokens.css
     },
     semantic: {
       background: {

@@ -37,7 +37,7 @@
 
 <style>
   .feature-stack-section {
-    padding: var(--spacing-3) 0 var(--spacing-4) 0;
+    padding: 0 0 var(--spacing-4) 0;
     background: transparent;
     overflow: hidden;
   }
@@ -45,12 +45,13 @@
   .video-container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: var(--spacing-2) 24px;
+    margin-top: 0;
   }
 
   .video-label {
     text-align: center;
-    margin-bottom: var(--spacing-2);
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +68,7 @@
     position: relative;
     width: 100%;
     max-width: 900px;
-    margin: var(--spacing-2) auto var(--spacing-2);
+    margin: 0 auto;
     aspect-ratio: 16 / 9;
     border-radius: 18px;
     overflow: hidden;
@@ -120,15 +121,15 @@
   /* Responsive Design */
   @media (max-width: 1199px) {
     .feature-stack-section {
-      padding: 100px 0;
+      padding: 0 0 0 0;
     }
 
     .video-container {
-      padding: 0 20px;
+      padding: 40px 20px;
     }
 
     .video-label {
-      margin-bottom: 40px;
+      margin-bottom: 0;
     }
 
     .sentry-logo {
@@ -147,15 +148,15 @@
 
   @media (max-width: 767px) {
     .feature-stack-section {
-      padding: 80px 0;
+      padding: 0 0 80px 0;
     }
 
     .video-container {
-      padding: 0 16px;
+      padding: var(--spacing-2) 16px;
     }
 
     .video-label {
-      margin-bottom: var(--spacing-2);
+      margin-bottom: 0;
     }
 
     .sentry-logo {
@@ -175,15 +176,15 @@
 
   @media (max-width: 479px) {
     .feature-stack-section {
-      padding: 60px 0;
+      padding: 0 0 60px 0;
     }
 
     .video-container {
-      padding: 0 12px;
+      padding: 24px 12px;
     }
 
     .video-label {
-      margin-bottom: 24px;
+      margin-bottom: 0;
     }
 
     .sentry-logo {

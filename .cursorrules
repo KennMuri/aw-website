@@ -1,0 +1,104 @@
+# Auditware Website Development Guidelines
+
+## Color Usage Guidelines
+
+### ⚠️ CRITICAL: No Hardcoded Colors
+
+**All colors MUST be pulled from the page theme system. Hardcoded colors (hex codes, rgb() values, etc.) are strictly prohibited.**
+
+### Theme System Architecture
+
+The website uses a sophisticated theme system that allows each page to have its own color palette:
+
+1. **Theme Definitions** (`src/styles/themes.ts`):
+   - Each page has a `PageTheme` with a `ColorPalette`
+   - Colors are defined as RGB tuples (e.g., `'139, 92, 246'`) for flexibility
+   - Themes include primary color scales (50-900), semantic colors, and accent colors
+
+2. **CSS Variables** (`src/styles/tokens.css`):
+   - Global design tokens are defined in `:root`
+   - Use these variables for common UI elements
+   - Examples: `var(--color-primary-500)`, `var(--color-text-primary)`, `var(--gradient-primary)`
+
+3. **Component-Level Themes**:
+   - Components like `ModernHero` accept a `colorScheme` prop
+   - These are converted from `PageTheme` using `themeToColorScheme()`
+   - CSS custom properties are set inline on the component
+
+### How to Use Colors Correctly
+
+#### ✅ CORRECT: Using Theme Variables
+
+```css
+/* Use CSS variables from tokens.css */
+.button {
+  background: var(--gradient-primary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-purple);
+}
+
+/* Use component-level CSS variables (for ModernHero, etc.) */
+.hero .btn-primary {
+  background: linear-gradient(135deg, 
+    rgb(var(--button-primary-start)) 0%, 
+    rgb(var(--button-primary-end)) 100%);
+  border-color: rgba(var(--button-border-color), var(--button-border-opacity));
+}
+```
+
+#### ❌ INCORRECT: Hardcoded Colors
+
+```css
+/* NEVER do this */
+.button {
+  background: rgb(125, 70, 190);
+  color: #FFFFFF;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+```
+
+### Available Theme Variables
+
+#### Global Variables (from `tokens.css`):
+- `--color-primary-*` (50, 100, 200, ..., 900)
+- `--color-text-primary`, `--color-text-secondary`, etc.
+- `--color-background-primary`, `--color-background-secondary`, etc.
+- `--color-border-primary`, `--color-border-purple`, etc.
+- `--gradient-primary`, `--gradient-purple`, etc.
+- `--shadow-glow`, `--shadow-glow-medium`, etc.
+
+#### Component-Level Variables (ModernHero):
+- `--button-primary-start`, `--button-primary-end`
+- `--button-primary-hover-start`, `--button-primary-hover-end`
+- `--button-border-color`, `--button-border-opacity`
+- `--gradient-text-1` through `--gradient-text-5`
+- And more...
+
+### Why This Matters
+
+1. **Theme Consistency**: Colors automatically adapt to each page's theme
+2. **Maintainability**: Change colors in one place (themes.ts) and they update everywhere
+3. **Future-Proofing**: Easy to add dark/light mode support later
+4. **Design System**: Ensures visual consistency across the entire site
+
+### Migration Checklist
+
+When working on components, ensure:
+- [ ] No `rgb()` values with hardcoded numbers
+- [ ] No hex color codes (`#FFFFFF`, `#12091F`, etc.)
+- [ ] No `rgba()` with hardcoded color values
+- [ ] All colors reference theme variables or CSS custom properties
+- [ ] Component-specific colors use the component's color scheme system
+
+### Examples of Fixed Components
+
+- `ModernHero.astro`: Uses `colorScheme` prop with CSS custom properties
+- `CTASection.astro`: Uses global theme variables from `tokens.css`
+
+### Questions?
+
+If you're unsure which variable to use:
+1. Check `src/styles/tokens.css` for global variables
+2. Check `src/styles/themes.ts` for available theme colors
+3. Look at similar components for examples
+4. When in doubt, use the most semantic variable name (e.g., `--color-text-primary` instead of `--color-primary-500`)
