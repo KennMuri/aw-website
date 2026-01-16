@@ -41,6 +41,7 @@ const cs = colorScheme;
   --cta-button-primary-hover-end: ${cs.button.primaryHover.end};
   --cta-button-border-color: ${cs.button.border.color};
   --cta-button-border-opacity: ${cs.button.border.opacity};
+  --cta-title-gradient-color: ${cs.button.primary.start};
 ` : ''}>
   <div class="container">
     <div class="cta-content text-center">
@@ -100,7 +101,7 @@ const cs = colorScheme;
   .cta-title {
     margin-bottom: var(--spacing-4);
     color: var(--color-text-primary);
-    background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-primary-300) 100%);
+    background: linear-gradient(135deg, var(--color-text-primary) 0%, rgb(var(--cta-title-gradient-color, 139, 92, 246)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -48,6 +48,55 @@ select {
   font: inherit;
 }
 
+/* Select element styling */
+select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-2-5) var(--spacing-4);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-3) center;
+  background-size: 12px;
+  padding-right: calc(var(--spacing-4) + 16px);
+}
+
+select:hover {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-tertiary);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+select:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-background-tertiary);
+}
+
+select option {
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-2);
+}
+
 p,
 h1,
 h2,
@@ -533,6 +582,14 @@ h6 {
 
 .card:hover::before {
   opacity: 1;
+}
+
+/* Sentry monitors section cards - match CTA hover effect with Sentry green */
+.sentry-monitors-section .card:hover {
+  border-color: rgba(89, 184, 134, 0.3);
+  box-shadow: 0 0 0 1px rgba(89, 184, 134, 0.15), 
+              0 4px 20px rgba(89, 184, 134, 0.3);
+  transform: translateY(-2px);
 }
 
 .card-header {
@@ -1261,6 +1318,22 @@ h6 {
   background: var(--color-background-glass-strong);
   border: 1px solid var(--color-border-strong);
   backdrop-filter: var(--backdrop-blur-md);
+}
+
+/* Add purple gradient dividers to top and bottom of sentry monitors section to match homepage */
+.sentry-monitors-section.section {
+  border-bottom: none;
+}
+
+.sentry-monitors-section.section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-500), transparent);
+  opacity: 0.2;
 }
 
 .glow {

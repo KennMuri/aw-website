@@ -1,0 +1,356 @@
+---
+import type { ColorScheme } from './ModernHero.astro';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  leftLabel?: string;
+  rightLabel?: string;
+  leftImageSrc: string;
+  rightImageSrc: string;
+  leftAlt: string;
+  rightAlt: string;
+  leftCaption?: string;
+  rightCaption?: string;
+  colorScheme?: ColorScheme;
+  toggleButtonColor?: {
+    primary: string; // RGB values like "110, 231, 183"
+    secondary: string; // RGB values like "89, 184, 134"
+    border: string; // RGB values like "110, 231, 183"
+    borderOpacity?: number; // Default 0.5
+  };
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  leftLabel = "Product view",
+  rightLabel = "How it works",
+  leftImageSrc,
+  rightImageSrc,
+  leftAlt,
+  rightAlt,
+  leftCaption,
+  rightCaption,
+  colorScheme,
+  toggleButtonColor
+} = Astro.props;
+
+const sectionId = `toggle-media-${title.toLowerCase().replace(/\s+/g, '-')}`;
+const cs = colorScheme;
+---
+
+<section class="toggle-media-section section" id={sectionId}>
+  <div class="container">
+    <div class="toggle-media-header text-center">
+      {eyebrow && (
+        <p class="body-small" style="color: var(--color-text-muted); margin-bottom: var(--spacing-2); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0;">
+          {eyebrow}
+        </p>
+      )}
+      <h2 class="h2" style="margin-bottom: var(--spacing-3);">{title}</h2>
+      {description && (
+        <p class="body-base" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-5); max-width: 600px; margin-left: auto; margin-right: auto;">
+          {description}
+        </p>
+      )}
+    </div>
+    
+    <div class="toggle-media-card" style={toggleButtonColor ? `
+      --toggle-button-primary: ${toggleButtonColor.primary};
+      --toggle-button-secondary: ${toggleButtonColor.secondary};
+      --toggle-button-border-color: ${toggleButtonColor.border};
+      --toggle-button-border-opacity: ${toggleButtonColor.borderOpacity || 0.5};
+      --toggle-button-gradient: linear-gradient(135deg, rgb(${toggleButtonColor.primary}) 0%, rgb(${toggleButtonColor.secondary}) 100%);
+    ` : cs ? `
+      --toggle-button-border-color: ${cs.button.border.color};
+      --toggle-button-border-opacity: ${cs.button.border.opacity};
+      --toggle-button-primary-start: ${cs.button.primary.start};
+    ` : ''}>
+      <div class="toggle-media-controls">
+        <button
+          class="toggle-button active"
+          data-view="left"
+          aria-pressed="true"
+          aria-controls={`${sectionId}-media`}
+          id={`${sectionId}-left-btn`}
+        >
+          {leftLabel}
+        </button>
+        <button
+          class="toggle-button"
+          data-view="right"
+          aria-pressed="false"
+          aria-controls={`${sectionId}-media`}
+          id={`${sectionId}-right-btn`}
+        >
+          {rightLabel}
+        </button>
+      </div>
+      
+      <div class="toggle-media-content" id={`${sectionId}-media`}>
+        <div class="toggle-media-image-wrapper active" data-image="left">
+          <img
+            src={leftImageSrc}
+            alt={leftAlt}
+            class="toggle-media-image"
+            loading="eager"
+          />
+        </div>
+        <div class="toggle-media-image-wrapper" data-image="right">
+          <img
+            src={rightImageSrc}
+            alt={rightAlt}
+            class="toggle-media-image"
+            loading="lazy"
+          />
+        </div>
+      </div>
+      
+      {(leftCaption || rightCaption) && (
+        <div class="toggle-media-caption">
+          <p class="body-small toggle-caption-text active" data-caption="left" style="color: var(--color-text-muted); margin: 0;">
+            {leftCaption || ''}
+          </p>
+          <p class="body-small toggle-caption-text" data-caption="right" style="color: var(--color-text-muted); margin: 0;">
+            {rightCaption || ''}
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.toggle-media-section');
+    
+    sections.forEach(section => {
+      const buttons = section.querySelectorAll('.toggle-button');
+      const imageWrappers = section.querySelectorAll('.toggle-media-image-wrapper');
+      const captions = section.querySelectorAll('.toggle-caption-text');
+      
+      if (buttons.length === 0) return;
+      
+      function switchView(view) {
+        // Update buttons
+        buttons.forEach(btn => {
+          const isActive = btn.getAttribute('data-view') === view;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+        
+        // Update images
+        imageWrappers.forEach(wrapper => {
+          const isActive = wrapper.getAttribute('data-image') === view;
+          wrapper.classList.toggle('active', isActive);
+        });
+        
+        // Update captions
+        captions.forEach(caption => {
+          const isActive = caption.getAttribute('data-caption') === view;
+          caption.classList.toggle('active', isActive);
+        });
+      }
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const view = this.getAttribute('data-view');
+          switchView(view);
+        });
+        
+        // Keyboard navigation
+        button.addEventListener('keydown', function(e) {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const currentIndex = Array.from(buttons).indexOf(this);
+            const nextIndex = e.key === 'ArrowLeft' 
+              ? (currentIndex - 1 + buttons.length) % buttons.length
+              : (currentIndex + 1) % buttons.length;
+            buttons[nextIndex].focus();
+            const nextView = buttons[nextIndex].getAttribute('data-view');
+            switchView(nextView);
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .toggle-media-section {
+    padding: var(--spacing-8) 0;
+    border-top: none !important;
+  }
+  
+  .toggle-media-section.section {
+    border-top: none !important;
+  }
+  
+  .toggle-media-section.section::before {
+    display: none !important;
+  }
+  
+  .toggle-media-header {
+    margin-bottom: var(--spacing-5);
+  }
+  
+  .toggle-media-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-5);
+    backdrop-filter: var(--backdrop-blur-base);
+    transition: all var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .toggle-media-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border-strong), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+  
+  .toggle-media-card:hover {
+    border-color: rgba(var(--toggle-button-border-color, 139, 92, 246), var(--toggle-button-border-opacity, 0.3));
+    box-shadow: 0 0 0 1px rgba(var(--toggle-button-border-color, 139, 92, 246), calc(var(--toggle-button-border-opacity, 0.3) * 0.5)), 
+                0 4px 20px rgba(var(--toggle-button-primary-start, 147, 51, 234), 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .toggle-media-card:hover::before {
+    opacity: 1;
+  }
+  
+  .toggle-media-controls {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-6);
+    position: relative;
+  }
+  
+  .toggle-button {
+    flex: 1;
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: inherit;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .toggle-button:hover {
+    border-color: var(--toggle-button-border-color, var(--color-border-purple));
+    color: var(--color-text-primary);
+  }
+  
+  .toggle-button:focus {
+    outline: none;
+  }
+  
+  .toggle-button:focus-visible {
+    outline: 2px solid var(--toggle-button-primary, var(--color-primary-400));
+    outline-offset: 2px;
+  }
+  
+  .toggle-button.active {
+    background: var(--toggle-button-gradient, var(--gradient-primary));
+    border-color: rgba(var(--toggle-button-border-color, 139, 92, 246), var(--toggle-button-border-opacity, 0.3));
+    color: #FFFFFF;
+    box-shadow: 0 0 0 1px rgba(var(--toggle-button-border-color, 139, 92, 246), calc(var(--toggle-button-border-opacity, 0.3) * 0.5)), 
+                0 4px 12px rgba(var(--toggle-button-primary, 139, 92, 246), 0.3);
+  }
+  
+  .toggle-media-content {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .toggle-media-image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    pointer-events: none;
+  }
+  
+  .toggle-media-image-wrapper.active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  
+  .toggle-media-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    display: block;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  .toggle-media-caption {
+    position: relative;
+    min-height: 1.5rem;
+    text-align: center;
+  }
+  
+  .toggle-caption-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+  }
+  
+  .toggle-caption-text.active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  @media (max-width: 767px) {
+    .toggle-media-controls {
+      flex-direction: column;
+    }
+    
+    .toggle-button {
+      width: 100%;
+    }
+    
+    .toggle-media-content {
+      min-height: 220px;
+    }
+    
+    .toggle-media-header {
+      text-align: center;
+    }
+  }
+</style>
