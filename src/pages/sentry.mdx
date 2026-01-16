@@ -8,6 +8,7 @@ image: "/images/Sentry-Grph-image.png"
 import Navbar from '../components/Navbar.astro';
 import ModernHero from '../components/ModernHero.astro';
 import CTASection from '../components/CTASection.astro';
+import ToggleMediaSection from '../components/ToggleMediaSection.astro';
 import Footer from '../components/Footer.astro';
 import { sentryTheme, themeToColorScheme } from '../styles/themes.ts';
 
@@ -27,8 +28,11 @@ export const pageTheme = sentryTheme;
   colorScheme={themeToColorScheme(pageTheme)}
 />
 
-<section className="section sentry-monitors-section" style="background: #111111; padding: 80px 0;">
+<section className="section sentry-monitors-section" style="background: #111111; padding: var(--spacing-8) 0;">
   <div className="container">
+    <div className="text-center" style="margin-bottom: var(--spacing-8);">
+      <h2 className="h2" style="margin-bottom: 0;">Security monitoring</h2>
+    </div>
     <div style="text-align: center; max-width: 100%;">
       <div className="grid grid-cols-2 grid-gap-md" style="gap: var(--spacing-5);">
         <div className="card" style="padding: var(--spacing-8); border-radius: var(--radius-2xl); border: 1px solid var(--color-border-primary); position: relative; background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(124, 58, 237, 0.06) 100%), var(--gradient-card); transition: all var(--transition-slow);">
@@ -37,57 +41,39 @@ export const pageTheme = sentryTheme;
             <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <p className="body-small" style="color: var(--color-text-muted); margin-bottom: var(--spacing-2); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0;">
-            Surface
-          </p>
           <h4 className="h5" style="margin-bottom: var(--spacing-4); margin-top: 0;">Endpoints & devices</h4>
           <p className="body-large" style="margin: 0 0 var(--spacing-4) 0; line-height: 1.6;">
             Monitor endpoints and devices for signs of compromise and unauthorized access.
           </p>
-          <p className="body-small" style="color: var(--color-text-subtle); margin: 0 0 var(--spacing-5) 0;">
+          <p className="body-small" style="color: var(--color-text-subtle); margin: 0;">
             Example signals: Unusual login locations, device policy violations, suspicious process execution.
           </p>
-          <a href="#" className="body-small link-underline" style="color: var(--color-text-muted);">
-            Learn more →
-          </a>
         </div>
         <div className="card" style="padding: var(--spacing-8); border-radius: var(--radius-2xl); border: 1px solid var(--color-border-primary); position: relative; background: linear-gradient(135deg, rgba(139, 92, 246, 0.10) 0%, rgba(124, 58, 237, 0.05) 100%), var(--gradient-card); transition: all var(--transition-slow);">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: var(--spacing-4); opacity: 0.8; color: var(--color-text-secondary);">
             <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="2"/>
           </svg>
-          <p className="body-small" style="color: var(--color-text-muted); margin-bottom: var(--spacing-2); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0;">
-            Access
-          </p>
           <h4 className="h5" style="margin-bottom: var(--spacing-4); margin-top: 0;">Identity & access</h4>
           <p className="body-large" style="margin: 0 0 var(--spacing-4) 0; line-height: 1.6;">
             Track identity and access management for account security and permissions.
           </p>
-          <p className="body-small" style="color: var(--color-text-subtle); margin: 0 0 var(--spacing-5) 0;">
+          <p className="body-small" style="color: var(--color-text-subtle); margin: 0;">
             Example signals: Privilege escalation, inactive account access, MFA bypass attempts.
           </p>
-          <a href="#" className="body-small link-underline" style="color: var(--color-text-muted);">
-            Learn more →
-          </a>
         </div>
         <div className="card" style="padding: var(--spacing-8); border-radius: var(--radius-2xl); border: 1px solid var(--color-border-primary); position: relative; background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.3) 100%), var(--gradient-card); transition: all var(--transition-slow);">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: var(--spacing-4); opacity: 0.8; color: var(--color-text-secondary);">
             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <p className="body-small" style="color: var(--color-text-muted); margin-bottom: var(--spacing-2); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0;">
-            Pipeline
-          </p>
           <h4 className="h5" style="margin-bottom: var(--spacing-4); margin-top: 0;">DevOps & GitHub activity</h4>
           <p className="body-large" style="margin: 0 0 var(--spacing-4) 0; line-height: 1.6;">
             Watch DevOps pipelines and GitHub repositories for suspicious changes.
           </p>
-          <p className="body-small" style="color: var(--color-text-subtle); margin: 0 0 var(--spacing-5) 0;">
+          <p className="body-small" style="color: var(--color-text-subtle); margin: 0;">
             Example signals: Unauthorized repo access, secret exposure, CI/CD configuration changes.
           </p>
-          <a href="#" className="body-small link-underline" style="color: var(--color-text-muted);">
-            Learn more →
-          </a>
         </div>
         <div className="card" style="padding: var(--spacing-8); border-radius: var(--radius-2xl); border: 1px solid var(--color-border-primary); position: relative; background: linear-gradient(135deg, rgba(89, 184, 134, 0.08) 0%, rgba(72, 167, 117, 0.04) 100%), var(--gradient-card); transition: all var(--transition-slow);">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: var(--spacing-4); opacity: 0.8; color: var(--color-text-secondary);">
@@ -95,81 +81,94 @@ export const pageTheme = sentryTheme;
             <path d="M3.27002 6.96L12 12.01L20.73 6.96" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 22.08V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <p className="body-small" style="color: var(--color-text-muted); margin-bottom: var(--spacing-2); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0;">
-            Network
-          </p>
           <h4 className="h5" style="margin-bottom: var(--spacing-4); margin-top: 0;">Frontend & DNS</h4>
           <p className="body-large" style="margin: 0 0 var(--spacing-4) 0; line-height: 1.6;">
             Monitor frontend applications and DNS records for tampering and attacks.
           </p>
-          <p className="body-small" style="color: var(--color-text-subtle); margin: 0 0 var(--spacing-5) 0;">
+          <p className="body-small" style="color: var(--color-text-subtle); margin: 0;">
             Example signals: DNS record modifications, certificate changes, frontend injection attempts.
           </p>
-          <a href="#" className="body-small link-underline" style="color: var(--color-text-muted);">
-            Learn more →
-          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section className="section" style="padding: 80px 0;">
-  <div className="container">
-    <div style="text-align: center; max-width: 100%;">
-      <h3 className="h4" style="margin-bottom: 32px;">Monitor for Attacks</h3>
-      <div style="width: 100%; max-width: 90%; margin: 0 auto 24px;">
-        <img 
-          src="/images/Screenshot-2025-07-14-at-2.45.47-PM.png" 
-          alt="Sentry Attack Monitoring Dashboard"
-          loading="lazy"
-          style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"
-        />
-      </div>
-      <p className="body-base" style="color: #a0a0a0; max-width: 600px; margin: 0 auto;">
-        Real-time alerts on indicators of compromise.
-      </p>
-    </div>
-  </div>
-</section>
+<ToggleMediaSection
+  eyebrow="Breach detection"
+  title="Breach detection & OSINT"
+  description="Monitor compromised credentials and organizational email exposure across dark web sources."
+  leftImageSrc="/images/Screenshot-2025-07-14-at-2.45.47-PM.png"
+  rightImageSrc="/images/sentry-breach-detection-diagram.png"
+  leftAlt="Sentry breach detection dashboard showing compromised email alerts"
+  rightAlt="Diagram showing breach detection workflow from dark web sources to Sentry alerts"
+  leftCaption="Real-time alerts when organizational emails appear in breach databases."
+  rightCaption="Continuous monitoring of dark web markets, paste sites, and leaked databases feeds into Sentry's threat detection engine."
+  colorScheme={themeToColorScheme(pageTheme)}
+  toggleButtonColor={{
+    primary: "110, 231, 183",
+    secondary: "89, 184, 134",
+    border: "110, 231, 183",
+    borderOpacity: 0.5
+  }}
+/>
 
-<section className="section" style="background: #111111; padding: 80px 0;">
-  <div className="container">
-    <div style="text-align: center; max-width: 100%;">
-      <h3 className="h4" style="margin-bottom: 32px;">Onboard & Configure</h3>
-      <div style="width: 100%; max-width: 90%; margin: 0 auto 24px;">
-        <img 
-          src="/images/Screenshot-2025-07-14-at-2.19.06-PM.png" 
-          alt="Sentry Onboarding Interface"
-          loading="lazy"
-          style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"
-        />
-      </div>
-      <p className="body-base" style="color: #a0a0a0; max-width: 600px; margin: 0 auto;">
-        Deploy security guidance across your organization.
-      </p>
-    </div>
-  </div>
-</section>
+<ToggleMediaSection
+  eyebrow="GitHub monitoring"
+  title="GitHub activity monitoring"
+  description="Detect malicious activity and developer mistakes across your organization's repositories."
+  leftImageSrc="/images/Screenshot-2025-07-14-at-2.46.51-PM.png"
+  rightImageSrc="/images/sentry-github-diagram.png"
+  leftAlt="Sentry GitHub monitoring interface showing repository activity alerts"
+  rightAlt="Diagram showing GitHub monitoring workflow detecting commit spoofing, force pushes, and secret exposure"
+  leftCaption="Alerts on risky GitHub activity including commit author spoofing and force pushes."
+  rightCaption="Monitors for commit author spoofing, force pushes, secret exposure, and outdated dependencies."
+  colorScheme={themeToColorScheme(pageTheme)}
+  toggleButtonColor={{
+    primary: "110, 231, 183",
+    secondary: "89, 184, 134",
+    border: "110, 231, 183",
+    borderOpacity: 0.5
+  }}
+/>
 
-<section className="section" style="padding: 80px 0;">
-  <div className="container">
-    <div style="text-align: center; max-width: 100%;">
-      <h3 className="h4" style="margin-bottom: 32px;">Audit</h3>
-      <div style="width: 100%; max-width: 90%; margin: 0 auto 24px;">
-        <img 
-          src="/images/Screenshot-2025-07-14-at-2.47.39-PM.png" 
-          alt="Sentry Audit Interface"
-          loading="lazy"
-          style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"
-        />
-      </div>
-      <p className="body-base" style="color: #a0a0a0; max-width: 600px; margin: 0 auto;">
-        Comprehensive security audits with actionable tasks.
-      </p>
-    </div>
-  </div>
-</section>
+<ToggleMediaSection
+  eyebrow="Frontend security"
+  title="Frontend & DNS integrity"
+  description="Monitor website content changes and security header configurations to detect tampering."
+  leftImageSrc="/images/Screenshot-2025-07-14-at-2.47.39-PM.png"
+  rightImageSrc="/images/sentry-frontend-dns-diagram.png"
+  leftAlt="Sentry frontend monitoring dashboard showing DNS and content change alerts"
+  rightAlt="Diagram showing frontend monitoring workflow from DNS verification to content hash tracking"
+  leftCaption="Alerts when frontend content changes or security headers degrade."
+  rightCaption="Tracks DNS TXT records for ownership verification, URL path content hashes, and HTTP security header grades."
+  colorScheme={themeToColorScheme(pageTheme)}
+  toggleButtonColor={{
+    primary: "110, 231, 183",
+    secondary: "89, 184, 134",
+    border: "110, 231, 183",
+    borderOpacity: 0.5
+  }}
+/>
+
+<ToggleMediaSection
+  eyebrow="Endpoint protection"
+  title="Endpoints & devices (EDR)"
+  description="Continuous monitoring of endpoints and devices for compromise indicators and policy violations."
+  leftImageSrc="/images/Screenshot-2025-07-14-at-2.19.06-PM.png"
+  rightImageSrc="/images/sentry-edr-diagram.png"
+  leftAlt="Sentry endpoint monitoring dashboard showing device security status"
+  rightAlt="Diagram showing EDR workflow from CVE detection to endpoint protection and threat response"
+  leftCaption="Real-time device monitoring with software inventory and threat detection."
+  rightCaption="EDR agents send OS information to Sentry, which performs policy checks and detects vulnerabilities before attackers exploit them."
+  colorScheme={themeToColorScheme(pageTheme)}
+  toggleButtonColor={{
+    primary: "110, 231, 183",
+    secondary: "89, 184, 134",
+    border: "110, 231, 183",
+    borderOpacity: 0.5
+  }}
+/>
 
 <div className="sentry-cta-wrapper" style="background: #111111;">
   <CTASection 
@@ -180,8 +179,8 @@ export const pageTheme = sentryTheme;
       href: "/sentry-waitlist"
     }}
     secondaryCta={{
-      text: "Talk to the team",
-      href: "/audits"
+      text: "Learn more",
+      href: "/sentry"
     }}
     disclaimer=""
     colorScheme={themeToColorScheme(pageTheme)}
