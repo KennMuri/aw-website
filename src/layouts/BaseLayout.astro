@@ -24,7 +24,7 @@ const props = Astro.props;
 const frontmatter = props.frontmatter || {};
 const title = props.title || frontmatter.title || "Auditware";
 const description = props.description || frontmatter.description || "Operational security audits for web3 organizations, active compromise monitoring, and rapid incident response.";
-const image = props.image || frontmatter.image || "/images/HP-Grph-image.png";
+const image = props.image || frontmatter.image || "/images/Sentry-Grph-image.png";
 const canonical = props.canonical || frontmatter.canonical;
 const structuredData = props.structuredData || frontmatter.structuredData;
 const googleAnalyticsId = props.googleAnalyticsId || frontmatter.googleAnalyticsId;
@@ -40,7 +40,7 @@ const organizationSchema = {
   "@type": "Organization",
   "name": "Auditware",
   "url": siteUrl,
-  "logo": new URL("/images/HP-Grph-image.png", siteUrl).toString(),
+  "logo": new URL("/images/Monitoring.png", siteUrl).toString(),
   "description": "Premier Web3 operational security audits, smart contract audits, and the Sentry OpSec monitoring platform.",
   "foundingDate": "2020",
   "sameAs": [
