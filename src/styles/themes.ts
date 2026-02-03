@@ -255,13 +255,17 @@ export const themes: Record<string, PageTheme> = {
 export function themeToColorScheme(theme: PageTheme) {
   const { palette } = theme;
   
+  // Create stronger gradient for better visibility
+  // For audit wizard (blue), use more saturated blues in the gradient
+  const isAuditWizard = theme.id === 'audit-wizard';
+  
   return {
     gradientText: {
       stop1: '255, 255, 255',      // Pure white
-      stop2: '255, 255, 255',      // Pure white
-      stop3: palette.primary[50],  // Very light tint
-      stop4: palette.primary[100], // Light tint
-      stop5: palette.primary[200], // Subtle accent
+      stop2: isAuditWizard ? palette.primary[100] : '255, 255, 255',  // Start blue earlier for audit wizard
+      stop3: isAuditWizard ? palette.primary[200] : palette.primary[50],  // Light blue tint
+      stop4: isAuditWizard ? palette.primary[300] : palette.primary[100], // Medium blue tint
+      stop5: isAuditWizard ? palette.primary[400] : palette.primary[200], // Stronger blue accent
     },
     button: {
       primary: { 
