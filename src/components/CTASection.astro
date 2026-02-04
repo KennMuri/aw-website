@@ -52,14 +52,24 @@ const cs = colorScheme;
         {description} Book an operational security audit to identify and mitigate risk.
       </p>
       <div class="cta-buttons flex gap-4 justify-center">
-        <a href={primaryCta.href} class="btn btn-primary btn-lg">
+        <a 
+          href={primaryCta.href} 
+          class="btn btn-primary btn-lg"
+          target={primaryCta.href.startsWith('http') ? '_blank' : undefined}
+          rel={primaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
           {primaryCta.text}
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
         {secondaryCta && (
-          <a href={secondaryCta.href} class="btn btn-secondary btn-lg">
+          <a 
+            href={secondaryCta.href} 
+            class="btn btn-secondary btn-lg"
+            target={secondaryCta.href.startsWith('http') ? '_blank' : undefined}
+            rel={secondaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
             {secondaryCta.text}
           </a>
         )}
