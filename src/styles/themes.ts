@@ -162,41 +162,41 @@ export const sentryTheme: PageTheme = {
   },
 };
 
-// Radar - Deep Green/Forest Theme
+// Radar - Subtle Yellow-Green Theme
 export const radarTheme: PageTheme = {
   id: 'radar',
   name: 'Radar',
   palette: {
     primary: {
-      50: '240, 253, 244',   // #f0fdf4
-      100: '220, 252, 231',  // #dcfce7
-      200: '187, 247, 208',  // #bbf7d0
-      300: '134, 239, 172',  // #86efac
-      400: '74, 222, 128',   // #4ade80
-      500: '33, 76, 64',     // #214c40 - Base dark green from navbar
-      600: '26, 61, 51',     // #1a3d33
-      700: '20, 48, 40',     // #143028
-      800: '15, 36, 30',     // #0f241e
-      900: '10, 24, 20',     // #0a1814
+      50: '240, 253, 244',   // #f0fdf4 - Very light green with yellow tint
+      100: '220, 252, 231',   // #dcfce7 - Light green-yellow
+      200: '187, 247, 208',   // #bbf7d0 - Soft yellow-green
+      300: '134, 239, 172',   // #86efac - Muted yellow-green
+      400: '101, 217, 120',   // #65d978 - Medium yellow-green (more yellow)
+      500: '84, 180, 100',    // #54b464 - Base yellow-green (warmer, more yellow than Sentry)
+      600: '68, 146, 81',     // #449251 - Deeper yellow-green
+      700: '56, 120, 67',     // #387843 - Dark yellow-green
+      800: '45, 97, 54',       // #2d6136 - Deep yellow-green
+      900: '37, 79, 44',       // #254f2c - Darkest yellow-green
     },
     accent: {
-      light: '167, 243, 208',  // Light mint
-      base: '110, 231, 183',   // Mint
-      dark: '59, 130, 100',    // Medium green
+      light: '134, 239, 172',  // Muted yellow-green
+      base: '101, 217, 120',    // Medium yellow-green (more yellow)
+      dark: '68, 146, 81',      // Deeper yellow-green
     },
     semantic: {
       background: {
-        gradient1: { color: '33, 76, 64', opacity: 0.25 },
-        gradient2: { color: '59, 130, 100', opacity: 0.2 },
-        gradient3: { color: '45, 106, 83', opacity: 0.15 },
+        gradient1: { color: '84, 180, 100', opacity: 0.25 },
+        gradient2: { color: '68, 146, 81', opacity: 0.2 },
+        gradient3: { color: '56, 120, 67', opacity: 0.15 },
       },
       border: {
-        base: { color: '59, 130, 100', opacity: 0.3 },
-        hover: { color: '110, 231, 183', opacity: 0.5 },
+        base: { color: '84, 180, 100', opacity: 0.3 },
+        hover: { color: '101, 217, 120', opacity: 0.5 },
       },
       glow: {
-        base: { color: '59, 130, 100', opacity: 0.3 },
-        strong: { color: '33, 76, 64', opacity: 0.5 },
+        base: { color: '84, 180, 100', opacity: 0.3 },
+        strong: { color: '68, 146, 81', opacity: 0.5 },
       },
     },
   },
@@ -255,13 +255,17 @@ export const themes: Record<string, PageTheme> = {
 export function themeToColorScheme(theme: PageTheme) {
   const { palette } = theme;
   
+  // Create stronger gradient for better visibility
+  // For audit wizard (blue), use more saturated blues in the gradient
+  const isAuditWizard = theme.id === 'audit-wizard';
+  
   return {
     gradientText: {
       stop1: '255, 255, 255',      // Pure white
-      stop2: '255, 255, 255',      // Pure white
-      stop3: palette.primary[50],  // Very light tint
-      stop4: palette.primary[100], // Light tint
-      stop5: palette.primary[200], // Subtle accent
+      stop2: isAuditWizard ? palette.primary[100] : '255, 255, 255',  // Start blue earlier for audit wizard
+      stop3: isAuditWizard ? palette.primary[200] : palette.primary[50],  // Light blue tint
+      stop4: isAuditWizard ? palette.primary[300] : palette.primary[100], // Medium blue tint
+      stop5: isAuditWizard ? palette.primary[400] : palette.primary[200], // Stronger blue accent
     },
     button: {
       primary: { 
