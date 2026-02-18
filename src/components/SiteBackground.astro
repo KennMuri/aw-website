@@ -62,6 +62,9 @@ if (currentPath.includes('/audit-wizard')) {
 } else if (currentPath.includes('/audits')) {
   pageKey = 'audits';
   theme = themes.audits;
+} else if (currentPath.includes('/partnerships')) {
+  pageKey = 'home';
+  theme = themes.home;
 }
 
 const gradientPositions = PAGE_GRADIENT_POSITIONS[pageKey];

@@ -6,33 +6,42 @@ export interface Props {
   }>;
   title?: string;
   subtitle?: string;
+  /** When false, removes the section background/pattern for embedding in a parent layout */
+  showBackground?: boolean;
+  /** Unique ID prefix for this FAQ group (needed when multiple FAQSections on one page) */
+  groupId?: string;
 }
 
-const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
+const { 
+  faqs, 
+  title = "Frequently Asked Questions", 
+  subtitle, 
+  showBackground = true,
+  groupId = "faq"
+} = Astro.props;
 ---
 
-<section class="faq-section">
-  <!-- Dotted Background Pattern -->
-  <div class="dotted-background"></div>
+<section class:list={["faq-section", { "faq-section--embedded": !showBackground }]}>
+  {showBackground && <div class="dotted-background"></div>}
   
   <div class="container">
     {(title || subtitle) && (
       <div class="faq-header">
         {subtitle && <p class="faq-subtitle">{subtitle}</p>}
-        {title && <h2 class="faq-title">{title}</h2>}
+        {title && <h2 class:list={["faq-title", { "faq-title--category": !showBackground }]}>{title}</h2>}
       </div>
     )}
     
     <div class="faq-list">
       {faqs.map((faq, index) => (
-        <div class="faq-item" data-faq={index}>
-          <button class="faq-question" aria-expanded="false" data-faq-toggle={index}>
+        <div class="faq-item" data-faq-group={groupId} data-faq={`${groupId}-${index}`}>
+          <button class="faq-question" aria-expanded="false" data-faq-toggle={`${groupId}-${index}`}>
             <span class="faq-question-text">{faq.question}</span>
             <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <div class="faq-answer" data-faq-content={index}>
+          <div class="faq-answer" data-faq-content={`${groupId}-${index}`}>
             <div class="faq-answer-inner">
               {faq.answer}
             </div>
@@ -54,8 +63,14 @@ const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
         const item = toggle.closest('.faq-item');
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
         
-        // Close all other FAQs
-        document.querySelectorAll('.faq-item').forEach(otherItem => {
+        // Get the group this FAQ belongs to
+        const groupId = item?.getAttribute('data-faq-group');
+        
+        // Close all other FAQs in the same group
+        const groupSelector = groupId 
+          ? `.faq-item[data-faq-group="${groupId}"]` 
+          : '.faq-item';
+        document.querySelectorAll(groupSelector).forEach(otherItem => {
           if (otherItem !== item) {
             otherItem.classList.remove('active');
             const otherToggle = otherItem.querySelector('[data-faq-toggle]');
@@ -64,6 +79,7 @@ const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
         });
         
         // Toggle current FAQ
+        if (!item) return;
         if (isExpanded) {
           item.classList.remove('active');
           toggle.setAttribute('aria-expanded', 'false');
@@ -79,9 +95,18 @@ const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
 <style>
   .faq-section {
     padding: var(--spacing-24) 0;
-    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    background: linear-gradient(180deg, 
+      var(--color-background-primary) 0%, 
+      var(--color-background-elevated, rgba(255, 255, 255, 0.04)) 50%, 
+      var(--color-background-primary) 100%
+    );
     position: relative;
     overflow: hidden;
+  }
+  
+  .faq-section--embedded {
+    background: transparent;
+    padding: var(--spacing-8) 0;
   }
   
   /* Dotted Background Pattern */
@@ -127,6 +152,11 @@ const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin: 0;
+  }
+  
+  .faq-title--category {
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary-400);
   }
   
   .faq-list {
@@ -213,8 +243,16 @@ const { faqs, title = "Frequently Asked Questions", subtitle } = Astro.props;
       padding: var(--spacing-16) 0;
     }
     
+    .faq-section--embedded {
+      padding: var(--spacing-6) 0;
+    }
+    
     .faq-title {
       font-size: var(--font-size-5xl);
+    }
+    
+    .faq-title--category {
+      font-size: var(--font-size-2xl);
     }
     
     .faq-question {

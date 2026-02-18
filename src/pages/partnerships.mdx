@@ -1,0 +1,29 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: "Partnerships - Partner With Auditware | Auditware"
+description: "Auditware partnership program details, referral incentives, product information, comarketing resources, and brand assets. Everything partners need in one place."
+image: "/images/og/og-press.png"
+---
+
+import Navbar from '../components/Navbar.astro';
+import PartnershipsContent from '../components/PartnershipsContent.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { homeTheme, themeToColorScheme } from '../styles/themes.ts';
+
+export const pageTheme = homeTheme;
+
+<Navbar />
+
+<PartnershipsContent />
+
+<CTASection
+  title="Ready to Partner?"
+  description="Reach out to discuss referral terms, comarketing, or security engagements."
+  primaryCta={{ text: "Schedule a Call", href: "https://calendly.com/d/cnqr-49f-xdy/auditware-consultation" }}
+  secondaryCta={{ text: "Email Us", href: "mailto:joe@auditware.io" }}
+  disclaimer="Direct CEO involvement across all partnerships"
+  colorScheme={themeToColorScheme(pageTheme)}
+/>
+
+<Footer />

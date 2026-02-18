@@ -1,1 +1,142 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: "FAQ - Frequently Asked Questions | Auditware"
+description: "Answers to common questions about Auditware's security audits, the Sentry monitoring platform, W3OS compliance, smart contract reviews, and how to get started."
+image: "/images/og/og-homepage.png"
+---
 
+import Navbar from '../components/Navbar.astro';
+import FAQSection from '../components/FAQSection.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { homeTheme, themeToColorScheme } from '../styles/themes.ts';
+
+export const pageTheme = homeTheme;
+
+<Navbar />
+
+<FAQSection
+  title="Frequently Asked Questions"
+  subtitle="ABOUT AUDITWARE"
+  showBackground={true}
+  groupId="about"
+  faqs={[
+    {
+      question: "What is Auditware?",
+      answer: "Auditware is a Web3 operational security company that combines a security standard (W3OS), a monitoring platform (Sentry), and hands-on audit execution into one workflow. We provide operational security audits, smart contract audits, penetration testing, and infrastructure security reviews — backed by over 10 years of combined security experience from Apple, Amazon, and leading penetration testing firms."
+    },
+    {
+      question: "What makes Auditware different from other security firms?",
+      answer: "Most security firms focus solely on smart contract audits. Auditware takes a holistic approach — we assess your entire organization's security posture, including people, processes, devices, and code. We created the W3OS open-source standard, built the Sentry monitoring platform, and deliver hands-on audits, combining all three into a single workflow. Our team's roots in Web2 security from Apple and Amazon give us deep expertise that extends beyond on-chain code."
+    },
+    {
+      question: "Who is on the Auditware team?",
+      answer: "Our core team includes Joe Van Loon (Founder & CEO), previously a security engineer at Apple and Amazon; Tomer Bar (CTO), a software engineer with extensive security research experience who develops and deconstructs open-source security tools; and Ken Murillo (Head of Operations), who leads product and client operations with a focus on intuitive tools and clear workflows for Web3 teams."
+    }
+  ]}
+/>
+
+<FAQSection
+  title="Security Audits"
+  showBackground={false}
+  groupId="audits"
+  faqs={[
+    {
+      question: "What types of security audits do you offer?",
+      answer: "We offer four core services: Operational Security (OpSec) Audits with Sentry monitoring, Smart Contract Audits for EVM and Solana ecosystems, Web2 Penetration Testing for applications and backend services, and Infrastructure Security Reviews covering cloud configurations, CI/CD pipelines, containers, and hosting environments."
+    },
+    {
+      question: "What is an Operational Security (OpSec) audit?",
+      answer: "An OpSec audit is a comprehensive review of your organization's security posture beyond just code. We assess team member devices and accounts, code repositories and DevOps pipelines, wallet security and multi-sig setups, communication channels, and social engineering resistance — all measured against our W3OS standard and the SEAL framework. It includes onboarding to Sentry for ongoing compliance tracking and a 2-month support retainer."
+    },
+    {
+      question: "How is an OpSec audit different from a smart contract audit?",
+      answer: "A smart contract audit focuses specifically on on-chain code — reviewing Solidity or Rust contracts for vulnerabilities, logic errors, and gas optimization. An OpSec audit is broader, assessing the people, processes, infrastructure, and operational practices surrounding your project. Many of the biggest Web3 hacks weren't caused by smart contract bugs — they resulted from compromised private keys, insider threats, malware infections, and access control failures. An OpSec audit addresses these human and operational risks."
+    },
+    {
+      question: "How long does an audit take?",
+      answer: "Timelines vary by service: OpSec Audits take 2–4 weeks, Smart Contract Audits take 2–4 weeks, Web2 Penetration Tests take 1–3 weeks, and Infrastructure Security Reviews take 1–2 weeks. Exact duration depends on the scope and complexity of your project, which we determine during an initial 30-minute consultation."
+    },
+    {
+      question: "What is the audit process from start to finish?",
+      answer: "Our process has eight steps: (1) Initial Consultation — a 30-minute call to understand your needs. (2) Scoping & Agreement — define deliverables, timeline, and pricing. (3) Information Gathering — you provide access and documentation. (4) Security Assessment — comprehensive audit with regular status updates. (5) Report Delivery — detailed findings with severity ratings and remediation guidance. (6) Review & Discussion — walkthrough call to discuss findings. (7) Remediation Support — guidance during your implementation. (8) Verification & Sign-off — we verify fixes and issue the final report."
+    },
+    {
+      question: "Is a re-review after fixes included?",
+      answer: "Yes. For smart contract audits, a re-review after you implement fixes is included at no additional cost, along with proof-of-concept tests for significant issues and a ready-to-publish report. For OpSec audits, the 2-month support retainer covers ongoing guidance and verification of remediation efforts. All services include a final verification step before sign-off."
+    }
+  ]}
+/>
+
+<FAQSection
+  title="Sentry Platform"
+  showBackground={false}
+  groupId="sentry"
+  faqs={[
+    {
+      question: "What is Sentry?",
+      answer: "Sentry is Auditware's operational security monitoring platform. Built from how we evaluate teams during real audits, it provides continuous visibility into your organization's security posture — monitoring endpoints, identities, GitHub activity, DNS integrity, and breach exposure. It serves as your always-on OpSec dashboard, tracking compliance against the W3OS standard."
+    },
+    {
+      question: "Is Sentry free?",
+      answer: "Yes. Sentry is free to use. You can sign up and begin monitoring your organization's security posture at sentry.auditware.io. Paid audit services and advanced monitoring engagements are scoped separately."
+    },
+    {
+      question: "What does Sentry monitor?",
+      answer: "Sentry monitors five key areas: Endpoints & Devices (unusual logins, device policy violations, suspicious processes), Identity & Access (privilege escalation, MFA bypass attempts, inactive accounts), DevOps & GitHub Activity (unauthorized repo access, commit spoofing, secret exposure, CI/CD changes), Frontend & DNS Integrity (DNS record modifications, certificate changes, frontend injection), and Breach Detection & OSINT (compromised credentials across dark web sources, paste sites, and leaked databases)."
+    },
+    {
+      question: "Do I need an audit to use Sentry?",
+      answer: "No. Sentry is available as a standalone product with free self-serve onboarding. Teams typically start with a W3OS self-review, use Sentry to monitor their posture over time, and then engage Auditware for a full audit when ready. That said, teams that complete an OpSec audit get the most value from Sentry, as it tracks compliance with the recommendations from the audit."
+    }
+  ]}
+/>
+
+<FAQSection
+  title="Standards, Tools & Getting Started"
+  showBackground={false}
+  groupId="tools"
+  faqs={[
+    {
+      question: "What is W3OS?",
+      answer: "W3OS (Web3 Operational Security Standard) is an open-source security framework created by Auditware. It defines best practices for operational security in Web3 organizations — covering key management, access control, device security, incident response, and more. Auditware's audits are measured against this standard, and Sentry tracks compliance with it. The standard is available on GitHub."
+    },
+    {
+      question: "What is Radar?",
+      answer: "Radar is an open-source static analysis tool built by Auditware for Anchor/Rust smart contract programs. It uses a Python-based rule engine to automatically detect vulnerabilities in Solana programs. Radar powers part of our automated scanning during smart contract audits and is freely available on GitHub at github.com/Auditware/radar."
+    },
+    {
+      question: "What blockchains and ecosystems do you support?",
+      answer: "For smart contract audits, we support EVM-compatible chains (Ethereum, Polygon, Arbitrum, Base, and others) as well as Solana/Rust ecosystems. Our OpSec audits, penetration testing, and infrastructure security reviews are blockchain-agnostic — they apply to any Web3 project regardless of the underlying chain."
+    },
+    {
+      question: "How do I get started?",
+      answer: "The easiest way to start is by booking a free 30-minute consultation through our Audits page, where we'll discuss your project, security needs, and timeline. You can also sign up for Sentry at sentry.auditware.io to begin monitoring your security posture immediately. For general inquiries, reach us at contact@auditware.io — we typically respond within 24 hours."
+    },
+    {
+      question: "Do you offer ongoing support or retainers?",
+      answer: "Yes. Our OpSec Audit package includes a 2-month support retainer with Sentry monitoring access, which can be extended. We also offer follow-on audit engagements, ongoing retainer agreements, and continuous monitoring services as your organization's security needs evolve."
+    },
+    {
+      question: "Do you have a partnership or referral program?",
+      answer: "Yes. We offer a referral program with a 10% revenue share on accepted OpSec audit engagements, including 6 months of retainer revenue. Custom terms are available for long-term collaborators. Visit our Partnerships page or contact joe@auditware.io to learn more."
+    }
+  ]}
+/>
+
+<CTASection 
+  title="Still Have Questions?"
+  description="We're happy to chat."
+  primaryCta={{
+    text: "Book A Consultation",
+    href: "/audits"
+  }}
+  secondaryCta={{
+    text: "Try Sentry Free",
+    href: "https://sentry.auditware.io"
+  }}
+  disclaimer="Free consultation • Response within 24 hours • No commitment required"
+  colorScheme={themeToColorScheme(pageTheme)}
+/>
+
+<Footer />
