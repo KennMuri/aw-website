@@ -76,6 +76,90 @@ const { title, subtitle, logos } = Astro.props;
   
   .logo-carousel-container {
     margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — section and container stay within viewport; header text wraps. */
+  @media (max-width: 1024px) {
+    .logo-carousel {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .logo-carousel.section-sm {
+      max-width: 100vw;
+    }
+    .logo-carousel :global(.container) {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .logo-carousel-container {
+      min-width: 0;
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+    }
+    .logo-carousel-header {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      min-width: 0;
+    }
+    .logo-carousel-header .h4,
+    .logo-carousel-header .body-small {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+  }
+  @media (max-width: 768px) {
+    .logo-carousel {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .logo-carousel-container {
+      min-width: 0;
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  /* Phones only: ensure section/container cannot hold a width floor (align with 480px global overrides). */
+  @media (max-width: 480px) {
+    .logo-carousel {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .logo-carousel.section-sm {
+      max-width: 100vw;
+    }
+    .logo-carousel :global(.container) {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .logo-carousel-container {
+      min-width: 0;
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+    }
   }
   
   .logo-carousel-header .body-small {
@@ -195,6 +279,22 @@ const { title, subtitle, logos } = Astro.props;
       height: 100px;
       min-height: 100px;
       max-height: 100px;
+    }
+  }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — on very narrow viewports (e.g. 320px) item min-width 240px plus padding can exceed width; section clips track but smaller items improve fit. */
+  @media (max-width: 480px) {
+    .logo-carousel-item {
+      min-width: 140px;
+      height: 100px;
+    }
+    .logo-carousel-item img {
+      height: 80px;
+      min-height: 80px;
+      max-height: 80px;
+    }
+    .logo-carousel-track {
+      gap: 24px;
     }
   }
 </style>

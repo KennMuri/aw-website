@@ -255,6 +255,7 @@ const cs = colorScheme;
     text-align: center;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
     overflow: visible;
     box-sizing: border-box;
     position: relative;
@@ -271,6 +272,7 @@ const cs = colorScheme;
   .hero-text {
     max-width: none;
     margin: 0 auto;
+    min-width: 0;
   }
   
   .hero-subtitle-badge {
@@ -384,6 +386,21 @@ const cs = colorScheme;
     box-sizing: border-box;
     padding: var(--spacing-4) var(--spacing-2);
     margin-bottom: 0;
+  }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — allow image to scale; lower min-height so content fits. */
+  @media (max-width: 768px) {
+    .hero-image-container {
+      min-height: 220px;
+      max-width: 100%;
+      padding: var(--spacing-2) var(--spacing-1);
+    }
+  }
+  @media (max-width: 480px) {
+    .hero-image-container {
+      min-height: 180px;
+      padding: var(--spacing-2) 0;
+    }
   }
   
   .hero-image {

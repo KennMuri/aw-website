@@ -80,11 +80,42 @@ const {
     z-index: 1;
   }
 
+  /* Mobile/tablet-only: prevent horizontal overflow — reduce padding. */
+  @media (max-width: 768px) {
+    .container-2 {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+  @media (max-width: 480px) {
+    .container-2 {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
   .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 48px;
     justify-items: center;
+  }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — minmax(320px) exceeds 320px viewport with padding; single column + min-width:0. */
+  @media (max-width: 1024px) {
+    .team-grid {
+      grid-template-columns: 1fr;
+      min-width: 0;
+    }
+    .team-card {
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+  @media (max-width: 480px) {
+    .team-grid {
+      gap: 24px;
+    }
   }
 
   .team-card {

@@ -91,6 +91,7 @@ const cs = colorScheme;
   
   .cta-content {
     max-width: 800px;
+    width: 100%;
     margin: 0 auto;
     padding: var(--spacing-3) var(--spacing-4);
     background: var(--color-background-secondary);
@@ -99,6 +100,28 @@ const cs = colorScheme;
     transition: all var(--transition-base);
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+  }
+
+  /* Mobile/tablet-only: prevent section box from being cut off — match container width. */
+  @media (max-width: 768px) {
+    .cta-content {
+      padding: var(--spacing-5) var(--spacing-4);
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .cta-description {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 480px) {
+    .cta-content {
+      padding: var(--spacing-4) 12px;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
   }
   
   .cta-content:hover {

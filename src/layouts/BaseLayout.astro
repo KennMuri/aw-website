@@ -277,6 +277,31 @@ if (structuredData) {
     padding: 0 2em;
   }
 
+  /* Mobile/tablet-only: prevent horizontal overflow — constrain container so document width stays at viewport (no html scrollWidth > innerWidth). */
+  @media (max-width: 1024px) {
+    .container {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
+    }
+  }
+  @media (max-width: 768px) {
+    .container {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+  @media (max-width: 480px) {
+    .container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
   /* Responsive typography */
   @media screen and (max-width: 991px) {
     h1 { font-size: var(--font-size-7xl); }

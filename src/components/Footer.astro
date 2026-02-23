@@ -143,6 +143,17 @@ const {
     transition: all var(--transition-base);
     white-space: nowrap;
   }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — allow links to wrap when many in a row. */
+  @media (max-width: 768px) {
+    .footer-link {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+    .footer-copyright {
+      white-space: normal;
+    }
+  }
   
   .footer-link:hover {
     color: var(--color-primary-400);
@@ -189,8 +200,11 @@ const {
     .footer {
       padding: var(--spacing-6) 0;
     }
-    
+    /* Mobile: prevent section box from being cut off. */
     .footer-wrapper {
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
       flex-direction: column;
       gap: var(--spacing-4);
     }

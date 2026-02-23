@@ -210,6 +210,23 @@ const cs = colorScheme;
     max-width: 1200px;
     margin: 0 auto;
   }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — card and images stay within viewport. */
+  @media (max-width: 768px) {
+    .toggle-media-card {
+      width: 100%;
+      max-width: 100%;
+      padding: var(--spacing-4);
+    }
+    .toggle-media-image {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 480px) {
+    .toggle-media-card {
+      padding: var(--spacing-3) 12px;
+    }
+  }
   
   .toggle-media-card::before {
     content: '';

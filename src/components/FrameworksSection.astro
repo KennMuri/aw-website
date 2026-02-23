@@ -97,6 +97,77 @@ const {
     align-items: stretch;
     margin-top: 0;
   }
+
+  /* Mobile/tablet-only: prevent horizontal overflow — minmax(400px) exceeds viewport; single column + min-width:0 so cards shrink. Section capped at viewport and centered. */
+  @media (max-width: 1024px) {
+    .frameworks-section {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .frameworks-section.section-sm {
+      max-width: 100vw;
+    }
+    .frameworks-section .container {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .frameworks-content {
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+    .frameworks-grid {
+      grid-template-columns: 1fr;
+      min-width: 0;
+      max-width: 100%;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .framework-card {
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+  @media (max-width: 768px) {
+    .frameworks-grid {
+      gap: var(--spacing-4);
+    }
+  }
+  @media (max-width: 480px) {
+    .frameworks-grid {
+      gap: var(--spacing-3);
+    }
+  }
+
+  /* Phones only: remove ~493px floor — base .framework-card max-width 500px must not apply so document stays within viewport. */
+  @media (max-width: 480px) {
+    .frameworks-content {
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .frameworks-grid {
+      grid-template-columns: 1fr;
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
+    }
+    .framework-card {
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
   
   .framework-card {
     background: var(--color-background-secondary);
@@ -204,10 +275,13 @@ const {
     color: var(--color-background-primary);
   }
   
+  /* Mobile/tablet: prevent horizontal overflow — max-width 500px was wider than viewport and caused scroll. */
   @media (max-width: 991px) {
     .frameworks-grid {
       grid-template-columns: 1fr;
-      max-width: 500px;
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
       margin: 0 auto;
     }
   }
@@ -224,7 +298,9 @@ const {
     
     .frameworks-grid {
       grid-template-columns: 1fr;
-      min-width: auto;
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
     }
   }
 </style>

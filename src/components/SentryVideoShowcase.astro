@@ -44,9 +44,35 @@
 
   .video-container {
     max-width: 1600px;
+    width: 100%;
     margin: 0 auto;
     padding: var(--spacing-2) 24px;
     margin-top: 0;
+    box-sizing: border-box;
+  }
+
+  /* Mobile/tablet-only: align section content with hero container (same padding and centering). */
+  @media (max-width: 768px) {
+    .video-container {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 16px;
+      padding-right: 16px;
+      box-sizing: border-box;
+    }
+  }
+  @media (max-width: 480px) {
+    .video-container {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 12px;
+      padding-right: 12px;
+      box-sizing: border-box;
+    }
   }
 
   .video-label {
@@ -74,6 +100,12 @@
     overflow: hidden;
     background: #000000;
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .video-wrapper {
+      max-width: 100%;
+    }
   }
 
   .video-glow {

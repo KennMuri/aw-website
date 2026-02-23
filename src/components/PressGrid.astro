@@ -39,6 +39,23 @@ const {
     z-index: 1;
   }
 
+  /* Mobile/tablet-only: prevent horizontal overflow — minmax(300px) exceeds 320px viewport; single column + min-width:0. */
+  @media (max-width: 768px) {
+    .press-grid {
+      grid-template-columns: 1fr;
+      min-width: 0;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+  @media (max-width: 480px) {
+    .press-grid {
+      padding-left: 12px;
+      padding-right: 12px;
+      gap: 24px;
+    }
+  }
+
   .press-item {
     display: flex;
     flex-direction: column;

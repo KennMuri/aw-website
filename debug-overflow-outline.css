@@ -1,0 +1,6 @@
+/* TEMPORARY: Paste into DevTools → Elements → <head> or inject as stylesheet.
+   Makes overflow visible (elements wider than viewport show red outline).
+   REMOVE BEFORE COMMIT. */
+* {
+  outline: 1px solid rgba(255, 0, 0, 0.1);
+}

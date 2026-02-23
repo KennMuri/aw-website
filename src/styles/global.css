@@ -14,9 +14,29 @@
   margin: 0;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+}
+
+/* Mobile/tablet: clip tiny horizontal overflow (e.g. from 100vw + scrollbar) without hiding scroll. */
+@media (max-width: 1024px) {
+  html {
+    overflow-x: clip;
+  }
+}
+
+/* Phones / small tablets only: kill leftover horizontal scroll */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
 }
 
 body {
@@ -228,6 +248,42 @@ h6 {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--spacing-6);
+  box-sizing: border-box;
+}
+
+/* Mobile/tablet-only: align section content with hero container — same width, centering, symmetric padding. */
+@media (max-width: 1024px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 480px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
 }
 
 .container-sm {
@@ -250,6 +306,7 @@ h6 {
   max-width: var(--container-2xl);
 }
 
+/* Not a primary fix — overflow is addressed via layout (padding, min-width: 0, single column). This only contains e.g. carousel track; do not use on body/html or as primary overflow fix (see MOBILE_ACCEPTANCE_AND_TESTING.md). */
 .section {
   padding: var(--spacing-2) 0;
   border-top: 1px solid var(--color-border-primary);
@@ -487,8 +544,12 @@ h6 {
   outline-offset: 2px;
 }
 
-.btn:active {
-  transform: scale(0.98);
+/* Mobile/tablet-only: prevent horizontal overflow — allow button text to wrap on narrow screens. */
+@media (max-width: 768px) {
+  .btn {
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 .btn-primary {
@@ -1050,6 +1111,187 @@ h6 {
   margin: 0 auto;
 }
 
+/* Mobile/tablet-only: prevent horizontal overflow — base .frameworks-grid max-width 900px was forcing document wider than viewport. Constrain section to viewport and center. */
+@media (max-width: 1024px) {
+  .frameworks-section.section-sm,
+  .frameworks-section,
+  .logo-carousel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  /* Cap section at viewport so it stays centered when body is wider (e.g. section was 1120px on mobile). */
+  .frameworks-section.section-sm {
+    max-width: 100vw;
+  }
+  .logo-carousel.section-sm {
+    max-width: 100vw;
+  }
+  .frameworks-section .container,
+  .logo-carousel .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+  .logo-carousel .container {
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .frameworks-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  .framework-card {
+    max-width: 100%;
+    min-width: 0;
+  }
+  /* Hero: cap at viewport and center on mobile so all sections align. */
+  .hero {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .hero .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  /* Other homepage sections: cap at viewport and center so they align with hero / frameworks / logo carousel. */
+  .service-section.section,
+  .cta-section.section,
+  .feature-stack-section.section {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .footer {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .service-section .container,
+  .cta-section .container,
+  .footer .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .feature-stack-section .video-container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 768px) {
+  .frameworks-section .container,
+  .logo-carousel .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Phones only: remove ~493px floor — section/card/grid must not exceed viewport (fixes html scrollWidth > innerWidth below ~493px). */
+@media (max-width: 480px) {
+  .frameworks-section.section-sm,
+  .frameworks-section,
+  .logo-carousel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  .frameworks-section.section-sm {
+    max-width: 100vw;
+  }
+  .logo-carousel.section-sm {
+    max-width: 100vw;
+  }
+  .frameworks-section .container,
+  .logo-carousel .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
+  .logo-carousel .container {
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .frameworks-section .frameworks-content,
+  .frameworks-content {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .frameworks-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  .framework-card {
+    max-width: 100%;
+    min-width: 0;
+  }
+  /* Other sections (phones): same viewport cap and centering. */
+  .service-section.section,
+  .cta-section.section,
+  .feature-stack-section.section {
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .footer {
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .service-section .container,
+  .cta-section .container,
+  .footer .container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .feature-stack-section .video-container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .framework-card {
   background: var(--gradient-card);
   border: 1px solid var(--color-border-primary);
@@ -1105,6 +1347,14 @@ h6 {
   white-space: nowrap;
 }
 
+/* Mobile/tablet-only: prevent horizontal overflow — allow long badge text to wrap. */
+@media (max-width: 768px) {
+  .framework-badge-title {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
 .framework-badge-info {
   color: var(--color-text-tertiary);
   flex-shrink: 0;
@@ -1112,12 +1362,8 @@ h6 {
   margin-left: var(--spacing-1);
 }
 
-/* Responsive Design */
+/* Responsive Design — mobile/tablet only; desktop (≥1025px) unchanged. */
 @media (max-width: 1199px) {
-  .container {
-    padding: 0 var(--spacing-4);
-  }
-  
   .hero-title {
     font-size: var(--font-size-6xl);
   }
@@ -1182,10 +1428,6 @@ h6 {
 }
 
 @media (max-width: 479px) {
-  .container {
-    padding: 0 var(--spacing-3);
-  }
-  
   .hero-title {
     font-size: var(--font-size-4xl);
   }

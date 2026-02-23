@@ -644,6 +644,12 @@ const { title, subtitle, services } = Astro.props;
   
   /* Responsive Design */
   @media (max-width: 767px) {
+    /* Mobile: prevent section boxes from being cut off — match container width. */
+    .service-content-wrapper {
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
     .service-header {
       margin-bottom: var(--spacing-3);
     }
