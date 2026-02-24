@@ -33,6 +33,11 @@ const PAGE_GRADIENT_POSITIONS: Record<string, GradientPositions> = {
     gradient2: { bottom: '-25%', right: '10%', width: '60%', height: '80%' },
     gradient3: { top: '50%', left: '-10%', width: '50%', height: '70%' }
   },
+  'multisig-monitor': {
+    gradient1: { top: '-30%', right: '-20%', width: '80%', height: '100%' },
+    gradient2: { bottom: '-20%', left: '-15%', width: '70%', height: '85%' },
+    gradient3: { top: '55%', right: '5%', width: '50%', height: '65%' }
+  },
   'audits': {
     gradient1: { top: '-25%', right: '5%', width: '90%', height: '95%' },
     gradient2: { bottom: '-35%', left: '-20%', width: '75%', height: '90%' },
@@ -59,6 +64,9 @@ if (currentPath.includes('/audit-wizard')) {
 } else if (currentPath.includes('/radar')) {
   pageKey = 'radar';
   theme = themes.radar;
+} else if (currentPath.includes('/multisig-monitor')) {
+  pageKey = 'multisig-monitor';
+  theme = themes['multisig-monitor'];
 } else if (currentPath.includes('/audits')) {
   pageKey = 'audits';
   theme = themes.audits;
