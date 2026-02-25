@@ -5,6 +5,7 @@ description: "Multisig Monitor gives operational visibility for Safe multisig si
 image: "/images/og/og-default.png"
 ---
 
+import '../styles/multisig-monitor.css';
 import Navbar from '../components/Navbar.astro';
 import ModernHero from '../components/ModernHero.astro';
 import Footer from '../components/Footer.astro';
@@ -16,73 +17,16 @@ export const pageTheme = multisigMonitorTheme;
   <Navbar />
 
   <ModernHero 
-    title={"Multisig Monitor"}
+    title="Multisig Monitor"
     description="Monitor treasury signers, transactions, and config drift. Detect governance and policy changes before they become incidents."
     primaryCta={{
       text: "Explore Multisig Monitor",
-      href: "https://safemonitor.io"
+      href: "https://msm.w3os.org/"
     }}
-    imageUrl="/images/AW Website Homepage Image.png"
+    imageUrl="/images/Multisigmonitor Header.jpeg"
     imageAlt="Multisig Monitor - Treasury and signer monitoring"
     colorScheme={themeToColorScheme(pageTheme)}
   />
 
   <Footer />
 </div>
-
-<style>
-  /* Multisig Monitor route only: same container/section pattern as Sentry/Radar — align with hero, symmetric padding, no horizontal scroll. */
-  .page-multisig-monitor {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-
-  .page-multisig-monitor .hero .container,
-  .page-multisig-monitor .section .container {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-  }
-
-  @media (max-width: 1024px) {
-    .page-multisig-monitor .hero .container,
-    .page-multisig-monitor .section .container {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-    .page-multisig-monitor .section .grid,
-    .page-multisig-monitor .section [style*="grid"] {
-      min-width: 0;
-      max-width: 100%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .page-multisig-monitor .hero .container,
-    .page-multisig-monitor .section .container {
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .page-multisig-monitor .hero .container,
-    .page-multisig-monitor .section .container {
-      padding-left: 12px;
-      padding-right: 12px;
-    }
-  }
-
-  /* Grids/rows stack or fit within 100% width — prevent overflow from grid children */
-  .page-multisig-monitor .section .grid > *,
-  .page-multisig-monitor .section [style*="grid-template-columns"] > * {
-    min-width: 0;
-    max-width: 100%;
-  }
-</style>

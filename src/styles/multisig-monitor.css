@@ -1,0 +1,117 @@
+/* Multisig Monitor route only: same container/section pattern as Sentry/Radar — align with hero, symmetric padding, no horizontal scroll. */
+
+/* Hero image: match original 650×450 frame so new image dimensions don’t stretch or leave gaps */
+/* A bit of space between image and colored border */
+/* Hero image: detached border (gap between image and border) — MSM only */
+.page-multisig-monitor .hero-image-container {
+  position: relative;
+  border: 1px solid rgba(var(--image-border-color), var(--image-border-opacity));
+  border-radius: var(--radius-4xl);
+  padding: var(--spacing-1-5);
+  transition: border-color var(--transition-slower), box-shadow var(--transition-slower), transform var(--transition-slower);
+  box-shadow: none;
+}
+/* Overlay over image area so container :hover is only true when cursor is on the border ring */
+.page-multisig-monitor .hero-image-container::after {
+  content: '';
+  position: absolute;
+  inset: var(--spacing-1-5);
+  border-radius: calc(var(--radius-4xl) - var(--spacing-1-5));
+  pointer-events: auto;
+  z-index: 1;
+}
+/* Floating + glow on the detached border only when hovering the border ring */
+.page-multisig-monitor .hero-image-container:hover {
+  transform: translateY(-8px);
+  border-color: rgba(var(--image-border-color), calc(var(--image-border-opacity) + 0.15));
+  box-shadow: 0 0 20px rgba(var(--image-border-color), 0.25),
+              0 0 40px rgba(var(--image-border-color), 0.15);
+}
+/* MSM image: no float, no glow, no shadow — completely static */
+.page-multisig-monitor .hero-image {
+  pointer-events: none;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: calc(var(--radius-4xl) - var(--spacing-1-5));
+}
+/* Counter the container’s float so the image stays fixed on screen */
+.page-multisig-monitor .hero-image-container:hover .hero-image {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.page-multisig-monitor .hero-image-glow {
+  opacity: 0 !important;
+}
+.page-multisig-monitor .hero-image-container:hover .hero-image-glow {
+  opacity: 0 !important;
+}
+@media (max-width: 768px) {
+  .page-multisig-monitor .hero-image-container {
+    padding: var(--spacing-1-5);
+  }
+  .page-multisig-monitor .hero-image-container::after {
+    inset: var(--spacing-1-5);
+  }
+}
+@media (max-width: 480px) {
+  .page-multisig-monitor .hero-image-container {
+    padding: var(--spacing-1);
+  }
+  .page-multisig-monitor .hero-image-container::after {
+    inset: var(--spacing-1);
+  }
+}
+
+.page-multisig-monitor {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.page-multisig-monitor .hero .container,
+.page-multisig-monitor .section .container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .page-multisig-monitor .hero .container,
+  .page-multisig-monitor .section .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .page-multisig-monitor .section .grid,
+  .page-multisig-monitor .section [style*="grid"] {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-multisig-monitor .hero .container,
+  .page-multisig-monitor .section .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-multisig-monitor .hero .container,
+  .page-multisig-monitor .section .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Grids/rows stack or fit within 100% width — prevent overflow from grid children */
+.page-multisig-monitor .section .grid > *,
+.page-multisig-monitor .section [style*="grid-template-columns"] > * {
+  min-width: 0;
+  max-width: 100%;
+}

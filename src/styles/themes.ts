@@ -202,41 +202,41 @@ export const radarTheme: PageTheme = {
   },
 };
 
-// Multisig Monitor - Safe/safemonitor.io style green theme
+// Multisig Monitor - Greenish-yellow / lime theme (from Multisigmonitor branding)
 export const multisigMonitorTheme: PageTheme = {
   id: 'multisig-monitor',
   name: 'Multisig Monitor',
   palette: {
     primary: {
-      50: '236, 253, 245',   // #ecfdf5 - very light green
-      100: '209, 250, 229',  // #d1fae5
-      200: '167, 243, 208',  // #a7f3d0
-      300: '110, 231, 183',  // #6ee7b7
-      400: '52, 211, 153',   // #34d399
-      500: '18, 255, 128',   // #12ff80 - Safe/safemonitor.io green
-      600: '16, 185, 129',   // #10b981
-      700: '5, 150, 105',    // #059669
-      800: '4, 120, 87',     // #047857
-      900: '6, 95, 70',      // #065f46
+      50: '247, 254, 231',   // #f7fee7 - very light lime
+      100: '236, 252, 203',   // #ecfccb
+      200: '217, 249, 157',   // #d9f99d
+      300: '190, 242, 100',   // #bef264
+      400: '163, 230, 53',    // #a3e635 - lime
+      500: '132, 204, 22',   // #84cc16 - greenish-yellow base
+      600: '113, 163, 18',   // #71a312
+      700: '92, 128, 15',    // #5c800f
+      800: '73, 102, 12',    // #49660c
+      900: '54, 77, 9',      // #354d09
     },
     accent: {
-      light: '110, 231, 183',  // Light green
-      base: '18, 255, 128',    // Safe green
-      dark: '16, 185, 129',    // Deep green
+      light: '190, 242, 100',  // Light lime
+      base: '163, 230, 53',    // Lime
+      dark: '113, 163, 18',    // Deep lime
     },
     semantic: {
       background: {
-        gradient1: { color: '18, 255, 128', opacity: 0.2 },
-        gradient2: { color: '16, 185, 129', opacity: 0.18 },
-        gradient3: { color: '5, 150, 105', opacity: 0.14 },
+        gradient1: { color: '132, 204, 22', opacity: 0.22 },
+        gradient2: { color: '113, 163, 18', opacity: 0.18 },
+        gradient3: { color: '92, 128, 15', opacity: 0.14 },
       },
       border: {
-        base: { color: '18, 255, 128', opacity: 0.35 },
-        hover: { color: '52, 211, 153', opacity: 0.5 },
+        base: { color: '132, 204, 22', opacity: 0.35 },
+        hover: { color: '163, 230, 53', opacity: 0.5 },
       },
       glow: {
-        base: { color: '18, 255, 128', opacity: 0.35 },
-        strong: { color: '16, 185, 129', opacity: 0.5 },
+        base: { color: '132, 204, 22', opacity: 0.35 },
+        strong: { color: '113, 163, 18', opacity: 0.5 },
       },
     },
   },

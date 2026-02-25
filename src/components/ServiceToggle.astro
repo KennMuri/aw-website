@@ -417,10 +417,11 @@ const { title, subtitle, services } = Astro.props;
     background: var(--color-background-tertiary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-2xl);
-    padding: var(--spacing-1);
-    max-width: 600px;
+    padding: var(--spacing-2);
+    max-width: 720px;
     width: 100%;
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
     position: relative;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   }
@@ -431,16 +432,17 @@ const { title, subtitle, services } = Astro.props;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-1);
+    gap: var(--spacing-2);
     position: relative;
     width: 100%;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     min-width: 0;
   }
   
   .service-toggle-indicator {
     display: none;
+    pointer-events: none;
   }
   
   .service-toggle-item {
@@ -464,11 +466,11 @@ const { title, subtitle, services } = Astro.props;
     justify-content: center;
     min-height: 36px;
     height: 36px;
-    min-width: 100px;
+    min-width: 0;
     box-sizing: border-box;
     touch-action: manipulation;
     overflow: visible;
-    flex: 1 1 0;
+    flex: 0 0 auto;
     font-family: inherit;
   }
   
