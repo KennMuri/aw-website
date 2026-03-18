@@ -193,23 +193,48 @@ const posthogEnabled = posthogKey.length > 0 && posthogHost.length > 0;
       var STORAGE_INITIAL = 'aw_initial_ref';
       var STORAGE_INITIAL_TS = 'aw_initial_ref_ts';
       var STORAGE_SESSION = 'aw_session_ref';
+      var TTL_MS = 90 * 24 * 60 * 60 * 1000;
       var TRACKED_HOSTS = ['calendly.com', 'sentry.auditware.io', 'docs.sentry.auditware.io'];
 
       function getRefFromUrl() {
         var params = new URLSearchParams(window.location.search);
         return params.get(REF_PARAM) || null;
       }
-      function getStoredRef() {
+      function getValidInitialRef() {
         try {
-          return sessionStorage.getItem(STORAGE_SESSION) || localStorage.getItem(STORAGE_INITIAL) || null;
+          var val = localStorage.getItem(STORAGE_INITIAL);
+          var ts = localStorage.getItem(STORAGE_INITIAL_TS);
+          if (!val) return null;
+          if (!ts) {
+            localStorage.removeItem(STORAGE_INITIAL);
+            return null;
+          }
+          var age = Date.now() - parseInt(ts, 10);
+          if (isNaN(age) || age > TTL_MS) {
+            localStorage.removeItem(STORAGE_INITIAL);
+            localStorage.removeItem(STORAGE_INITIAL_TS);
+            return null;
+          }
+          return val;
         } catch (e) { return null; }
       }
+
+      function getStoredRef() {
+        try {
+          return sessionStorage.getItem(STORAGE_SESSION) || getValidInitialRef() || null;
+        } catch (e) { return null; }
+      }
+
       function persistRef(ref) {
         if (!ref) return;
         try {
-          localStorage.setItem(STORAGE_INITIAL, ref);
-          localStorage.setItem(STORAGE_INITIAL_TS, String(Date.now()));
+          // Always persist the session ref for this tab/session.
           sessionStorage.setItem(STORAGE_SESSION, ref);
+          // Only set initial ref on first touch (or after TTL expiry).
+          if (!getValidInitialRef()) {
+            localStorage.setItem(STORAGE_INITIAL, ref);
+            localStorage.setItem(STORAGE_INITIAL_TS, String(Date.now()));
+          }
         } catch (e) {}
       }
       function isTrackedOutbound(href) {
@@ -235,10 +260,15 @@ const posthogEnabled = posthogKey.length > 0 && posthogHost.length > 0;
       var refCode = getRefFromUrl();
       if (refCode) {
         persistRef(refCode);
+        var initialRefCode = getValidInitialRef();
+        var sessionRefCode = null;
+        try { sessionRefCode = sessionStorage.getItem(STORAGE_SESSION) || null; } catch (e) {}
         setTimeout(function() {
           if (window.posthog) window.posthog.capture('referral_landing', {
-            ref: refCode,
             ref_code: refCode,
+            initial_ref_code: initialRefCode,
+            session_ref_code: sessionRefCode,
+            landing_path: window.location.pathname,
             $set_once: { ref_code: refCode }
           });
         }, 100);
@@ -261,7 +291,29 @@ const posthogEnabled = posthogKey.length > 0 && posthogHost.length > 0;
           var u = new URL(a.href);
           if (u.hostname === window.location.hostname) return;
           if (!TRACKED_HOSTS.some(function(h) { return u.hostname === h || u.hostname.endsWith('.' + h); })) return;
-          if (window.posthog) window.posthog.capture('outbound_click', { url: a.href, domain: u.hostname });
+
+          function getDestinationType(href) {
+            if (href.indexOf('docs.sentry.auditware.io') !== -1) return 'sentry_docs';
+            if (href.indexOf('sentry.auditware.io') !== -1) return 'sentry';
+            if (href.indexOf('calendly.com') !== -1) return 'book_call';
+            return null;
+          }
+
+          var destinationType = getDestinationType(a.href);
+          if (!destinationType) return;
+
+          var ref = getStoredRef();
+          var initialRef = getValidInitialRef();
+          var sessionRef = null;
+          try { sessionRef = sessionStorage.getItem(STORAGE_SESSION) || null; } catch (err) {}
+
+          if (window.posthog) window.posthog.capture('outbound_click', {
+            ref_code: ref,
+            initial_ref_code: initialRef,
+            session_ref_code: sessionRef,
+            destination_url: a.href,
+            destination_type: destinationType
+          });
         } catch (err) {}
       }
 
