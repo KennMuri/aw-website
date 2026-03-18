@@ -1,0 +1,65 @@
+---
+const links = [
+  { text: 'Framework', href: '/framework' },
+  { text: 'Why OpSec', href: '/why-opsec' },
+  { text: 'Community', href: '/community' },
+  { text: 'About', href: '/about' },
+];
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-wrapper">
+      <a href="/" class="footer-brand">W3OS</a>
+      <div class="footer-links">
+        {links.map((link) => (
+          <a href={link.href} class="footer-link">{link.text}</a>
+        ))}
+      </div>
+      <div class="footer-copyright">
+        &copy; {new Date().getFullYear()} W3OS — Web3 Operational Security Standard
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: var(--spacing-8) 0;
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid var(--color-border-primary);
+  }
+  .footer-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+  }
+  .footer-brand {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+  .footer-links {
+    display: flex;
+    gap: var(--spacing-6);
+  }
+  .footer-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+  }
+  .footer-link:hover {
+    color: var(--color-text-primary);
+  }
+  .footer-copyright {
+    width: 100%;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-4);
+  }
+</style>

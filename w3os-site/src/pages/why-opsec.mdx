@@ -1,0 +1,50 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: 'Why OpSec? | W3OS — Web3 Operational Security Standard'
+description: 'Why Web3 teams face unusual operational attack surfaces, why code audits alone are not enough, and how operational weakness can undermine strong engineering.'
+---
+
+import Navbar from '../components/Navbar.astro';
+import ContentSection from '../components/ContentSection.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { w3osTheme, themeToColorScheme } from '../styles/themes.ts';
+
+<Navbar />
+
+<ContentSection title="Why operational security matters in Web3" description="Web3 creates unique operational risks that go beyond smart contract code.">
+  <p>
+    In Web3, keys and access often control irreversible value. A single compromised key or account can drain treasuries, take over governance, or undermine protocol security. At the same time, teams are distributed, tools are evolving quickly, and many processes are still informal. That combination makes operational security—how people, access, credentials, and processes are managed—as important as the quality of the code itself.
+  </p>
+  <p>
+    Attackers know this. They target key storage, phishing, vendor compromise, and social engineering because those surfaces are frequently weaker than the contracts. Strong smart contracts cannot protect you if the keys that control them are not protected, or if the people and processes around them are not disciplined.
+  </p>
+</ContentSection>
+
+<ContentSection title="Why code audits are not enough" description="Audits focus on code. Operational risk lives in people, access, and process.">
+  <p>
+    Smart contract audits are essential. They find bugs, logic errors, and economic vulnerabilities in code. But they do not address who has access to deploy or upgrade contracts, how keys are stored and used, how domains and infrastructure are secured, or how the team would respond to a compromise. Those are operational questions.
+  </p>
+  <p>
+    Many high-impact incidents have involved little or no smart contract failure: private keys leaked or phished, admin keys misused, or infrastructure and vendor compromise. An operational security framework like W3OS helps teams close those gaps in a structured way, so that strong engineering is not undermined by weak operations.
+  </p>
+</ContentSection>
+
+<ContentSection title="Building a resilient operating model" description="Operational security is about consistent practice, not one-time fixes.">
+  <p>
+    Good operational security is ongoing. It means clear ownership of access and credentials, defined processes for changes and incidents, and regular review. It also means having a shared language—so that when you say you have “strong key management” or “incident readiness,” others know what that means.
+  </p>
+  <p>
+    W3OS provides that structure. It is designed to help teams assess where they are, decide what to improve first, and communicate maturity to auditors, partners, and the ecosystem—without reinventing the wheel each time.
+  </p>
+</ContentSection>
+
+<CTASection
+  title="Explore the framework"
+  description="See how W3OS is structured and how you can use it."
+  primaryCta={{ text: 'View Framework', href: '/framework' }}
+  secondaryCta={{ text: 'About W3OS', href: '/about' }}
+  colorScheme={themeToColorScheme(w3osTheme)}
+/>
+
+<Footer />

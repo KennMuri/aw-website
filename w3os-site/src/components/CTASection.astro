@@ -1,0 +1,82 @@
+---
+import type { ColorScheme } from '../styles/themes.ts';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  primaryCta?: { text: string; href: string };
+  secondaryCta?: { text: string; href: string };
+  disclaimer?: string;
+  colorScheme?: ColorScheme;
+}
+
+const {
+  title = 'Get started with W3OS',
+  description = 'Adopt the standard. Improve your operational security.',
+  primaryCta = { text: 'View the framework', href: '/framework' },
+  secondaryCta = { text: 'Join the community', href: '/community' },
+  disclaimer,
+  colorScheme,
+} = Astro.props;
+
+const cs = colorScheme;
+---
+
+<section class="cta-section section" style={cs ? `
+  --cta-button-primary-start: ${cs.button.primary.start};
+  --cta-button-primary-end: ${cs.button.primary.end};
+  --cta-button-border-color: ${cs.button.border.color};
+  --cta-button-border-opacity: ${cs.button.border.opacity};
+` : ''}>
+  <div class="container">
+    <div class="cta-content text-center">
+      <h2 class="h2 cta-title">{title}</h2>
+      <p class="body-large cta-description">{description}</p>
+      <div class="cta-buttons flex gap-4 justify-center">
+        <a
+          href={primaryCta.href}
+          class="btn btn-primary btn-lg"
+          target={primaryCta.href.startsWith('http') ? '_blank' : undefined}
+          rel={primaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {primaryCta.text}
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {secondaryCta && (
+          <a
+            href={secondaryCta.href}
+            class="btn btn-secondary btn-lg"
+            target={secondaryCta.href.startsWith('http') ? '_blank' : undefined}
+            rel={secondaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {secondaryCta.text}
+          </a>
+        )}
+      </div>
+      {disclaimer && <p class="body-small cta-disclaimer">{disclaimer}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding: var(--spacing-8) 0;
+    background: var(--color-background-primary);
+  }
+  .cta-content {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .cta-title {
+    margin-bottom: var(--spacing-4);
+  }
+  .cta-description {
+    margin-bottom: var(--spacing-6);
+  }
+  .cta-buttons {
+    margin-bottom: var(--spacing-4);
+  }
+  .cta-disclaimer {
+    margin-top: var(--spacing-4);
+  }
+</style>

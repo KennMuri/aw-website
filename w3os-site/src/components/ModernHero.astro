@@ -1,0 +1,91 @@
+---
+import type { ColorScheme } from '../styles/themes.ts';
+
+export interface Props {
+  title: string;
+  description: string;
+  primaryCta: { text: string; href: string };
+  secondaryCta?: { text: string; href: string };
+  colorScheme?: ColorScheme;
+  isHomepage?: boolean;
+}
+
+const { title, description, primaryCta, secondaryCta, colorScheme, isHomepage = false } = Astro.props;
+
+const cs = colorScheme ?? {
+  gradientText: { stop1: '255,255,255', stop2: '255,255,255', stop3: '240,253,250', stop4: '204,251,241', stop5: '153,246,228' },
+  button: { primary: { start: '13,148,136', end: '20,184,166' }, primaryHover: { start: '20,184,166', end: '45,212,191' }, border: { color: '20,184,166', opacity: 0.3 } },
+  text: { title: '204,251,241', description: '160,160,160' },
+  accent: { imageBorder: { color: '20,184,166', opacity: 0.3 }, imageGlow: { start: '13,148,136', startOpacity: 0.8, end: '20,184,166', endOpacity: 0.6 }, dotPattern: { color: '94,234,212', opacity: 0.4 }, gridPattern: { color: '20,184,166', opacity: 0.08 }, badge: { color: '13,148,136', opacity: 0.2 } },
+};
+---
+
+<section class={`hero ${isHomepage ? 'hero-homepage' : ''}`} style={`
+  --button-primary-start: ${cs.button.primary.start};
+  --button-primary-end: ${cs.button.primary.end};
+  --button-border-color: ${cs.button.border.color};
+  --button-border-opacity: ${cs.button.border.opacity};
+`}>
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">{title}</h1>
+      <p class="hero-description">{description}</p>
+      <div class="hero-cta">
+        <a
+          href={primaryCta.href}
+          class="btn btn-primary btn-lg"
+          target={primaryCta.href.startsWith('http') ? '_blank' : undefined}
+          rel={primaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {primaryCta.text}
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {secondaryCta && (
+          <a
+            href={secondaryCta.href}
+            class="btn btn-secondary btn-lg"
+            target={secondaryCta.href.startsWith('http') ? '_blank' : undefined}
+            rel={secondaryCta.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {secondaryCta.text}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--spacing-10) 0;
+    text-align: center;
+  }
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .hero-title {
+    font-size: var(--font-size-7xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-6);
+  }
+  .hero-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-8);
+    line-height: var(--line-height-normal);
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+    justify-content: center;
+  }
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+</style>

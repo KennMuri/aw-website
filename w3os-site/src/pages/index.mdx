@@ -1,0 +1,98 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: 'W3OS — The Web3 Operational Security Standard'
+description: 'A practical framework for operational security in Web3. Assess, implement, and communicate stronger practices across identity, access, infrastructure, and response.'
+---
+
+import Navbar from '../components/Navbar.astro';
+import ModernHero from '../components/ModernHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ContentSection from '../components/ContentSection.astro';
+import PillarsGrid from '../components/PillarsGrid.astro';
+import AudienceGrid from '../components/AudienceGrid.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { w3osTheme, themeToColorScheme } from '../styles/themes.ts';
+
+export const pageTheme = w3osTheme;
+
+<Navbar />
+
+<ModernHero
+  title="The Web3 Operational Security Standard"
+  description="A shared framework for operational security maturity in Web3. Define, measure, and improve how your organization secures access, credentials, and processes—beyond the smart contract."
+  primaryCta={{ text: 'Explore the Framework', href: '/framework' }}
+  secondaryCta={{ text: 'Why OpSec Matters', href: '/why-opsec' }}
+  colorScheme={themeToColorScheme(pageTheme)}
+  isHomepage={true}
+/>
+
+<ContentSection title="What is W3OS?" description="A practical standard and community for operational security in Web3.">
+  <p>
+    W3OS is an open framework that gives teams a common language and set of expectations for operational security. It covers the risks that sit outside code: who has access, how keys and credentials are handled, how infrastructure and domains are protected, and how your organization responds when something goes wrong.
+  </p>
+  <p>
+    The standard is designed to be used—by protocol teams, DAOs, foundations, and infra providers—to benchmark current posture, prioritize gaps, and communicate maturity to stakeholders and auditors.
+  </p>
+</ContentSection>
+
+<ContentSection title="Why this matters" description="Many serious failures in Web3 stem from operational gaps, not smart contract bugs.">
+  <p>
+    High-profile incidents often involve compromised keys, social engineering, misconfigured access, or weak vendor and process controls. Smart contract audits are essential but do not address these areas. Operational security is what connects strong engineering to real-world resilience.
+  </p>
+  <p>
+    W3OS helps teams address identity and access, domain and infrastructure security, repository and SDLC practices, communications and social surfaces, vendor risk, incident readiness, and governance—so that the whole system is aligned with the same expectations.
+  </p>
+</ContentSection>
+
+<ContentSection>
+  <SectionIntro
+    title="Core pillars of the framework"
+    description="The W3OS framework is organized around these operational security domains. Each pillar includes controls and guidance teams can use to assess and improve."
+  />
+  <PillarsGrid
+    pillars={[
+      { title: 'Identity & Access', description: 'Who can access what, how access is granted and revoked, and how identity is verified and protected.' },
+      { title: 'Domains & Infrastructure', description: 'Domain security, DNS, hosting, and infrastructure configuration and monitoring.' },
+      { title: 'Repositories & SDLC', description: 'Code repositories, CI/CD, and software development lifecycle security and integrity.' },
+      { title: 'Communications & Social Surfaces', description: 'Official channels, social accounts, and communication security to reduce impersonation and phishing risk.' },
+      { title: 'Vendors & Third Parties', description: 'Third-party and vendor risk: what they can access, how they are assessed, and how dependencies are managed.' },
+      { title: 'Incident Readiness', description: 'Detection, response planning, and recovery so teams can react quickly and consistently when something goes wrong.' },
+      { title: 'Governance & Operational Process', description: 'How decisions are made, how changes are approved, and how operational security is owned and reviewed over time.' },
+    ]}
+  />
+</ContentSection>
+
+<ContentSection>
+  <SectionIntro
+    title="Who it's for"
+    description="W3OS is relevant to any team or organization that cares about operational security in Web3."
+  />
+  <AudienceGrid
+    items={[
+      { label: 'Protocol teams', description: 'Core developers and operators who need a clear baseline for keys, access, and infrastructure.' },
+      { label: 'DAOs & foundations', description: 'Organizations that want to demonstrate and maintain a consistent security posture.' },
+      { label: 'Infrastructure providers', description: 'Validators, RPC providers, and other infra operators who are critical to ecosystem security.' },
+      { label: 'Security-conscious operators', description: 'Investors, ecosystem teams, and partners who want to assess and compare operational maturity.' },
+    ]}
+  />
+</ContentSection>
+
+<ContentSection title="Adoption and implementation" description="Use W3OS to benchmark, prioritize, and communicate.">
+  <p>
+    Teams can use the framework to run a self-assessment, identify the largest gaps, and create a roadmap. The same structure supports external audits and makes it easier to communicate maturity to stakeholders—without reinventing the wheel each time.
+  </p>
+  <p>
+    Implementation guidance and additional resources will continue to grow with the community. The goal is to make the standard practical: something you can adopt incrementally and align with existing tools and audits.
+  </p>
+</ContentSection>
+
+<CTASection
+  title="Explore the framework"
+  description="Review the pillars and maturity levels, or join the community to contribute and share practices."
+  primaryCta={{ text: 'View Framework', href: '/framework' }}
+  secondaryCta={{ text: 'Join the Community', href: '/community' }}
+  colorScheme={themeToColorScheme(pageTheme)}
+/>
+
+<Footer />

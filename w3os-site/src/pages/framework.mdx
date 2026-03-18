@@ -1,0 +1,73 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: 'Framework | W3OS — Web3 Operational Security Standard'
+description: 'How the W3OS framework is structured: pillars, maturity levels, and how to use it to assess and improve operational security.'
+---
+
+import Navbar from '../components/Navbar.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ContentSection from '../components/ContentSection.astro';
+import PillarsGrid from '../components/PillarsGrid.astro';
+import MaturityLevels from '../components/MaturityLevels.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { w3osTheme, themeToColorScheme } from '../styles/themes.ts';
+
+<Navbar />
+
+<ContentSection title="Using the framework" description="The W3OS framework is a structured set of domains and controls. Use it to assess where you are, decide what to improve first, and communicate maturity.">
+  <p>
+    Each pillar of the framework covers a distinct area of operational security. Within each, controls are organized so you can see what a baseline looks like, what “strengthened” adds, and what “mature” looks like. You do not have to implement everything at once; the goal is to make progress in a clear order and to speak a common language with auditors and partners.
+  </p>
+  <p>
+    Deeper implementation guidance, examples, and resources will expand over time with community input. The framework page on the canonical W3OS repository remains the source of truth for the full specification.
+  </p>
+</ContentSection>
+
+<ContentSection>
+  <SectionIntro
+    title="Framework pillars"
+    description="The framework is organized into these operational security domains. Each pillar contains controls and guidance you can map to your own environment."
+  />
+  <PillarsGrid
+    pillars={[
+      { title: 'Identity & Access', description: 'Access control, authentication, authorization, and how identity is verified and maintained.' },
+      { title: 'Domains & Infrastructure', description: 'Domain registration and DNS security, hosting, and infrastructure configuration and monitoring.' },
+      { title: 'Repositories & SDLC', description: 'Source control, CI/CD pipelines, and secure development and deployment practices.' },
+      { title: 'Communications & Social Surfaces', description: 'Official channels, social accounts, and protection against impersonation and phishing.' },
+      { title: 'Vendors & Third Parties', description: 'Third-party access, vendor assessment, and supply-chain and dependency risk.' },
+      { title: 'Incident Readiness', description: 'Detection, response planning, communication plans, and recovery procedures.' },
+      { title: 'Governance & Operational Process', description: 'Decision-making, change control, and how operational security is owned and reviewed.' },
+    ]}
+  />
+</ContentSection>
+
+<ContentSection>
+  <SectionIntro
+    title="Maturity levels"
+    description="Controls within each pillar can be understood in terms of baseline, strengthened, and mature. Use these levels to prioritize and to describe your posture."
+  />
+  <MaturityLevels
+    levels={[
+      { name: 'Baseline', description: 'Essential controls in place: basic access discipline, key handling, and enough structure to prevent the most common failures. Suitable as a starting point and minimum for low-risk or early-stage teams.' },
+      { name: 'Strengthened', description: 'Additional controls, monitoring, and process so that access, changes, and incidents are visible and managed. Appropriate for protocols and teams with meaningful assets and dependencies.' },
+      { name: 'Mature', description: 'Consistent practice across pillars, regular review, and clear ownership. Teams at this level can demonstrate and communicate strong operational security to auditors and stakeholders.' },
+    ]}
+  />
+</ContentSection>
+
+<ContentSection title="Further resources" description="The framework will evolve with the community.">
+  <p>
+    The full specification, control details, and future implementation guides will live in the W3OS repository and related documentation. This site gives you the structure and intent; for the authoritative version and to contribute, see the canonical source and the community channels linked below.
+  </p>
+</ContentSection>
+
+<CTASection
+  title="Go deeper"
+  description="View the canonical framework or join the community to contribute and share practices."
+  primaryCta={{ text: 'W3OS on GitHub', href: 'https://github.com/W3OSC/web3-opsec-standard' }}
+  secondaryCta={{ text: 'Community', href: '/community' }}
+  colorScheme={themeToColorScheme(w3osTheme)}
+/>
+
+<Footer />

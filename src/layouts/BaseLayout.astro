@@ -73,6 +73,11 @@ const allSchemas = [organizationSchema, websiteSchema];
 if (structuredData) {
   allSchemas.push(structuredData);
 }
+
+// PostHog: public env vars (fail safely if missing)
+const posthogKey = typeof import.meta.env.PUBLIC_POSTHOG_KEY === 'string' ? import.meta.env.PUBLIC_POSTHOG_KEY : '';
+const posthogHost = typeof import.meta.env.PUBLIC_POSTHOG_HOST === 'string' ? import.meta.env.PUBLIC_POSTHOG_HOST : '';
+const posthogEnabled = posthogKey.length > 0 && posthogHost.length > 0;
 ---
 
 <!DOCTYPE html>
@@ -133,6 +138,15 @@ if (structuredData) {
       </script>
     </>
   )}
+
+  <!-- PostHog (only when env vars set) -->
+  {posthogEnabled && (
+    <script define:vars={{ posthogKey, posthogHost }} is:inline>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      // Ensure identity continuity across `auditware.io` and subdomains like `sentry.auditware.io`.
+      posthog.init(posthogKey, { api_host: posthogHost, cross_subdomain_cookie: true });
+    </script>
+  )}
 </head>
 <body>
   <SiteBackground />
@@ -170,6 +184,94 @@ if (structuredData) {
         });
       }
     });
+  </script>
+
+  <!-- Referral attribution: persist ref from URL, rewrite tracked outbound hrefs, outbound_click -->
+  <script is:inline>
+    (function(){
+      var REF_PARAM = 'ref';
+      var STORAGE_INITIAL = 'aw_initial_ref';
+      var STORAGE_INITIAL_TS = 'aw_initial_ref_ts';
+      var STORAGE_SESSION = 'aw_session_ref';
+      var TRACKED_HOSTS = ['calendly.com', 'sentry.auditware.io', 'docs.sentry.auditware.io'];
+
+      function getRefFromUrl() {
+        var params = new URLSearchParams(window.location.search);
+        return params.get(REF_PARAM) || null;
+      }
+      function getStoredRef() {
+        try {
+          return sessionStorage.getItem(STORAGE_SESSION) || localStorage.getItem(STORAGE_INITIAL) || null;
+        } catch (e) { return null; }
+      }
+      function persistRef(ref) {
+        if (!ref) return;
+        try {
+          localStorage.setItem(STORAGE_INITIAL, ref);
+          localStorage.setItem(STORAGE_INITIAL_TS, String(Date.now()));
+          sessionStorage.setItem(STORAGE_SESSION, ref);
+        } catch (e) {}
+      }
+      function isTrackedOutbound(href) {
+        try {
+          var u = new URL(href);
+          return TRACKED_HOSTS.some(function(h) { return u.hostname === h || u.hostname.endsWith('.' + h); });
+        } catch (e) { return false; }
+      }
+      function hrefHasRef(href) {
+        try {
+          return new URL(href).searchParams.has(REF_PARAM);
+        } catch (e) { return false; }
+      }
+      function appendRefToHref(href, ref) {
+        try {
+          var u = new URL(href);
+          if (u.searchParams.has(REF_PARAM)) return href;
+          u.searchParams.set(REF_PARAM, ref);
+          return u.toString();
+        } catch (e) { return href; }
+      }
+
+      var refCode = getRefFromUrl();
+      if (refCode) {
+        persistRef(refCode);
+        setTimeout(function() {
+          if (window.posthog) window.posthog.capture('referral_landing', {
+            ref: refCode,
+            ref_code: refCode,
+            $set_once: { ref_code: refCode }
+          });
+        }, 100);
+      }
+
+      function applyRefToTrackedLinks() {
+        var ref = getStoredRef();
+        if (!ref) return;
+        document.querySelectorAll('a[href^="http"]').forEach(function(a) {
+          var href = a.getAttribute('href');
+          if (!href || !isTrackedOutbound(href) || hrefHasRef(href)) return;
+          a.setAttribute('href', appendRefToHref(href, ref));
+        });
+      }
+
+      function handleOutboundClick(e) {
+        var a = e.target && e.target.closest ? e.target.closest('a') : null;
+        if (!a || !a.href) return;
+        try {
+          var u = new URL(a.href);
+          if (u.hostname === window.location.hostname) return;
+          if (!TRACKED_HOSTS.some(function(h) { return u.hostname === h || u.hostname.endsWith('.' + h); })) return;
+          if (window.posthog) window.posthog.capture('outbound_click', { url: a.href, domain: u.hostname });
+        } catch (err) {}
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyRefToTrackedLinks);
+      } else {
+        applyRefToTrackedLinks();
+      }
+      document.addEventListener('click', handleOutboundClick);
+    })();
   </script>
 </body>
 </html>

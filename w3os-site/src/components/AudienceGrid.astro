@@ -1,0 +1,53 @@
+---
+export interface AudienceItem {
+  label: string;
+  description: string;
+}
+
+export interface Props {
+  items: AudienceItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="audience-grid">
+  {items.map((item) => (
+    <div class="audience-item">
+      <h3 class="audience-item__label">{item.label}</h3>
+      <p class="audience-item__description">{item.description}</p>
+    </div>
+  ))}
+</div>
+
+<style>
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--spacing-6);
+  }
+  .audience-item {
+    padding: var(--spacing-4) 0;
+    border-bottom: 1px solid var(--color-border-primary);
+  }
+  .audience-item:last-child {
+    border-bottom: none;
+  }
+  .audience-item__label {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2) 0;
+  }
+  .audience-item__description {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .audience-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

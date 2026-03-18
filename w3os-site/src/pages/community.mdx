@@ -1,0 +1,50 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: 'Community | W3OS — Web3 Operational Security Standard'
+description: 'Join the W3OS community. Contribute to the standard, share practices, and connect with others focused on operational security in Web3.'
+---
+
+import Navbar from '../components/Navbar.astro';
+import ContentSection from '../components/ContentSection.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { w3osTheme, themeToColorScheme } from '../styles/themes.ts';
+
+<Navbar />
+
+<ContentSection title="Community" description="W3OS is driven by collaboration and ecosystem participation.">
+  <p>
+    The standard improves when practitioners contribute: feedback on the framework, implementation stories, and shared learning. Whether you are adopting W3OS internally, building tooling, or conducting audits, your experience helps refine the standard and make it more useful for everyone.
+  </p>
+  <p>
+    We welcome future contributors and implementers—protocol teams, DAOs, foundations, auditors, and infra providers—who want to align on operational security and raise the bar across Web3.
+  </p>
+</ContentSection>
+
+<ContentSection title="How to get involved" description="Ways to participate and stay updated.">
+  <p>
+    <strong>Contribute to the standard.</strong> The framework lives in the W3OS repository. Proposals, issues, and pull requests that clarify controls or add guidance are valuable. If you have used the framework in practice, sharing what worked and what was unclear helps the next team.
+  </p>
+  <p>
+    <strong>Share adoption and practices.</strong> Teams that adopt W3OS can help others by describing their approach, maturity targets, and how they work with auditors. Community channels are the place to share those stories and ask questions.
+  </p>
+  <p>
+    <strong>Stay updated.</strong> As the standard evolves, community channels will announce changes, new resources, and opportunities to contribute. Links to Discord, GitHub discussions, and other channels will be added here as they are finalized.
+  </p>
+</ContentSection>
+
+<ContentSection title="Placeholder links" description="Community channels will be linked here.">
+  <p>
+    Official Discord, GitHub discussions, and other community links are pending. For now, you can explore the framework and the canonical repository. Once channels are live, this page will be updated with direct links for discussion, contribution, and adoption support.
+  </p>
+</ContentSection>
+
+<CTASection
+  title="Explore the framework"
+  description="Review the standard while community channels are being set up."
+  primaryCta={{ text: 'View Framework', href: '/framework' }}
+  secondaryCta={{ text: 'W3OS on GitHub', href: 'https://github.com/W3OSC/web3-opsec-standard' }}
+  colorScheme={themeToColorScheme(w3osTheme)}
+/>
+
+<Footer />

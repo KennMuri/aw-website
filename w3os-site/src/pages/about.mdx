@@ -1,0 +1,44 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: 'About W3OS | Web3 Operational Security Standard'
+description: 'Why W3OS exists, the gap it fills in Web3 security, and how it complements audits and creates clearer expectations for operational behavior.'
+---
+
+import Navbar from '../components/Navbar.astro';
+import ContentSection from '../components/ContentSection.astro';
+import CTASection from '../components/CTASection.astro';
+import Footer from '../components/Footer.astro';
+import { w3osTheme, themeToColorScheme } from '../styles/themes.ts';
+
+<Navbar />
+
+<ContentSection title="About W3OS" description="Why the standard exists and what it aims to achieve.">
+  <p>
+    W3OS exists because Web3 teams need a shared way to talk about and improve operational security. Smart contract audits are well understood; operational security—how keys, access, infrastructure, and people are managed—often is not. That gap leads to inconsistent expectations, repeated mistakes, and difficulty comparing maturity across teams and ecosystems.
+  </p>
+  <p>
+    The standard defines a practical framework: domains, controls, and a common vocabulary. It does not replace audits or tooling. It complements them by giving auditors, implementers, and stakeholders the same baseline. When everyone uses the same structure, it is easier to assess posture, prioritize work, and communicate clearly.
+  </p>
+  <p>
+    Standards also improve behavior over time. When teams know what “good” looks like and can measure against it, they are more likely to close gaps and maintain discipline. W3OS is intended to support that: open, usable, and refined with input from the community.
+  </p>
+</ContentSection>
+
+<ContentSection title="How W3OS fits with audits" description="The standard is designed to work alongside existing security practice.">
+  <p>
+    Operational security audits and smart contract audits address different layers. W3OS focuses on the operational layer—identity, access, credentials, domains, vendors, incident response, and process. Teams can use the framework to prepare for an operational audit, to run a self-assessment, or to communicate maturity to partners and investors.
+  </p>
+  <p>
+    Adopting W3OS does not mean replacing your current tools or auditors. It means having a clear structure that can align internal practice, external review, and ecosystem expectations.
+  </p>
+</ContentSection>
+
+<CTASection
+  title="Explore the framework"
+  description="See how the standard is structured and how you can use it."
+  primaryCta={{ text: 'View Framework', href: '/framework' }}
+  secondaryCta={{ text: 'Community', href: '/community' }}
+  colorScheme={themeToColorScheme(w3osTheme)}
+/>
+
+<Footer />
